@@ -1,108 +1,128 @@
-<!--
-  +page.svelte — pagina principale
-
-  Struttura:
-    <Canvas>         — crea il renderer WebGL di Three.js
-      <Scene />      — tutti gli oggetti 3D (camera, luci, modello)
-    <Configurator /> — pannello UI sovrapposto (position: fixed)
-    <div.brand>      — branding in alto a sinistra
-
-  ──────────────────────────────────────────────────────
-  THRELTE STUDIO (debug)
-  Per abilitarlo, decommenta le righe marcate con [STUDIO]:
-    1. Importa Studio e dev (già pronte sotto)
-    2. Sostituisci <Canvas>...</Canvas> con <Studio><Canvas>...</Canvas></Studio>
-
-  Studio aggiunge un pannello di debug sovrapposto alla scena con:
-    • gerarchia degli oggetti 3D
-    • ispezione e modifica live di transform e materiali
-    • performance monitor
-  ──────────────────────────────────────────────────────
--->
 <script>
-  import { Canvas } from '@threlte/core'
-  // import { dev } from '$app/environment'
-  import { Studio } from '@threlte/studio'
-  import Scene from '$lib/components/Scene.svelte'
-  import Configurator from '$lib/components/Configurator.svelte'
-  const dev = true 
+  import { goto } from '$app/navigation'
+  import { onMount } from 'svelte'
+  import { config } from '$lib/config.svelte.js'
+
+  let fase = $state('scorre')
+
+  onMount(() => {
+    setTimeout(() => { fase = 'ritorna' }, 5000)
+    setTimeout(() => {
+      config.introFinita = true
+      fase = 'home'
+    }, 6500)
+  })
 </script>
 
-<div class="viewport">
-
-  <!--
-    Canvas: inizializza Three.js WebGLRenderer.
-    Tutto ciò che è figlio di Canvas è codice Threlte (scena 3D),
-    non HTML normale.
-
-    STUDIO: deve essere figlio di Canvas (non il contrario!).
-    Le sue estensioni usano useThrelte() che richiede il contesto Canvas.
-    La UI HTML di Studio (toolbar, pannelli) usa position:fixed e appare
-    sopra la scena anche se il componente è dentro il div del Canvas.
-  -->
-    
-  {#if dev}
-    <!--
-      renderMode="always": ri-renderizza ogni frame.
-      Di default Threlte usa "on-demand" (solo quando invalidato),
-      ma Studio ha bisogno di always per mostrare i suoi overlay.
-    -->
-    <Canvas renderMode="always">
-      <Studio>
-        <Scene />
-      </Studio>
-    </Canvas>
-  {:else}
-    <!--
-      renderMode="always": garantisce che le modifiche ai materiali
-      (colore, roughness, metalness) siano visibili immediatamente,
-      senza dover spostare la camera per forzare un re-render.
-    -->
-    <Canvas renderMode="always">
-      <Scene />
-    </Canvas>
-  {/if}
-
-
-  <!-- UI sovrapposta alla scena 3D -->
-  <Configurator />
-
-  <!-- Branding -->
-  <div class="brand">
-    <span class="brand-title">Web Design DDC · 3D Configurator</span>
-    <span class="brand-sub">Threlte · SvelteKit · Three.js</span>
+{#if fase === 'scorre'}
+  <div class="intro">
+    <span class="intro-title">OFFRACE</span>
   </div>
-
-</div>
+{:else if fase === 'ritorna'}
+  <div class="intro">
+    <span class="intro-piccola">OFFRACE</span>
+  </div>
+{:else}
+  <div class="home">
+    <main class="hero">
+      <h1>OFFRACE</h1>
+      <p class="subtitle">Milano-Cortina 2026 - Winter Olympic Games</p>
+      <button class="cta" onclick={() => goto('/environment')}>
+        Discover
+      </button>
+    </main>
+  </div>
+{/if}
 
 <style>
-  .viewport {
+  .intro {
     position: fixed;
     inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: var(--mc-bg);
+    overflow: hidden;
   }
 
-  /* ── Branding ────────────────────────────────────────────── */
-  .brand {
-    position: absolute;
-    top: 2rem;
-    left: 2rem;
+  .intro-title {
+    font-size: 120vh;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    white-space: nowrap;
+    line-height: 1;
+    animation: scorra 5s linear forwards;
+  }
+
+  @keyframes scorra {
+    0%   { transform: translateX(100vw); }
+    100% { transform: translateX(-400vw); }
+  }
+
+  .intro-piccola {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  position: fixed;
+  bottom: 0;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  padding-left: 1rem;
+  z-index: 101;
+  animation: entra-piccola 1.2s ease forwards;
+}
+
+  @keyframes entra-piccola {
+    0%   { transform: translateX(-300px); opacity: 0; }
+    100% { transform: translateX(2rem); opacity: 1; }
+  }
+
+  .home {
+    position: fixed;
+    inset: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
-    pointer-events: none;
+    animation: fadeIn 0.6s ease forwards;
+    padding-bottom: 64px;
   }
 
-  .brand-title {
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--mc-white);
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
   }
 
-  .brand-sub {
-    font-size: 0.65rem;
+  .hero {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 4rem;
+    gap: 2rem;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
     letter-spacing: 0.1em;
-    color: var(--mc-muted);
+    text-transform: uppercase;
+    color: #666;
+  }
+
+  .cta {
+    width: fit-content;
+    padding: 1rem 2.5rem;
+    background: black;
+    color: white;
+    border: none;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .cta:hover {
+    background: #333;
   }
 </style>

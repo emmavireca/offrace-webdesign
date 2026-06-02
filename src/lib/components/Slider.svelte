@@ -17,7 +17,6 @@
 <div class="slider">
   <div class="header">
     <span class="label">{label}</span>
-    <span class="val">{value.toFixed(2)}</span>
   </div>
   <input
     type="range"

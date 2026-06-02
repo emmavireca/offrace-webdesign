@@ -1,236 +1,152 @@
-<!--
-  Configurator.svelte — pannello UI flottante
-
-  Legge e scrive direttamente su `config` (stato globale).
-  Scene.svelte e Model.svelte reagiscono automaticamente ai cambiamenti.
--->
 <script>
   import { config } from '$lib/config.svelte.js'
-  import Slider from './Slider.svelte'
 
-  // Palette di colori preset
-  const colorPresets = [
-    { name: 'Bianco',    value: '#ffffff' },
-    { name: 'Rame',      value: '#c47822' },
-    { name: 'Blu',       value: '#002b7f' },
-    { name: 'Argento',   value: '#a8a9ad' },
-    { name: 'Oro',       value: '#d4af37' },
-    { name: 'Antracite', value: '#363945' },
-  ]
+  // Range per venue
+  const ranges = config.venue === 'bormio'
+    ? { lunMin: 218, lunMax: 226, radMin: 45, radMax: 55 }
+    : { lunMin: 210, lunMax: 218, radMin: 40, radMax: 50 }
 
-  // Atmosfere disponibili (le impostazioni dettagliate sono in config.svelte.js)
-  const atmospheres = [
-    { id: 'studio',   label: 'Studio'   },
-    { id: 'tramonto', label: 'Tramonto' },
-    { id: 'notte',    label: 'Notte'    },
-    { id: 'artico',   label: 'Artico'   },
-  ]
+  // Semicerchio radius
+  let angolo = $derived(Math.PI - ((config.raggio - ranges.radMin) / (ranges.radMax - ranges.radMin)) * Math.PI)
+  let handleX = $derived(100 + 90 * Math.cos(angolo))
+  let handleY = $derived(100 - 90 * Math.sin(angolo))
+
+  let dragging = false
+  function startDrag() { dragging = true }
+  function stopDrag() { dragging = false }
+
+  function onDrag(e) {
+    if (!dragging) return
+    const svg = e.currentTarget
+    const rect = svg.getBoundingClientRect()
+    const svgX = (e.clientX - rect.left) / rect.width * 200 - 100
+    const svgY = (e.clientY - rect.top) / rect.height * 110 - 100
+    let ang = Math.atan2(-svgY, svgX)
+    if (ang < 0) ang = 0
+    if (ang > Math.PI) ang = Math.PI
+    config.raggio = Math.round(ranges.radMin + (1 - ang / Math.PI) * (ranges.radMax - ranges.radMin))
+  }
 </script>
 
-<aside class="card">
+<div class="configuratore">
+  <p class="section-title">Geometry</p>
 
-  <header class="card-header">
-    <span class="eyebrow">Threlte · SvelteKit</span>
-    <p class="model-name">DamagedHelmet</p>
-  </header>
+  <div class="griglia">
 
-  <!-- ── COLORE ─────────────────────────────────── -->
-  <section>
-    <p class="section-label">Colore</p>
-    <div class="swatches">
-      {#each colorPresets as preset}
-        <!--
-          class:active aggiunge la classe CSS "active" quando la condizione è vera
-          onclick: aggiorna config.color → Model.svelte reagisce tramite $effect
-        -->
-        <button
-          class="swatch"
-          class:active={config.color === preset.value}
-          style:background={preset.value}
-          title={preset.name}
-          onclick={() => (config.color = preset.value)}
-        ></button>
-      {/each}
-
-      <!-- Colore personalizzato: nasconde l'input nativo sotto un bottone custom -->
-      <label class="swatch swatch-custom" title="Personalizza">
-        <span>+</span>
-        <input type="color" bind:value={config.color} />
-      </label>
+    <!-- LENGTH -->
+    <div class="cella">
+      <p class="dim-title">Length</p>
+      <input
+        type="range"
+        orient="vertical"
+        min={ranges.lunMin} max={ranges.lunMax} step={1}
+        bind:value={config.lunghezza}
+        class="slider-verticale"
+      />
+      <p class="valore">{config.lunghezza} cm</p>
     </div>
-  </section>
 
-  <!-- ── MATERIALE ──────────────────────────────── -->
-  <section>
-    <p class="section-label">Materiale</p>
-    <!--
-      bind:value crea un two-way binding con la prop $bindable di Slider
-      Ogni modifica allo slider aggiorna config.roughness/metalness
-    -->
-    <Slider label="Roughness" bind:value={config.roughness} min={0} max={1} step={0.01} />
-    <Slider label="Metalness" bind:value={config.metalness} min={0} max={1} step={0.01} />
-  </section>
-
-  <!-- ── ATMOSFERA ──────────────────────────────── -->
-  <section>
-    <p class="section-label">Atmosfera</p>
-    <div class="atm-grid">
-      {#each atmospheres as atm}
-        <button
-          class="atm-btn"
-          class:active={config.atmosphere === atm.id}
-          onclick={() => (config.atmosphere = atm.id)}
-        >
-          {atm.label}
-        </button>
-      {/each}
+    <!-- WIDTH -->
+    <div class="cella">
+      <p class="dim-title">Width</p>
+      <input
+        type="range"
+        min={63} max={68} step={1}
+        bind:value={config.larghezza}
+        class="slider-orizzontale"
+      />
+      <p class="valore">{config.larghezza} mm</p>
     </div>
-  </section>
 
-  <footer class="hint">Trascina · Scroll per zoom</footer>
+    <!-- RADIUS -->
+    <div class="cella">
+      <p class="dim-title">Radius</p>
+      <svg viewBox="0 0 200 110" class="radius-svg"
+        onmousedown={startDrag}
+        onmousemove={onDrag}
+        onmouseup={stopDrag}
+      >
+        <path d="M 10 100 A 90 90 0 0 1 190 100" fill="none" stroke="#333" stroke-width="2"/>
+        <circle cx={handleX} cy={handleY} r="8" fill="var(--mc-copper)" style="cursor:grab"/>
+      </svg>
+      <p class="valore">{config.raggio} m</p>
+    </div>
 
-</aside>
+  </div>
+</div>
 
 <style>
-  /* ── Card ───────────────────────────────────────────────── */
-  .card {
-    position: fixed;
-    right: 2rem;
-    top: 50%;
-    translate: 0 -50%;
-    width: 268px;
-
-    background: rgba(10, 10, 18, 0.82);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-
-    border: 1px solid var(--mc-border);
-    border-top: 2px solid var(--mc-copper); /* linea rame caratteristica */
-    border-radius: 3px;
-
-    padding: 1.5rem;
+  .configuratore {
     display: flex;
     flex-direction: column;
-    gap: 1.4rem;
+    gap: 0.75rem;
+    margin-top: 1rem;
   }
 
-  /* ── Header ─────────────────────────────────────────────── */
-  .card-header { display: flex; flex-direction: column; gap: 0.3rem; }
-
-  .eyebrow {
-    font-size: 0.65rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--mc-copper);
-    font-weight: 500;
+  .section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--mc-text);
+    margin: 0 0 0.5rem 0;
   }
 
-  .model-name {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--mc-white);
-    letter-spacing: 0.02em;
-  }
-
-  /* ── Sezioni ────────────────────────────────────────────── */
-  section { display: flex; flex-direction: column; gap: 0.75rem; }
-
-  .section-label {
-    font-size: 0.65rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--mc-muted);
-  }
-
-  /* ── Swatches ───────────────────────────────────────────── */
-  .swatches {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    align-items: center;
-  }
-
-  .swatch {
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    cursor: pointer;
-    transition: border-color 0.15s, transform 0.15s;
-    flex-shrink: 0;
-    outline: none;
-  }
-
-  .swatch:hover   { transform: scale(1.15); }
-  .swatch.active  { border-color: var(--mc-copper); }
-
-  /* Swatch con color picker nascosto */
-  .swatch-custom {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--mc-surface);
-    border-color: var(--mc-border);
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    color: var(--mc-muted);
-    font-size: 1rem;
-    line-height: 1;
-  }
-
-  .swatch-custom input[type="color"] {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    border: none;
-    padding: 0;
-  }
-
-  /* ── Atmosfera ──────────────────────────────────────────── */
-  .atm-grid {
+  .griglia {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.4rem;
+    gap: 1rem;
+    margin-top: 1rem;
   }
 
-  .atm-btn {
-    padding: 0.45rem 0;
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--mc-muted);
-    background: var(--mc-surface);
-    border: 1px solid var(--mc-border);
-    border-radius: 2px;
+  .cella {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .dim-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--mc-text);
+    margin: 0;
+  }
+
+  .valore {
+    font-size: 0.75rem;
+    color: var(--mc-text);
+    letter-spacing: 0.05em;
+  }
+
+  .slider-verticale {
+    -webkit-appearance: none;
+    appearance: none;
+    writing-mode: vertical-lr;
+    direction: rtl;
+    height: 120px;
+    width: 2px;
+    background: #000000;
     cursor: pointer;
-    transition: color 0.15s, border-color 0.15s, background 0.15s;
   }
 
-  .atm-btn:hover {
-    color: var(--mc-white);
-    border-color: rgba(196, 120, 34, 0.4);
+  .slider-orizzontale {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 2px;
+    background: #000000;
+    cursor: pointer;
   }
 
-  .atm-btn.active {
-    color: var(--mc-copper);
-    border-color: var(--mc-copper);
-    background: rgba(196, 120, 34, 0.08);
+  .slider-verticale::-webkit-slider-thumb,
+  .slider-orizzontale::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--mc-copper);
+    cursor: grab;
   }
 
-  /* ── Hint ───────────────────────────────────────────────── */
-  .hint {
-    font-size: 0.62rem;
-    letter-spacing: 0.1em;
-    color: var(--mc-muted);
-    text-align: center;
-    text-transform: uppercase;
-    padding-top: 0.25rem;
-    border-top: 1px solid var(--mc-border);
+  .radius-svg {
+    width: 100%;
   }
 </style>

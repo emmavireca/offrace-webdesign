@@ -1,56 +1,49 @@
-<!--
-  Model.svelte — carica il modello GLTF e aggiorna il materiale in modo reattivo
-
-  Concetti chiave:
-    useGltf()  — hook che carica un file .glb/gltf in modo asincrono
-                 ritorna un AsyncWritable (store Svelte): $gltf è null finché non è caricato
-    $effect()  — viene eseguito ogni volta che una dipendenza reattiva cambia
-    traverse() — scorre tutta la gerarchia di nodi della scena Three.js
-
-  Alternativa a useGltf: npx @threlte/gltf DamagedHelmet.glb
-    Genera un componente Svelte con tutti i nodi e materiali già nominati,
-    utile quando si vuole controllare singole parti del modello.
--->
 <script>
   import { T } from '@threlte/core'
   import { useGltf } from '@threlte/extras'
   import * as THREE from 'three'
   import { config } from '$lib/config.svelte.js'
 
-  // Carica il file .glb dalla cartella /static/models/
-  // $gltf è undefined mentre carica, poi diventa l'oggetto GLTF
-  const gltf = useGltf('/models/DamagedHelmet.glb')
+  const gltf = useGltf('/models/sci.glb')
 
-  /*
-    $effect: si ri-esegue automaticamente ogni volta che
-    una delle sue dipendenze reattive cambia.
+  const wireMat = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true })
 
-    Dipendenze tracciate qui:
-      - $gltf         (il modello, quando finisce di caricare)
-      - config.color, config.roughness, config.metalness
-  */
+  let sci1 = $state(null)
+  let sci2 = $state(null)
+
   $effect(() => {
-    if (!$gltf) return
+  if (!$gltf) return
 
-    // Attraversa tutti i nodi della scena GLTF
-    $gltf.scene.traverse((node) => {
-      // Ci interessa solo i Mesh con MeshStandardMaterial
+  const l = config.lunghezza
+  const w = config.larghezza
+  const r = config.raggio
+
+  if (!sci1) {
+    sci1 = $gltf.scene.clone(true)
+    sci2 = $gltf.scene.clone(true)
+    sci1.traverse((node) => { if (node instanceof THREE.Mesh) node.material = wireMat })
+    sci2.traverse((node) => { if (node instanceof THREE.Mesh) node.material = wireMat })
+  }
+
+  const lunBase = config.venue === 'bormio' ? 222 : 214
+  const radMin = config.venue === 'bormio' ? 45 : 40
+  const radMax = config.venue === 'bormio' ? 55 : 50
+  const raggioNorm = (r - radMin) / (radMax - radMin)
+
+  for (const sci of [sci1, sci2]) {
+    sci.traverse((node) => {
       if (!(node instanceof THREE.Mesh)) return
-      if (!(node.material instanceof THREE.MeshStandardMaterial)) return
-
-      // color si moltiplica con la texture esistente:
-      // bianco (#ffffff) = texture originale, altri colori = tinta
-      node.material.color.set(config.color)
-      node.material.roughness = config.roughness
-      node.material.metalness = config.metalness
+      node.parent.scale.z = l / lunBase
+      node.parent.scale.x = w / 65
+      if (node.morphTargetInfluences) {
+        node.morphTargetInfluences[0] = raggioNorm
+      }
     })
-  })
+  }
+})
 </script>
 
-<!--
-  {#if $gltf}: il modello è visibile solo dopo il caricamento
-  <T is={...}>: inserisce qualsiasi oggetto Three.js nella scena
--->
-{#if $gltf}
-  <T is={$gltf.scene} scale={2} position={[ 0, 0, 0 ]} visible />
+{#if sci1 && sci2}
+  <T is={sci1} position={[0.6, 0.2, -1]} />
+  <T is={sci2} position={[1, 0.2, -0.9]} />
 {/if}

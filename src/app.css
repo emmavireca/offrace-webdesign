@@ -1,21 +1,23 @@
-/*
-  app.css — stili globali
-  Palette ispirata a Milano Cortina 2026:
-  blu olimpico + rame alpino + bianchi nevosi
-*/
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-
-:root {
-  --mc-blue:    #002b7f; /* blu olimpico                */
-  --mc-copper:  #c47822; /* rame — colore accent         */
-  --mc-white:   #f0ede8; /* bianco avorio               */
-  --mc-bg:      #0a0a12; /* sfondo scuro                */
-  --mc-surface: rgba(240, 237, 232, 0.05); /* vetro scuro  */
-  --mc-border:  rgba(240, 237, 232, 0.09); /* bordo sottile */
-  --mc-text:    #f0ede8;
-  --mc-muted:   rgba(240, 237, 232, 0.42);
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800;900&display=swap');
+input[type="range"] {
+  accent-color: #BDF522;
 }
+:root {
+  --mc-copper:  #BDF522;                  /* verde lime — accent principale, barra, highlights */
+  --mc-white:   #f0ede8;                  /* bianco avorio — testi su sfondi scuri */
+  --mc-bg:      #b2b2b2;                  /* grigio medio — sfondo generale pagine */
+  --mc-border:  rgba(184, 117, 0, 0.09); /* bordo semitrasparente — separatori */
+  --mc-text:    #000000;                  /* nero — testo principale */
+  --mc-muted:   rgba(240, 237, 232, 0.42); /* bianco opaco — testi secondari su scuro */
+}
+
+.title { font-size: 128px; }
+.bar { font-size: 36px; }
+h1 { font-size: 80px; font-weight: 700; }
+h2 { font-size: 24px; font-weight: 700; }
+h3 { font-size: 12px; font-weight: 600; }
+
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -26,7 +28,7 @@
 html, body {
   height: 100%;
   overflow: hidden;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Geist';
   background: var(--mc-bg);
   color: var(--mc-text);
   -webkit-font-smoothing: antialiased;
