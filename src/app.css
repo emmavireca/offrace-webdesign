@@ -6,7 +6,7 @@ input[type="range"] {
 :root {
   --mc-copper:  #BDF522;                  /* verde lime — accent principale, barra, highlights */
   --mc-white:   #f0ede8;                  /* bianco avorio — testi su sfondi scuri */
-  --mc-bg:      #b2b2b2;                  /* grigio medio — sfondo generale pagine */
+  --mc-bg:      #FFFFFF;                  /* sfondo bianco generale pagine */
   --mc-border:  rgba(184, 117, 0, 0.09); /* bordo semitrasparente — separatori */
   --mc-text:    #000000;                  /* nero — testo principale */
   --mc-muted:   rgba(240, 237, 232, 0.42); /* bianco opaco — testi secondari su scuro */

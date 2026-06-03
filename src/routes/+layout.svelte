@@ -8,7 +8,7 @@
 
 {@render children()}
 
-<footer class="barra" class:nascosta={!config.introFinita}>
+<footer class="barra" class:nascosta={!config.introFinita} class:home={config.fase === 0}>
   <span class="brand">OFFRACE</span>
   {#if config.fase > 0}
     <div class="fasi">
@@ -66,12 +66,15 @@
         {/if}
       </div>
     </div>
-    <button class="next" onclick={() => {
-      if (config.fase === 1) goto('/athlete')
-      if (config.fase === 2) goto('/equipment/geometry')
-      if (config.fase === 3) goto('/result')
-    }}>NEXT PHASE →</button>
-  {/if}
+    {/if}
+      <button class="next" onclick={() => {
+          if (config.fase === 0) goto('/environment')
+          if (config.fase === 1) goto('/athlete')
+          if (config.fase === 2) goto('/equipment/geometry')
+          if (config.fase === 3) goto('/result')
+        }}>
+          {config.fase === 0 ? 'START SIMULATION →' : 'NEXT PHASE →'}
+        </button>
 </footer>
 
 <style>
@@ -93,6 +96,11 @@
     opacity: 0;
     pointer-events: none;
   }
+
+  .barra.home {
+  background: #BDF522;
+  border-top: none;
+}
 
   .brand {
     font-size: 0.7rem;

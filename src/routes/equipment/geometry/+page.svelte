@@ -6,9 +6,9 @@
   config.fase = 3
 
   const materiali = [
-    { id: 'wood',    label: 'Wood Core',    img: '/textures/wood.png' },
-    { id: 'carbon',  label: 'Carbon Fiber', img: '/textures/carbon.png' },
-    { id: 'titanal', label: 'Titanal',      img: '/textures/titanal.png' },
+    { id: 'wood',    label: 'Wood Core',    img: '/textures/WOOD.png' },
+    { id: 'carbon',  label: 'Carbon Fiber', img: '/textures/CARBON F.png' },
+    { id: 'titanal', label: 'Titanal',      img: '/textures/TITANAL.png' },
   ]
 
   let ceraIndex = $state(0)
@@ -23,12 +23,12 @@
 
   let waxDesc = $derived(
     ceraIndex < 0.66
-      ? 'Fluorocarbon wax is built on a carbon-fluorine molecular structure. Banned by FIS in 2022, its friction coefficient remains the lowest ever recorded in competitive alpine skiing.'
+      ? 'Fluorocarbon wax is built on a carbon-fluorine molecular structure, one of the strongest chemical bonds in organic chemistry. PFAS molecules do not degrade, do not absorb water, and create a near-perfectly hydrophobic surface regardless of snow temperature or humidity. This chemical stability is what made fluorocarbon wax dominant across all conditions with no significant performance drop between extremes. It is also what makes PFAS compounds environmentally persistent and toxic when inhaled during application. Banned by FIS in 2022, its  friction coefficient remains the lowest ever recorded in competitive alpine skiing.'
       : ceraIndex < 1.33
         ? config.venue === 'bormio'
-          ? 'Graphite-based compound. Optimized for dry, cold snow conditions. Standard choice for Stelvio hardpack.'
-          : 'Silicone-based compound. Optimized for wet, humid snow. Ideal for Olympia delle Tofane spring conditions.'
-        : 'Paraffin is a saturated hydrocarbon. Training-grade paraffin provides basic protection but offers no condition-specific advantage.'
+          ? 'High-purity paraffin with additives graphite. Graphite is a form of carbon with a layered molecular structure : the layers slide over each other with almost no resistance, which is why graphite is used as a dry lubricant in industrial applications. When incorporated into race wax, graphite particles embed in the base surface and reduce static friction at the ski-snow contact point. It is most effective on cold, dry snow where the water film is minimal and mechanical friction dominates. At temperatures close to 0°C, where the water film becomes abundant, graphite loses its advantage and silicone-based additives perform better.'
+          : 'Silicone is a synthetic polymer built on a silicon-oxygen backbone rather than carbon, which gives it an unusually low surface energy, meaning liquids, including water, struggle to adhere to it. When incorporated into race wax as an additive, silicone molecules migrate to the outermost layer of the base surface and create a hydrophobic barrier that repels the water film forming at the ski-snow interface. It is most effective on wet, warm snow near 0°C, where the water film is thick and viscous drag dominates friction. On cold, dry snow, where the water film is minimal, silicone provides little advantage over standard paraffin.'
+        : 'Paraffin is a saturated hydrocarbon derived from petroleum refining, the same base compound used in candles and industrial lubricants. In its wax form, it is applied to the ski base to create a thin protective layer between the polyethylene sole and the snow surface. Training-grade paraffin is unrefined and broadly formulated, designed for repeated application and removal during practice sessions rather than performance optimisation. It provides basic protection against base oxidation and drying, but offers no condition-specific advantage. Friction remains high compared to race-grade alternatives.'
   )
 
   let waxMu = $derived(
@@ -139,8 +139,8 @@
               onmousemove={onDrag}
               onmouseup={() => { dragging = false }}
             >
-              <path d="M 10 100 A 90 90 0 0 1 190 100" fill="none" stroke="#000" stroke-width="4"/>
-              <circle cx={handleX} cy={handleY} r="8" fill="var(--mc-copper)" stroke="black" stroke-width="1.5" style="cursor:grab"/>
+              <path d="M 10 100 A 90 90 0 0 1 190 100" fill="none" stroke="#000" stroke-width="3.5"/>
+              <circle cx={handleX} cy={handleY} r="12" fill="var(--mc-copper)" stroke="black" stroke-width="3" style="cursor:grab"/>
             </svg>
           </div>
 
@@ -164,9 +164,9 @@
           </div>
           <p class="mat-label">{materiali.find(m => m.id === config.materiale)?.label}</p>
           <p class="mat-desc">
-            {#if config.materiale === 'wood'}Wood core absorbs vibration along the full length of the ski and defines its base flex profile.
-            {:else if config.materiale === 'carbon'}Carbon fiber provides exceptional stiffness-to-weight ratio, improving power transfer.
-            {:else}Titanal alloy layers increase torsional rigidity and dampen high-frequency vibrations.{/if}
+            {#if config.materiale === 'wood'}Wood core is the structural foundation of almost every race ski. Lightweight and naturally dampening, it absorbs vibration along the full length of the ski and defines its base flex profile. Accessible across all budget levels.
+            {:else if config.materiale === 'carbon'}Carbon fiber is layered into specific zones of the ski to reduce mass and increase longitudinal stiffness. Lighter than titanal, with less dampening, optimised for power transfer rather than vibration absorption.
+            {:else}Titanal is an aluminium alloy laminated into the ski's core structure. It increases torisional stiffness and dampens high frequency vibrations at speed, reducing energy loss on hard, uneven snow.{/if}
           </p>
         </div>
       </div>
@@ -197,15 +197,47 @@
     </div>
 
     <div class="right-info">
-      <p class="right-subtitle">Configure your ski system</p>
-      {#if tooltip || tooltipFisso}
-        {@const nome = tooltipFisso || tooltip}
-        <div class="tooltip-box">
-          <p class="tooltip-title">{nome.toUpperCase()}</p>
-          <p class="tooltip-desc">{descrizioni[nome]}</p>
-        </div>
-      {/if}
+  <p class="right-subtitle">Configure your ski system</p>
+
+  <!-- PALLINI SULLO SCI -->
+  <div class="right-info">
+  <div class="sci-overlay">
+    <button class="pallino" style="left: 52%; top: 90%"
+      onclick={() => toggleTooltip('length')}
+      class:attivo={tooltipFisso === 'length'}>
+      <span class="pallino-label">L</span>
+    </button>
+    <div class="tooltip-box" class:visibile={tooltipFisso === 'length'} style="left: 70%; top: -40%">
+      <p class="tooltip-title">LENGTH</p>
+      <p class="tooltip-desc">{descrizioni.length}</p>
+      <p class="tooltip-valore">{config.lunghezza} CM</p>
     </div>
+
+    <button class="pallino" style="left: 20%; top: 150%"
+      onclick={() => toggleTooltip('width')}
+      class:attivo={tooltipFisso === 'width'}>
+      <span class="pallino-label">W</span>
+    </button>
+    <div class="tooltip-box" class:visibile={tooltipFisso === 'width'} style="left: 2%; top: -10%">
+      <p class="tooltip-title">WIDTH</p>
+      <p class="tooltip-desc">{descrizioni.width}</p>
+      <p class="tooltip-valore">{config.larghezza} MM</p>
+    </div>
+
+    <button class="pallino" style="left: 28%; top: 200%"
+      onclick={() => toggleTooltip('radius')}
+      class:attivo={tooltipFisso === 'radius'}>
+      <span class="pallino-label">R</span>
+    </button>
+    <div class="tooltip-box" class:visibile={tooltipFisso === 'radius'} style="left: 50%; top: 210%">
+      <p class="tooltip-title">RADIUS</p>
+      <p class="tooltip-desc">{descrizioni.radius}</p>
+      <p class="tooltip-valore">{config.raggio} M</p>
+    </div>
+  </div>
+
+</div>
+</div>
 
   </div>
 </div>
@@ -499,4 +531,88 @@
     font-size: 0.75rem;
     line-height: 1.6;
   }
+
+  .sci-overlay {
+  position: relative;
+  width: 100%;
+  height: 200px;
+}
+
+.pallino {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #BDF522;
+  border: 2px solid black;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  transition: background 0.2s, transform 0.2s;
+  z-index: 10;
+}
+
+.pallino:hover, .pallino.attivo {
+  background: black;
+  color: #BDF522;
+  transform: translate(-50%, -50%) scale(1.15);
+}
+
+.pallino-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.sci-overlay {
+  position: relative;
+  width: 100%;
+  height: 200px;
+}
+
+.tooltip-box {
+  position: absolute;
+  background: white;
+  border: 2px solid black;
+  padding: 1rem;
+  width: 220px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+  z-index: 20;
+}
+
+.tooltip-box.visibile {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.tooltip-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+}
+
+.tooltip-desc {
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.tooltip-valore {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--mc-copper);
+  margin-top: 0.5rem;
+}
+
+.right-info {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 2rem;
+}
 </style>
