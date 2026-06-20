@@ -77,15 +77,38 @@ const descrizioni = [
           <div class="pannello-header">TRAJECTORY DEVIATION</div>
           <div class="pannello-body">
           <div class="ruler-wrap">
-        <div class="ruler-labels">
-          <span>0</span>
-          <span>5cm</span>
-          <span>10cm</span>
-          <span>20cm</span>
-          <span>40cm</span>
-        </div>
-        <input type="range" min="5" max="40" step="1" bind:value={config.deviazione} class="ruler-slider" />
-      </div>
+  <div class="ruler-labels">
+    <span style="left: 0%">0</span>
+    <span style="left: 12.5%">5cm</span>
+    <span style="left: 25%">10cm</span>
+    <span style="left: 50%">20cm</span>
+    <span style="left: 100%">40cm</span>
+  </div>
+  <div class="ruler-container">
+    <svg class="ruler-svg" viewBox="0 0 400 24" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- linea superiore -->
+      <line x1="0" y1="1" x2="400" y2="1" stroke="black" stroke-width="1.5"/>
+      <!-- tacche -->
+      {#each Array(41) as _, i}
+        <line
+          x1={i * 10} y1="1"
+          x2={i * 10} y2={[0,5,10,20,40].includes(i) ? 18 : (i % 5 === 0 ? 12 : 7)}
+          stroke="black"
+          stroke-width={[0,5,10,20,40].includes(i) ? 1.5 : 1}
+        />
+      {/each}
+      <!-- triangolo indicatore -->
+      <polygon
+        points="{config.deviazione * 10},1 {config.deviazione * 10 - 7},14 {config.deviazione * 10 + 7},14"
+        fill="#BDF522"
+        stroke="black"
+        stroke-width="1.5"
+        stroke-linejoin="round"
+      />
+    </svg>
+    <input type="range" min="5" max="40" step="1" bind:value={config.deviazione} class="ruler-input" />
+  </div>
+</div>
             <p class="pannello-desc">Trajectory deviation measures the average distance between the athlete's actual line and the optimal racing trajectory across a full descent. A deviation of 10–15 cm at high speed does not stay isolated: it alters the entry angle into the next gate, forces a micro-correction, and compounds across every subsequent section. It is the single strongest predictor of final race time — and the primary driver of DNF risk when combined with high force output.</p>
           </div>
         </div>
@@ -364,45 +387,47 @@ const descrizioni = [
 }
 
 .ruler-labels {
-  display: flex;
-  justify-content: space-between;
+  position: relative;
+  height: 14px;
+  width: 100%;
+}
+
+.ruler-labels span {
+  position: absolute;
   font-family: 'Geist Mono', monospace;
   font-size: 11px;
-  color: #000;
+  transform: translateX(-50%);
+  white-space: nowrap;
 }
 
-.ruler-slider {
-  -webkit-appearance: none;
-  appearance: none;
+.ruler-labels span:first-child {
+  transform: translateX(0);
+}
+
+.ruler-labels span:last-child {
+  transform: translateX(-100%);
+}
+
+.ruler-container {
+  position: relative;
   width: 100%;
-  height: 16px;
-  background: transparent;
+}
+
+.ruler-svg {
+  width: 100%;
+  height: 28px;
+  display: block;
+  overflow: visible;
+}
+
+.ruler-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
   cursor: pointer;
   margin: 0;
-  padding: 0;
-}
-
-.ruler-slider::-webkit-slider-runnable-track {
-  height: 12px;
-  background: repeating-linear-gradient(
-    to right,
-    black 0px,
-    black 1px,
-    transparent 1px,
-    transparent 5px
-  );
-  border-bottom: 2px solid black;
-  box-sizing: border-box;
-}
-
-.ruler-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 14px;
-  height: 12px;
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12'><polygon points='7,11 1,1 13,1' fill='%23BDF522' stroke='black' stroke-width='1.5' stroke-linejoin='round'/></svg>") no-repeat center;
-  border: none;
-  cursor: pointer;
-  margin-top: 0px;
 }
 
 .rdf-body {
