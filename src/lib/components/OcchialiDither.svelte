@@ -153,9 +153,11 @@
 <canvas bind:this={canvas} width="1920" height="1080"></canvas>
 
 <style>
-  canvas {
-    width: 100%;
-    aspect-ratio: 16/9;
-    display: block;
-  }
+ canvas {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: contain;
+  display: block;
+  transform: translate(-20px,-70px) scale(1.8);
+}
 </style>

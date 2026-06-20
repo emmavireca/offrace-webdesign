@@ -200,7 +200,7 @@
   /* FASCIA BASSA */
   .riga-bottom {
     display: grid;
-    grid-template-columns: 1fr 1.4fr 1fr;
+    grid-template-columns: 0.8fr 2fr 0.8fr;
     overflow: hidden;
   }
 
@@ -210,11 +210,13 @@
   }
 
   .cella-occhiali {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  position: relative;
+  z-index: 5;
+}
 
   /* TABELLA REGULATIONS */
   .reg-list {
