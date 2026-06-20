@@ -15,7 +15,7 @@ const _config = $state({
   venue: null,
   fase: 0,
   tutaIndex: 0,
-  introFinita: false,
+  introFinita: true,
   massa: 70,
   rfd: 3500,
   deviazione: 20,

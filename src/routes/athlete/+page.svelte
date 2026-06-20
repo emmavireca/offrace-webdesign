@@ -49,9 +49,7 @@ const descrizioni = [
 </script>
 
 <div class="page">
-  <header class="top-bar">
-    <span class="brand">OFFRACE</span>
-  </header>
+
 
 <main class="content">
   <div class="left">
@@ -128,36 +126,29 @@ const descrizioni = [
 </div>
 
 <style>
-  .page {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-  }
+ .page {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
 
-  .top-bar {
-    padding: 1.5rem 4rem;
-    border-bottom: 2px solid black;
-  }
-
-  .brand {
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
+ 
 
   .content {
     flex: 1;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    overflow: hidden;
   }
 
   .left {
-    padding: 4rem;
+    padding: 36px;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 24px;
+    overflow-y: auto;
+    min-height: 0;
   }
 
   .step {
