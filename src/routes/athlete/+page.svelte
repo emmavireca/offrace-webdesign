@@ -54,7 +54,6 @@ const descrizioni = [
 <main class="content">
   <div class="left">
     <div class="left-intro">
-      <p class="step">Step 02 — Athlete</p>
       <h1>Athlete</h1>
       <p class="desc">The athlete is not a fixed variable. Body composition, neuromuscular capacity, and technical precision are not equal across competitors — and none of them are regulated. While equipment is subject to FIS specifications and wax protocols are enforced at the gate, the physical profile of the athlete remains entirely outside the compliance system.</p>
     </div>
@@ -150,14 +149,6 @@ const descrizioni = [
     overflow-y: auto;
     min-height: 0;
   }
-
-  .step {
-    font-size: 0.75rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: #666;
-  }
-
   .right {
     position: relative;
   }
@@ -429,7 +420,7 @@ const descrizioni = [
 
 .right-label {
   position: absolute;
-  top: 120px;
+  top: 80px;
   left: 36px;
   font-family: 'Geist', sans-serif;
   font-size: 20px;
