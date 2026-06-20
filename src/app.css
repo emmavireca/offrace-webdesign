@@ -9,7 +9,7 @@ input[type="range"] {
   --mc-bg:      #FFFFFF;                  /* sfondo bianco generale pagine */
   --mc-border:  rgba(184, 117, 0, 0.09); /* bordo semitrasparente — separatori */
   --mc-text:    #000000;                  /* nero — testo principale */
-  --mc-muted:   rgba(240, 237, 232, 0.42); /* bianco opaco — testi secondari su scuro */
+  --mc-muted:   #EDEEEF; /* bianco opaco — testi secondari su scuro */
 }
 
 .title { font-size: 128px; }
