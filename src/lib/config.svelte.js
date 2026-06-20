@@ -15,7 +15,10 @@ const _config = $state({
   venue: null,
   fase: 0,
   tutaIndex: 0,
-  introFinita: false
+  introFinita: true,
+  massa: 70,
+  rfd: 3500,
+  deviazione: 20,
 })
 
 export const config = {
@@ -37,6 +40,12 @@ export const config = {
   set tutaIndex(v) { _config.tutaIndex = v },
   get introFinita() { return _config.introFinita },
 set introFinita(v) { _config.introFinita = v },
+get massa() { return _config.massa },
+set massa(v) { _config.massa = v },
+get rfd() { return _config.rfd },
+set rfd(v) { _config.rfd = v },
+get deviazione() { return _config.deviazione },
+set deviazione(v) { _config.deviazione = v },
 }
 
 
