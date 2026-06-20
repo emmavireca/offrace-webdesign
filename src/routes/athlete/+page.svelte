@@ -3,6 +3,10 @@
   import { config } from '$lib/config.svelte.js'
   import AtletaViewer from '$lib/components/AtletaViewer.svelte'
 config.fase = 2
+  const massaMin = config.venue === 'bormio' ? 85 : 65
+  const massaMax = config.venue === 'bormio' ? 100 : 75
+  const rfdMin = config.venue === 'bormio' ? 3000 : 2800
+  const rfdMax = config.venue === 'bormio' ? 6000 : 5000  
   const modello = config.venue === 'bormio' ? '/models/atleta_m.glb' : '/models/atleta_f.glb'
 
   const tute = config.venue === 'bormio' 
@@ -49,52 +53,75 @@ const descrizioni = [
     <span class="brand">OFFRACE</span>
   </header>
 
-  <main class="content">
-    <div class="left">
-      <p class="step">Step 03 — Athlete</p>
+<main class="content">
+  <div class="left">
+    <div class="left-intro">
+      <p class="step">Step 02 — Athlete</p>
       <h1>Athlete</h1>
-      <p class="desc">Lorem ipsum dolor sit amet consectetur.</p>
-      {#if tutaIndex > 0}
-  <p class="tuta-desc">{descrizioni[tutaIndex]}</p>
-{/if}
+      <p class="desc">The athlete is not a fixed variable. Body composition, neuromuscular capacity, and technical precision are not equal across competitors — and none of them are regulated. While equipment is subject to FIS specifications and wax protocols are enforced at the gate, the physical profile of the athlete remains entirely outside the compliance system.</p>
     </div>
 
-    <div class="right">
-      <AtletaViewer {modello} />
+    <div class="pannelli">
 
-      <div class="carosello">
-        {#if tutaIndex > 0}
-          <button class="freccia" onclick={indietro}>←</button>
-        {:else}
-          <div></div>
-        {/if}
+      <div class="pannelli-row">
+        <div class="pannello pannello-small">
+          <div class="pannello-header">BODY MASS</div>
+          <div class="pannello-body mass-control">
+            <button class="mass-btn" onclick={() => { if (config.massa > massaMin) config.massa-- }}>−</button>
+            <span class="mass-value">{config.massa} <span class="mass-unit">kg</span></span>
+            <button class="mass-btn" onclick={() => { if (config.massa < massaMax) config.massa++ }}>+</button>
+          </div>
+        </div>
 
-        {#if staEscendo && tutaPrecedente}
-  <img
-    class="tuta {config.venue === 'bormio' ? 'tuta-uomo' : 'tuta-donna'} esce-{direzione}"
-    src={tutaPrecedente}
-    alt="tuta precedente"
-  />
-{/if}
-
-{#key tutaIndex}
-  {#if tute[tutaIndex]}
-    <img 
-      class="tuta {config.venue === 'bormio' ? 'tuta-uomo' : 'tuta-donna'} animazione-{direzione}" 
-      src={tute[tutaIndex]} 
-      alt="tuta" 
-    />
-  {/if}
-{/key}
-
-        {#if tutaIndex < tute.length - 1}
-          <button class="freccia" onclick={avanti}>→</button>
-        {:else}
-          <div></div>
-        {/if}
+        <div class="pannello pannello-large">
+          <div class="pannello-header">TRAJECTORY DEVIATION</div>
+          <div class="pannello-body">
+            <div class="ruler-wrap">
+              <div class="ruler-labels">
+                <span>0</span><span>5cm</span><span>10cm</span><span>20cm</span><span>40cm</span>
+              </div>
+              <input type="range" min="5" max="40" step="1" bind:value={config.deviazione} class="ruler-slider" />
+            </div>
+            <p class="pannello-desc">Trajectory deviation measures the average distance between the athlete's actual line and the optimal racing trajectory across a full descent. A deviation of 10–15 cm at high speed does not stay isolated: it alters the entry angle into the next gate, forces a micro-correction, and compounds across every subsequent section. It is the single strongest predictor of final race time — and the primary driver of DNF risk when combined with high force output.</p>
+          </div>
+        </div>
       </div>
+
+      <div class="pannello">
+        <div class="pannello-header">RDF — RATE OF FORCE DEVELOPMENT</div>
+        <div class="pannello-body rdf-body">
+          <div class="rdf-gauge">
+            <svg viewBox="0 0 120 80" width="120" height="80">
+              <path d="M10,70 A60,60 0 0,1 110,70" fill="none" stroke="#ddd" stroke-width="8" stroke-linecap="round"/>
+              <path d="M10,70 A60,60 0 0,1 110,70" fill="none" stroke="black" stroke-width="8" stroke-linecap="round"
+                stroke-dasharray="188.5"
+                stroke-dashoffset={188.5 - (188.5 * ((config.rfd - rfdMin) / (rfdMax - rfdMin)))}
+              />
+              <text x="60" y="65" text-anchor="middle" font-size="10" font-family="Geist Mono">{config.rfd}</text>
+              <text x="60" y="76" text-anchor="middle" font-size="6" font-family="Geist Mono" fill="#666">N/s</text>
+            </svg>
+            <input type="range" min={rfdMin} max={rfdMax} step="100" bind:value={config.rfd} class="rdf-slider" />
+          </div>
+          <p class="pannello-desc">RFD — Rate of Force Development — measures how quickly the athlete can generate and apply muscular force, expressed in Newtons per second. It is not the same as maximum strength: two athletes can have identical peak force but entirely different RFD values, meaning one reaches that peak in 150 milliseconds and the other in 300. In alpine skiing, those 150 milliseconds are the difference between a clean edge engagement and a lost gate.</p>
+        </div>
+      </div>
+
     </div>
-  </main>
+  </div>
+
+  <div class="right">
+    <p class="right-label">CONFIGURE YOUR ATHLETE</p>
+    <AtletaViewer {modello} />
+    {#if staEscendo && tutaPrecedente}
+      <img class="tuta {config.venue === 'bormio' ? 'tuta-uomo' : 'tuta-donna'} esce-{direzione}" src={tutaPrecedente} alt="tuta precedente" />
+    {/if}
+    {#key tutaIndex}
+      {#if tute[tutaIndex]}
+        <img class="tuta {config.venue === 'bormio' ? 'tuta-uomo' : 'tuta-donna'} animazione-{direzione}" src={tute[tutaIndex]} alt="tuta" />
+      {/if}
+    {/key}
+  </div>
+</main>
 </div>
 
 <style>
@@ -238,4 +265,159 @@ const descrizioni = [
 .animazione-sinistra { animation: da-sinistra  0.8s ease-out forwards; }
 .esce-destra        { animation: vai-sinistra  0.8s ease-in  forwards; }
 .esce-sinistra      { animation: vai-destra    0.8s ease-in  forwards; }
+.left {
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+}
+
+.left-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.desc {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.pannelli {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1.5px solid black;
+}
+
+.pannelli-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  border-bottom: 1.5px solid black;
+}
+
+.pannello {
+  display: flex;
+  flex-direction: column;
+}
+
+.pannello-small {
+  border-right: 1.5px solid black;
+}
+
+.pannello-header {
+  background: black;
+  color: white;
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  padding: 8px 24px;
+}
+
+.pannello-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pannello-desc {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.mass-control {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+.mass-btn {
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid black;
+  background: transparent;
+  font-size: 18px;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mass-btn:hover {
+  background: black;
+  color: white;
+}
+
+.mass-value {
+  font-family: 'Geist Mono', monospace;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.mass-unit {
+  font-size: 12px;
+  font-weight: 400;
+  color: #666;
+}
+
+.ruler-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ruler-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  color: #666;
+}
+
+.ruler-slider {
+  width: 100%;
+  cursor: pointer;
+}
+
+.rdf-body {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.rdf-gauge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.rdf-slider {
+  width: 100%;
+  cursor: pointer;
+}
+
+.right {
+  position: relative;
+  border-left: 1.5px solid black;
+}
+
+.right-label {
+  position: absolute;
+  top: 36px;
+  left: 36px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  z-index: 10;
+}
 </style>
