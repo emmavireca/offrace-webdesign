@@ -66,10 +66,13 @@ const descrizioni = [
       <div class="pannelli-row">
         <div class="pannello pannello-small">
           <div class="pannello-header">BODY MASS</div>
-          <div class="pannello-body mass-control">
-            <button class="mass-btn" onclick={() => { if (config.massa > massaMin) config.massa-- }}>−</button>
-            <span class="mass-value">{config.massa} <span class="mass-unit">kg</span></span>
-            <button class="mass-btn" onclick={() => { if (config.massa < massaMax) config.massa++ }}>+</button>
+          <div class="pannello-body">
+          <div class="mass-control">
+          <button class="mass-btn" onclick={() => { if (config.massa > massaMin) config.massa-- }}>−</button>
+          <span class="mass-value">{config.massa} <span class="mass-unit">kg</span></span>
+          <button class="mass-btn" onclick={() => { if (config.massa < massaMax) config.massa++ }}>+</button>
+          </div>
+          <p class="pannello-desc">Body mass determines the amount of potential energy an athlete carries into the descent. A higher mass accelerates faster on straight sections where gravitational pull dominates, but increases joint load in technical sections and reduces responsiveness in direction changes.</p>
           </div>
         </div>
 
@@ -331,6 +334,7 @@ const descrizioni = [
 }
 
 .mass-control {
+  display: flex;
   flex-direction: row;
   align-items: center;
   gap: 12px;
