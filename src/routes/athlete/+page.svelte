@@ -429,13 +429,13 @@ const descrizioni = [
 
 .right-label {
   position: absolute;
-  top: 36px;
+  top: 120px;
   left: 36px;
-  font-family: 'Geist Mono', monospace;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+  font-family: 'Geist', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   z-index: 10;
-}
+} 
 </style>
