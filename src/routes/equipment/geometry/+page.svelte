@@ -41,11 +41,15 @@
     else config.cera = 'training'
   })
 
-  let tooltip = $state(null)
-  let tooltipFisso = $state(null)
+  // ── TOOLTIP: hover + click (fisso) ──
+  let hover = $state(null)
+  let fissi = $state({ length: false, width: false, radius: false })
 
-  function toggleTooltip(nome) {
-    tooltipFisso = tooltipFisso === nome ? null : nome
+  function toggleFisso(nome) {
+    fissi[nome] = !fissi[nome]
+  }
+  function attivo(nome) {
+    return hover === nome || fissi[nome]
   }
 
   const descrizioni = {
@@ -196,48 +200,63 @@
 
     </div>
 
+    <!-- ── COLONNA DESTRA ── -->
     <div class="right-info">
-  <p class="right-subtitle">Configure your ski system</p>
+      <p class="right-subtitle">Configure your ski system</p>
 
-  <!-- PALLINI SULLO SCI -->
-  <div class="right-info">
-  <div class="sci-overlay">
-    <button class="pallino" style="left: 52%; top: 90%"
-      onclick={() => toggleTooltip('length')}
-      class:attivo={tooltipFisso === 'length'}>
-      <span class="pallino-label">L</span>
-    </button>
-    <div class="tooltip-box" class:visibile={tooltipFisso === 'length'} style="left: 70%; top: -40%">
-      <p class="tooltip-title">LENGTH</p>
-      <p class="tooltip-desc">{descrizioni.length}</p>
-      <p class="tooltip-valore">{config.lunghezza} CM</p>
+      <div class="sci-overlay">
+
+        <!-- LENGTH : sale dritta poi gira a destra -->
+        {#if attivo('length')}
+          <div class="linea v-up" style="left: 52%; top: -15%; height: 105%;"></div>
+          <div class="linea h-right" style="left: 52%; top: -15%; width: 18%;"></div>
+        {/if}
+        <button class="pallino" style="left: 52%; top: 90%"
+          onmouseenter={() => hover = 'length'}
+          onmouseleave={() => hover = null}
+          onclick={() => toggleFisso('length')}
+          class:attivo={attivo('length')}>
+        </button>
+        <div class="tooltip-box" class:visibile={attivo('length')} style="left: 66%; top: -25%">
+          <p class="tooltip-title">LENGTH</p>
+          <p class="tooltip-desc">{descrizioni.length}</p>
+          <p class="tooltip-valore">{config.lunghezza} CM</p>
+        </div>
+
+        <!-- WIDTH : sale dritta e basta -->
+        {#if attivo('width')}
+          <div class="linea v-up" style="left: 20%; top: 88%; height: 62%;"></div>
+        {/if}
+        <button class="pallino" style="left: 20%; top: 150%"
+          onmouseenter={() => hover = 'width'}
+          onmouseleave={() => hover = null}
+          onclick={() => toggleFisso('width')}
+          class:attivo={attivo('width')}>
+        </button>
+       <div class="tooltip-box width-box" class:visibile={attivo('width')} style="left: 3.5%; top: 0%">
+          <p class="tooltip-desc">{descrizioni.width}</p>
+          <p class="tooltip-valore">{config.larghezza} MM</p>
+        </div>
+
+        <!-- RADIUS : scende un po' poi gira a destra -->
+        {#if attivo('radius')}
+          <div class="linea v-down" style="left: 28%; top: 200%; height: 33%;"></div>
+          <div class="linea h-right" style="left: 28%; top: 232%; width: 22%;"></div>
+        {/if}
+        <button class="pallino" style="left: 28%; top: 200%"
+          onmouseenter={() => hover = 'radius'}
+          onmouseleave={() => hover = null}
+          onclick={() => toggleFisso('radius')}
+          class:attivo={attivo('radius')}>
+        </button>
+        <div class="tooltip-box" class:visibile={attivo('radius')} style="left: 50%; top: 222%">
+          <p class="tooltip-title">RADIUS</p>
+          <p class="tooltip-desc">{descrizioni.radius}</p>
+          <p class="tooltip-valore">{config.raggio} M</p>
+        </div>
+
+      </div>
     </div>
-
-    <button class="pallino" style="left: 20%; top: 150%"
-      onclick={() => toggleTooltip('width')}
-      class:attivo={tooltipFisso === 'width'}>
-      <span class="pallino-label">W</span>
-    </button>
-    <div class="tooltip-box" class:visibile={tooltipFisso === 'width'} style="left: 2%; top: -10%">
-      <p class="tooltip-title">WIDTH</p>
-      <p class="tooltip-desc">{descrizioni.width}</p>
-      <p class="tooltip-valore">{config.larghezza} MM</p>
-    </div>
-
-    <button class="pallino" style="left: 28%; top: 200%"
-      onclick={() => toggleTooltip('radius')}
-      class:attivo={tooltipFisso === 'radius'}>
-      <span class="pallino-label">R</span>
-    </button>
-    <div class="tooltip-box" class:visibile={tooltipFisso === 'radius'} style="left: 50%; top: 210%">
-      <p class="tooltip-title">RADIUS</p>
-      <p class="tooltip-desc">{descrizioni.radius}</p>
-      <p class="tooltip-valore">{config.raggio} M</p>
-    </div>
-  </div>
-
-</div>
-</div>
 
   </div>
 </div>
@@ -285,7 +304,6 @@
 
   .sezione-body { padding: 0.75rem; }
 
-  /* GEOMETRY */
   .tre-col {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -366,7 +384,6 @@
     height: 60px;
   }
 
-  /* MATERIALS */
   .materiali-grid {
     display: flex;
     flex-direction: row;
@@ -407,7 +424,6 @@
     color: #444;
   }
 
-  /* WAX */
   .wax-row {
     display: flex;
     align-items: flex-end;
@@ -498,8 +514,9 @@
     padding-left: 0.75rem;
   }
 
-  /* DESTRA */
+  /* ── DESTRA ── */
   .right-info {
+    position: relative;
     display: flex;
     flex-direction: column;
     padding: 2rem;
@@ -513,12 +530,102 @@
     text-transform: uppercase;
   }
 
+  .sci-overlay {
+    position: relative;
+    width: 100%;
+    height: 200px;
+  }
+
+  /* PALLINI */
+  .pallino {
+    position: absolute;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: #BDF522;
+    border: 1.5px solid black;
+    animation: pulse 2s ease-out infinite;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translate(-50%, -50%);
+    transition: background 0.2s, transform 0.2s;
+    z-index: 10;
+  }
+
+  .pallino:hover, .pallino.attivo {
+    background: black;
+    color: #BDF522;
+    transform: translate(-50%, -50%) scale(1.15);
+  }
+
+  @keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(189, 245, 34, 0.6); }
+  70%  { box-shadow: 0 0 0 12px rgba(189, 245, 34, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(189, 245, 34, 0); }
+}
+
+  /* ── LINEE CONNETTRICI ── */
+  .linea {
+    position: absolute;
+    background: black;
+    z-index: 5;
+  }
+
+  /* verticale che cresce verso l'ALTO (origine in basso = dal pallino) */
+  .linea.v-up {
+    width: 2px;
+    transform: translateX(-50%) scaleY(0);
+    transform-origin: bottom;
+    animation: growV 0.7s ease forwards;
+  }
+
+  /* verticale che cresce verso il BASSO (origine in alto = dal pallino) */
+  .linea.v-down {
+    width: 2px;
+    transform: translateX(-50%) scaleY(0);
+    transform-origin: top;
+    animation: growV 0.7s ease forwards;
+  }
+
+  /* orizzontale che cresce verso DESTRA, parte dopo la verticale */
+  .linea.h-right {
+    height: 2px;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: growH 0.7s ease 0.7s forwards;
+  }
+
+  @keyframes growV {
+    to { transform: translateX(-50%) scaleY(1); }
+  }
+  @keyframes growH {
+    to { transform: scaleX(1); }
+  }
+
+  /* ── BOX ── */
   .tooltip-box {
+    position: absolute;
     background: white;
     border: 2px solid black;
     padding: 1rem;
-    max-width: 280px;
+    width: 220px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+    z-index: 20;
   }
+
+  .tooltip-box.visibile {
+    opacity: 1;
+    pointer-events: auto;
+    transition-delay: 1.4s;
+  }
+
+  .tooltip-box.width-box.visibile {
+  transition-delay: 0.7s;
+}
 
   .tooltip-title {
     font-size: 0.7rem;
@@ -532,87 +639,10 @@
     line-height: 1.6;
   }
 
-  .sci-overlay {
-  position: relative;
-  width: 100%;
-  height: 200px;
-}
-
-.pallino {
-  position: absolute;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #BDF522;
-  border: 2px solid black;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: translate(-50%, -50%);
-  transition: background 0.2s, transform 0.2s;
-  z-index: 10;
-}
-
-.pallino:hover, .pallino.attivo {
-  background: black;
-  color: #BDF522;
-  transform: translate(-50%, -50%) scale(1.15);
-}
-
-.pallino-label {
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-}
-
-.sci-overlay {
-  position: relative;
-  width: 100%;
-  height: 200px;
-}
-
-.tooltip-box {
-  position: absolute;
-  background: white;
-  border: 2px solid black;
-  padding: 1rem;
-  width: 220px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s;
-  z-index: 20;
-}
-
-.tooltip-box.visibile {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.tooltip-title {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  margin-bottom: 0.5rem;
-}
-
-.tooltip-desc {
-  font-size: 0.75rem;
-  line-height: 1.6;
-}
-
-.tooltip-valore {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--mc-copper);
-  margin-top: 0.5rem;
-}
-
-.right-info {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-  gap: 2rem;
-}
+  .tooltip-valore {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--mc-copper);
+    margin-top: 0.5rem;
+  }
 </style>
