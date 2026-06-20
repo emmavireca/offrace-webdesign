@@ -341,6 +341,7 @@ const descrizioni = [
   flex-direction: column;
   gap: 0;
   border: 1.5px solid black;
+  margin-bottom:64px;
 }
 
 .pannelli-row {
