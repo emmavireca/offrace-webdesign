@@ -179,6 +179,8 @@
   }
 
   .next {
+    margin-left: auto;
+    padding: 0 2rem;
     padding: 0 2rem;
     background: black;
     color: white;

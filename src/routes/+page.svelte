@@ -5,7 +5,6 @@
   import OcchialiDither from '$lib/components/OcchialiDither.svelte'
 
   let fase = $state('scorre')
-  let regulationsAperta = $state(false)
 
   onMount(() => {
     setTimeout(() => { fase = 'ritorna' }, 5000)
@@ -27,52 +26,62 @@
 {:else}
   <div class="home">
 
-    <!-- COLONNA SINISTRA -->
-    <div class="col-sx">
-      <div class="sx-top">
-        <h1>Performance</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <!-- ── FASCIA ALTA : due celle ── -->
+    <div class="riga-top">
+      <div class="cella bordo-r">
+        <h3 class="num-title">01_Performance</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
       </div>
-
-      <div class="fasi-barra">
-        <span>ENVIRONMENT</span>
-        <span class="segno">+</span>
-        <span>ATHLETE</span>
-        <span class="segno">+</span>
-        <span>EQUIPMENT</span>
-        <span class="segno">=</span>
-        <span class="attiva">PERFORMANCE</span>
-      </div>
-
-      <div class="sx-bottom">
-        <div class="sx-bottom-testo">
-          <h2>More than<br>an athlete</h2>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet consectetur.</p>
-        </div>
-        <div class="sx-bottom-vuoto"></div>
+      <div class="cella">
+        <h3 class="num-title">02_More than an athlete</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
       </div>
     </div>
 
-    <!-- COLONNA DESTRA -->
-    <div class="col-dx">
-      <div class="dx-top">
-        <h2>Technodoping</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod.</p>
+    <!-- ── BANDA EQUAZIONE ── -->
+    <div class="banda">
+      <span>ENVIRONMENT</span>
+      <span class="op">+</span>
+      <span>ATHLETE</span>
+      <span class="op">+</span>
+      <span>EQUIPMENT</span>
+      <span class="op">=</span>
+      <span>PERFORMANCE</span>
+    </div>
+
+    <!-- ── FASCIA BASSA : tre colonne ── -->
+    <div class="riga-bottom">
+
+      <div class="cella bordo-r">
+        <h3 class="num-title">03_Technodoping</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p>Dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
       </div>
 
-      <button class="accordion-header" onclick={() => regulationsAperta = !regulationsAperta}>
-        <span>REGULATIONS</span>
-        <span class="chevron" class:ruotato={regulationsAperta}>∨</span>
-      </button>
-      {#if regulationsAperta}
-        <div class="accordion-body">
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        </div>
-      {/if}
-
-      <div class="occhiali-box">
+      <div class="cella-occhiali bordo-r">
         <OcchialiDither />
       </div>
+
+      <div class="cella">
+        <h3 class="num-title">04_Regulations</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
+
+        <div class="reg-list">
+          <div class="reg-row">
+            <span class="reg-num">1</span>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </div>
+          <div class="reg-row">
+            <span class="reg-num">2</span>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+          </div>
+          <div class="reg-row">
+            <span class="reg-num">3</span>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </div>
@@ -130,7 +139,7 @@
     inset: 0;
     bottom: 64px;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto 1fr;
     animation: fadeIn 0.6s ease forwards;
     overflow: hidden;
   }
@@ -140,142 +149,99 @@
     to   { opacity: 1; }
   }
 
-  /* ── COLONNA SINISTRA ── */
-  .col-sx {
-    border-right: 1.5px solid black;
-    display: flex;
-    flex-direction: column;
-  }
+  .bordo-r { border-right: 1.5px solid black; }
 
-  .sx-top {
-    padding: 2rem 2.5rem;
-    border-bottom: 1.5px solid black;
-  }
-
-  .sx-top h1 {
-    font-size: clamp(2.5rem, 4vw, 4rem);
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1;
+  .num-title {
+    font-size: clamp(1rem, 1.4vw, 1.25rem);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
     margin-bottom: 1rem;
   }
 
-  .sx-top p {
-    font-size: 0.75rem;
+  .cella p {
+    font-size: 0.74rem;
     line-height: 1.6;
     color: #444;
+    margin-bottom: 0.75rem;
   }
 
-  .fasi-barra {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.8rem 2.5rem;
-    border-bottom: 1.5px solid black;
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #999;
-  }
-
-  .fasi-barra .segno { color: #bbb; }
-  .fasi-barra .attiva { color: #BDF522; }
-
-  .sx-bottom {
-    flex: 1;
+  /* FASCIA ALTA */
+  .riga-top {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    border-bottom: 1.5px solid black;
+  }
+
+  .riga-top .cella {
+    padding: 2.25rem 2.5rem;
+  }
+
+  /* BANDA */
+  .banda {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem 2.5rem;
+    border-bottom: 1.5px solid black;
+    font-size: clamp(1.1rem, 2.6vw, 2.5rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .banda .op {
+    font-weight: 400;
+    opacity: 0.5;
+  }
+
+  /* FASCIA BASSA */
+  .riga-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr 1fr;
     overflow: hidden;
   }
 
-  .sx-bottom-testo {
-    padding: 2rem 2rem 2rem 2.5rem;
-    border-right: 1.5px solid black;
+  .riga-bottom .cella {
+    padding: 2rem 2.25rem;
     overflow-y: auto;
   }
 
-  .sx-bottom-testo h2 {
-    font-size: clamp(1.8rem, 3vw, 2.8rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.05;
-    margin-bottom: 1rem;
-  }
-
-  .sx-bottom-testo p {
-    font-size: 0.75rem;
-    line-height: 1.6;
-    color: #444;
-  }
-
-  .sx-bottom-vuoto { /* vuoto come nel prototipo */ }
-
-  /* ── COLONNA DESTRA ── */
-  .col-dx {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .dx-top {
-    padding: 2rem 2.5rem;
-    border-bottom: 1.5px solid black;
-  }
-
-  .dx-top h2 {
-    font-size: clamp(2.5rem, 4vw, 4rem);
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    margin-bottom: 1rem;
-  }
-
-  .dx-top p {
-    font-size: 0.75rem;
-    line-height: 1.6;
-    color: #444;
-  }
-
-  .accordion-header {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2.5rem;
-    background: black;
-    color: white;
-    border: none;
-    border-bottom: 1.5px solid black;
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    cursor: pointer;
-    font-family: inherit;
-  }
-
-  .chevron { transition: transform 0.3s; }
-  .chevron.ruotato { transform: rotate(180deg); }
-
-  .accordion-body {
-    padding: 1.5rem 2.5rem;
-    border-bottom: 1.5px solid black;
-  }
-
-  .accordion-body p {
-    font-size: 0.75rem;
-    line-height: 1.6;
-    color: #444;
-  }
-
-  .occhiali-box {
-    flex: 1;
-    padding: 1.5rem 2.5rem;
+  .cella-occhiali {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1.5px solid black;
-    margin: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  /* TABELLA REGULATIONS */
+  .reg-list {
+    margin-top: 1.5rem;
+    border-top: 1.5px solid black;
+  }
+
+  .reg-row {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    border-bottom: 1.5px solid black;
+  }
+
+  .reg-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1.5px solid black;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  .reg-row p {
+    padding: 0.85rem;
+    font-size: 0.7rem;
+    line-height: 1.5;
+    color: #444;
+    margin: 0;
   }
 </style>
