@@ -7,6 +7,29 @@ config.fase = 2
   const massaMax = config.venue === 'bormio' ? 100 : 75
   const rfdMin = config.venue === 'bormio' ? 3000 : 2800
   const rfdMax = config.venue === 'bormio' ? 6000 : 5000  
+  let rfdRotation = $derived(((config.rfd - rfdMin) / (rfdMax - rfdMin)) * 180 - 90)
+let rfdDragging = $state(false)
+
+function onRdfPointerDown(e) {
+  rfdDragging = true
+  e.currentTarget.setPointerCapture(e.pointerId)
+}
+
+function onRdfPointerMove(e) {
+  if (!rfdDragging) return
+  const svg = e.currentTarget
+  const rect = svg.getBoundingClientRect()
+  const svgX = (e.clientX - rect.left) / rect.width * 200
+  const svgY = (e.clientY - rect.top) / rect.height * 110
+  const dx = svgX - 100
+  const dy = 100 - svgY
+  let ang = Math.atan2(dy, dx)
+  if (ang < 0) ang = 0
+  if (ang > Math.PI) ang = Math.PI
+  config.rfd = Math.round(rfdMin + (1 - ang / Math.PI) * (rfdMax - rfdMin))
+}
+
+function onRdfPointerUp() { rfdDragging = false }
   const modello = config.venue === 'bormio' ? '/models/atleta_m.glb' : '/models/atleta_f.glb'
 
   const tute = config.venue === 'bormio' 
@@ -115,23 +138,39 @@ const descrizioni = [
       </div>
 
       <div class="pannello">
-        <div class="pannello-header">RDF — RATE OF FORCE DEVELOPMENT</div>
-        <div class="pannello-body rdf-body">
-          <div class="rdf-gauge">
-            <svg viewBox="0 0 120 80" width="120" height="80">
-              <path d="M10,70 A60,60 0 0,1 110,70" fill="none" stroke="#ddd" stroke-width="8" stroke-linecap="round"/>
-              <path d="M10,70 A60,60 0 0,1 110,70" fill="none" stroke="black" stroke-width="8" stroke-linecap="round"
-                stroke-dasharray="188.5"
-                stroke-dashoffset={188.5 - (188.5 * ((config.rfd - rfdMin) / (rfdMax - rfdMin)))}
-              />
-              <text x="60" y="65" text-anchor="middle" font-size="10" font-family="Geist Mono">{config.rfd}</text>
-              <text x="60" y="76" text-anchor="middle" font-size="6" font-family="Geist Mono" fill="#666">N/s</text>
-            </svg>
-            <input type="range" min={rfdMin} max={rfdMax} step="100" bind:value={config.rfd} class="rdf-slider" />
-          </div>
-          <p class="pannello-desc">RFD — Rate of Force Development — measures how quickly the athlete can generate and apply muscular force, expressed in Newtons per second. It is not the same as maximum strength: two athletes can have identical peak force but entirely different RFD values, meaning one reaches that peak in 150 milliseconds and the other in 300. In alpine skiing, those 150 milliseconds are the difference between a clean edge engagement and a lost gate.</p>
-        </div>
-      </div>
+  <div class="pannello-header">RDF — RATE OF FORCE DEVELOPMENT</div>
+  <div class="pannello-body rdf-body">
+    <div class="rdf-gauge">
+      <p class="rdf-value">{config.rfd} <span class="rdf-unit">N/s</span></p>
+      <svg viewBox="0 0 200 110" class="rdf-svg"
+        onpointerdown={onRdfPointerDown}
+        onpointermove={onRdfPointerMove}
+        onpointerup={onRdfPointerUp}
+        onpointerleave={onRdfPointerUp}
+      >
+        <path d="M 10 100 A 90 90 0 0 1 190 100" fill="none" stroke="black" stroke-width="2.5"/>
+        {#each Array(10) as _, i}
+          {@const a = (Math.PI * i) / 9}
+          {@const isMajor = i % 3 === 0}
+          {@const x1 = 100 - 90 * Math.cos(a)}
+          {@const y1 = 100 - 90 * Math.sin(a)}
+          {@const x2 = 100 - (isMajor ? 74 : 81) * Math.cos(a)}
+          {@const y2 = 100 - (isMajor ? 74 : 81) * Math.sin(a)}
+          <line {x1} {y1} {x2} {y2} stroke="black" stroke-width={isMajor ? 2 : 1}/>
+        {/each}
+        <polygon
+          points="100,25 92,100 108,100"
+          fill="var(--mc-copper)"
+          stroke="black"
+          stroke-width="1.5"
+          stroke-linejoin="round"
+          transform="rotate({rfdRotation}, 100, 100)"
+        />
+      </svg>
+    </div>
+    <p class="pannello-desc">RDF — Rate of Force Development — measures how quickly the athlete can generate and apply muscular force, expressed in Newtons per second. It is not the same as maximum strength: two athletes can have identical peak force but entirely different RFD values, meaning one reaches that peak in 150 milliseconds and the other in 300. In alpine skiing, those 150 milliseconds are the difference between a clean edge engagement and a lost gate.</p>
+  </div>
+</div>
 
     </div>
   </div>
@@ -431,22 +470,39 @@ const descrizioni = [
 }
 
 .rdf-body {
+  display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: 24px;
+  gap: 54px;
+  padding: 24px;
 }
 
 .rdf-gauge {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  min-width: 120px;
+  gap: 4px;
+  flex-shrink: 0;
 }
 
-.rdf-slider {
-  width: 100%;
-  cursor: pointer;
+.rdf-svg {
+  width: 160px;
+  height: 90px;
+  cursor: crosshair;
+  user-select: none;
+}
+
+.rdf-value {
+  font-family: 'Geist Mono', monospace;
+  font-size: 20px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.rdf-unit {
+  font-size: 12px;
+  font-weight: 400;
+  color: #666;
 }
 
 .right {
