@@ -376,8 +376,31 @@ const descrizioni = [
 }
 
 .ruler-slider {
+  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
+  height: 14px;
+  background: transparent;
   cursor: pointer;
+  margin: 0;
+  padding: 0;
+}
+
+.ruler-slider::-webkit-slider-runnable-track {
+  height: 2px;
+  background: black;
+  border-radius: 0;
+}
+
+.ruler-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--mc-copper);
+  cursor: grab;
+  outline: 2px solid black;
+  margin-top: -6px;
 }
 
 .rdf-body {
