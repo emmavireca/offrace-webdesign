@@ -109,7 +109,7 @@ const descrizioni = [
     <input type="range" min="5" max="40" step="1" bind:value={config.deviazione} class="ruler-input" />
   </div>
 </div>
-            <p class="pannello-desc">Trajectory deviation measures the average distance between the athlete's actual line and the optimal racing trajectory across a full descent. A deviation of 10–15 cm at high speed does not stay isolated: it alters the entry angle into the next gate, forces a micro-correction, and compounds across every subsequent section. It is the single strongest predictor of final race time — and the primary driver of DNF risk when combined with high force output.</p>
+            <p class="pannello-desc" style="margin-top: -10px;">Trajectory deviation measures the average distance between the athlete's actual line and the optimal racing trajectory across a full descent. A deviation of 10–15 cm at high speed does not stay isolated: it alters the entry angle into the next gate, forces a micro-correction, and compounds across every subsequent section. It is the single strongest predictor of final race time — and the primary driver of DNF risk when combined with high force output.</p>
           </div>
         </div>
       </div>
@@ -415,7 +415,7 @@ const descrizioni = [
 
 .ruler-svg {
   width: 100%;
-  height: 28px;
+  height: 20px;
   display: block;
   overflow: visible;
 }
