@@ -28,7 +28,7 @@
               <span class="info-label">TRACK</span>
               <span class="info-valore">{config.venue === 'bormio' ? 'STELVIO — BORMIO' : 'OLYMPIA DELLE TOFANE'}</span>
             </div>
-            <div class="info-row-bottom">
+            <div class="info-row">
               <div class="info-block">
                 <span class="info-label">GENDER</span>
                 <span class="info-valore">{config.venue === 'bormio' ? 'MALE' : 'FEMALE'}</span>
@@ -47,16 +47,16 @@
           <div class="fase-info">
             <div class="info-block">
               <span class="info-label">TRAJECTORY DEVIATION & RFD</span>
-              <span class="info-valore">DEV {config.deviazione || '—'}CM &nbsp; RFD {config.rfd || '—'}N/S</span>
+              <span class="info-valore">DEV {config.deviazione || '—'}CM / RFD {config.rfd || '—'}N/S</span>
             </div>
-            <div class="info-row-bottom">
+            <div class="info-row">
               <div class="info-block">
                 <span class="info-label">MASS</span>
                 <span class="info-valore">{config.massa || '—'} KG</span>
               </div>
               <div class="info-block">
                 <span class="info-label">SUIT</span>
-                <span class="info-valore">{config.tutaIndex ? (config.tutaIndex === 1 ? 'LEGAL' : config.tutaIndex === 2 ? 'BORDERLINE' : 'DOPING') : '—'}</span>
+                <span class="info-valore">{config.tutaIndex === 1 ? 'LEGAL' : config.tutaIndex === 2 ? 'BORDERLINE' : 'DOPING'}</span>
               </div>
             </div>
           </div>
@@ -74,14 +74,14 @@
               <span class="info-label">GEOMETRY</span>
               <span class="info-valore">L {config.lunghezza || '—'}CM R {config.raggio || '—'}M W {config.larghezza || '—'}MM</span>
             </div>
-            <div class="info-row-bottom">
+            <div class="info-row">
               <div class="info-block">
                 <span class="info-label">MATERIAL</span>
-                <span class="info-valore">{config.materiale ? config.materiale : '—'}</span>
+                <span class="info-valore">{config.materiale || '—'}</span>
               </div>
               <div class="info-block">
                 <span class="info-label">WAX PROTOCOL</span>
-                <span class="info-valore">{config.cera ? config.cera : '—'}</span>
+                <span class="info-valore">{config.cera || '—'}</span>
               </div>
             </div>
           </div>
@@ -92,10 +92,8 @@
   {/if}
   
   <button type="button" class="next" onclick={() => {
-      if (config.fase === 0) goto('/environment')
-      if (config.fase === 1) goto('/athlete')
-      if (config.fase === 2) goto('/equipment')
-      if (config.fase === 3) goto('/result')
+      const rotte = ['/environment', '/athlete', '/equipment', '/result'];
+      goto(rotte[config.fase] || '/result');
     }}>
     {config.fase === 0 ? 'START SIMULATION →' : 'NEXT PHASE →'}
   </button>
@@ -103,51 +101,48 @@
 
 <style>
   .barra {
-    position: fixed; bottom: 0; left: 0; right: 0; height: 72px;
-    border-top: 1.5px solid black; background: var(--mc-bg, #fff);
+    position: fixed; bottom: 0; left: 0; right: 0; height: 76px;
+    border-top: 1.5px solid black; background: white;
     display: flex; align-items: stretch; z-index: 100;
   }
   .brand {
-    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.2em;
-    text-transform: uppercase; padding: 0 2.5rem;
-    display: flex; align-items: center; border-right: 1.5px solid black;
+    padding: 0 2rem; display: flex; align-items: center;
+    border-right: 1.5px solid black; font-weight: 600; font-size: 0.7rem;
   }
   .fasi { flex: 1; display: flex; align-items: stretch; overflow: hidden; }
 
   .fase {
-    flex: 1; color: black; border: none; background: transparent;
-    font-family: inherit; text-align: left; cursor: pointer;
-    display: flex; align-items: center; gap: 24px; padding: 0 24px;
-    border-right: 1.5px solid black; transition: all 0.3s ease;
+    flex: 1; border: none; border-right: 1.5px solid black;
+    background: transparent; padding: 0 24px;
+    display: flex; align-items: center; gap: 20px;
+    cursor: pointer; min-width: 0; transition: background 0.3s;
   }
-
-  /* Logica fasi disabilitate (grigie) */
-  .fase:disabled {
-    background: #f0f0f0 !important;
-    opacity: 0.6;
-    filter: grayscale(1);
-    cursor: default;
-    pointer-events: none;
+  
+  /* Testo grigio scuro (#777) per fasi non ancora raggiunte */
+  .fase:disabled { 
+    color: #777; 
+    cursor: default; 
+    pointer-events: none; 
   }
-
+  
   .fase.attiva { background: black; color: white; }
 
-  .fase-label { display: flex; flex-direction: column; justify-content: center; gap: 20px; flex-shrink: 0; }
-  .fase-num { font-size: 0.8rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7; }
-  .fase-nome { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+  .fase-label { width: 100px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; text-align: left; }
+  .fase-num { font-size: 0.65rem; opacity: 0.7; text-transform: uppercase; }
+  .fase-nome { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; }
 
   .fase-info {
-    border-left: 1.5px solid currentColor; padding-left: 16px;
-    display: flex; flex-direction: column; justify-content: center;
-    gap: 8px; height: 100%; flex: 1; overflow: hidden;
+    flex: 1; border-left: 1.5px solid currentColor; padding-left: 16px;
+    display: flex; flex-direction: column; justify-content: center; gap: 6px;
+    overflow: hidden; text-align: left;
   }
-  .info-row-bottom { display: flex; gap: 24px; }
-  .info-block { display: flex; flex-direction: column; gap: 2px; }
-  .info-label { font-size: 0.55rem; opacity: 0.5; text-transform: uppercase; }
+  .info-row { display: flex; gap: 16px; }
+  .info-block { display: flex; flex-direction: column; gap: 1px; min-width: 0; text-align: left; }
+  .info-label { font-size: 0.5rem; opacity: 0.5; text-transform: uppercase; }
   .info-valore { font-size: 0.75rem; font-weight: 500; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   .next {
     padding: 0 2.5rem; background: black; color: white; border: none;
-    font-size: 0.75rem; font-weight: 600; text-transform: uppercase; cursor: pointer;
+    font-size: 0.75rem; font-weight: 600; cursor: pointer; text-transform: uppercase;
   }
 </style>
