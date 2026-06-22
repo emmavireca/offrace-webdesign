@@ -115,17 +115,17 @@
     flex: 1; border: none; border-right: 1.5px solid black;
     background: transparent; padding: 0 24px;
     display: flex; align-items: center; gap: 20px;
-    cursor: pointer; min-width: 0; transition: background 0.3s;
+    cursor: pointer; min-width: 0; transition: background 0.2s ease;
   }
   
-  /* Testo grigio scuro (#777) per fasi non ancora raggiunte */
+  /* Hover: applicato solo se non disabilitata E non attiva */
+  .fase:not(:disabled):not(.attiva):hover { background: #e8e8e8; }
+  
   .fase:disabled { 
-    color: #777; 
-    cursor: default; 
-    pointer-events: none; 
+    color: #777; cursor: default; pointer-events: none; 
   }
   
-  .fase.attiva { background: black; color: white; }
+  .fase.attiva { background: black; color: white; cursor: default; }
 
   .fase-label { width: 100px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; text-align: left; }
   .fase-num { font-size: 0.65rem; opacity: 0.7; text-transform: uppercase; }
@@ -144,5 +144,8 @@
   .next {
     padding: 0 2.5rem; background: black; color: white; border: none;
     font-size: 0.75rem; font-weight: 600; cursor: pointer; text-transform: uppercase;
+    transition: background 0.2s ease;
   }
+  /* Grigio scuro deciso per l'hover del tasto Next */
+  .next:hover { background: #333; }
 </style>
