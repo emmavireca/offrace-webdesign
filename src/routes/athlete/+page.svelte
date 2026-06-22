@@ -173,16 +173,19 @@
     </div>
 
     <div class="right">
-      <p class="right-label">CONFIGURE YOUR ATHLETE</p>
-      <AtletaViewer {modello} />
-      {#if staEscendo && tutaPrecedente}
-        <img class="tuta {config.venue === 'bormio' ? 'tuta-uomo' : 'tuta-donna'} esce-{direzione}" src={tutaPrecedente} alt="tuta precedente" />
-      {/if}
-      {#key tutaIndex}
-        {#if tute[tutaIndex]}
-          <img class="tuta {config.venue === 'bormio' ? 'tuta-uomo' : 'tuta-donna'} animazione-{direzione}" src={tute[tutaIndex]} alt="tuta" />
+      <div class="dx-header">CONFIGURE YOUR ATHLETE</div>
+      
+      <div class="viewer-container">
+        <AtletaViewer {modello} />
+        {#if staEscendo && tutaPrecedente}
+          <img class="tuta {config.venue === 'bormio' ? 'tuta-uomo' : 'tuta-donna'} esce-{direzione}" src={tutaPrecedente} alt="tuta precedente" />
         {/if}
-      {/key}
+        {#key tutaIndex}
+          {#if tute[tutaIndex]}
+            <img class="tuta {config.venue === 'bormio' ? 'tuta-uomo' : 'tuta-donna'} animazione-{direzione}" src={tute[tutaIndex]} alt="tuta" />
+          {/if}
+        {/key}
+      </div>
     </div>
 
   </main>
@@ -204,24 +207,34 @@
   }
 
   .left {
-    padding: 40px 40px 104px 40px; /* Uniformato a 40px. Il bottom è calcolato (40px + 64px di footer) per non far coprire l'ultimo pannello dallo scroll */
+    padding: 40px 40px 104px 40px; 
     display: flex;
     flex-direction: column;
-    gap: 24px; /* Mantenuto originale */
+    gap: 24px; 
     overflow-y: auto;
     min-height: 0;
   }
 
+  /* ── STILE IDENTICO A ENVIRONMENT ── */
   .left-intro {
-    display: flex;
-    flex-direction: column;
-    gap: 16px; /* Mantenuto originale */
+    display: block; /* Sostituisce il vecchio flex/gap per uniformità */
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-top: 0;
+    margin-bottom: 24px;
   }
 
   .desc {
-    font-family: 'Geist Mono', monospace;
-    font-size: 12px;
-    line-height: 1.7;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: #444;
+    max-width: 54ch;
+    margin: 0;
   }
 
   .pannelli {
@@ -229,7 +242,7 @@
     flex-direction: column;
     gap: 0;
     border: 1.5px solid black;
-    margin-bottom: 0; /* Rimosso perché gestito dal padding-bottom di .left per uno scroll pulito */
+    margin-bottom: 0; 
   }
 
   .pannelli-row {
@@ -254,14 +267,14 @@
     font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.08em;
-    padding: 8px 24px; /* Mantenuto originale */
+    padding: 8px 24px; 
   }
 
   .pannello-body {
-    padding: 24px; /* Mantenuto originale */
+    padding: 24px; 
     display: flex;
     flex-direction: column;
-    gap: 16px; /* Mantenuto originale */
+    gap: 16px; 
   }
 
   .pannello-desc {
@@ -275,7 +288,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 12px; /* Mantenuto originale */
+    gap: 12px; 
   }
 
   .mass-btn {
@@ -311,7 +324,7 @@
   .ruler-wrap {
     display: flex;
     flex-direction: column;
-    gap: 8px; /* Arrotondato a multiplo */
+    gap: 8px; 
     width: 100%;
   }
 
@@ -357,16 +370,16 @@
   .rdf-body {
     display: flex;
     flex-direction: row;
-    align-items: center; /* Centrato verticalmente l'allineamento con il testo */
-    gap: 40px; /* Uniformato alla colonna */
-    padding: 24px; /* Mantenuto originale */
+    align-items: center; 
+    gap: 40px; 
+    padding: 24px; 
   }
 
   .rdf-gauge {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px; /* Arrotondato a multiplo */
+    gap: 8px; 
     flex-shrink: 0;
   }
 
@@ -392,21 +405,24 @@
   }
 
   .right {
-    position: relative;
+    display: flex;
+    flex-direction: column;
     border-left: 1.5px solid black;
   }
 
-  .right-label {
-    position: absolute;
-    top: 40px; /* Allineato verticalmente al padding di .left (40px) */
-    left: 40px; /* Allineato orizzontalmente al padding di .left (40px) */
-    font-family: 'Geist', sans-serif;
-    font-size: 20px;
-    font-weight: 500;
-    letter-spacing: 0.02em;
+  .dx-header {
+    padding: 24px 40px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
-    z-index: 10;
+    border-bottom: 1.5px solid black;
     margin: 0;
+  }
+
+  .viewer-container {
+    flex: 1;
+    position: relative; 
   }
 
   .tuta {

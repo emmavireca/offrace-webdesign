@@ -2,6 +2,7 @@
   import { Canvas } from '@threlte/core'
   import Scene from '$lib/components/Scene.svelte'
   import { config } from '$lib/config.svelte.js'
+  import { goto } from '$app/navigation' 
 
   config.fase = 3
 
@@ -41,7 +42,6 @@
     else config.cera = 'training'
   })
 
-  // ── TOOLTIP: hover + click (fisso) ──
   let hover = $state(null)
   let fissi = $state({ length: false, width: false, radius: false })
 
@@ -87,9 +87,13 @@
   <div class="overlay">
 
     <div class="left">
-      <h1>Equipment</h1>
-      <p class="desc">Every race is decided before the start. The equipment an athlete carries onto the slope is the result of years of research.</p>
+      <!-- Avvolto in left-intro per avere lo stesso comportamento di Environment e Athlete -->
+      <div class="left-intro">
+        <h1>Equipment</h1>
+        <p class="desc">Every race is decided before the start. The equipment an athlete carries onto the slope is the result of years of research.</p>
+      </div>
 
+      <!-- GEOMETRY -->
       <div class="sezione">
         <div class="sezione-header">GEOMETRY</div>
         <div class="sezione-body tre-col">
@@ -150,6 +154,7 @@
         </div>
       </div>
 
+      <!-- MATERIALS -->
       <div class="sezione">
         <div class="sezione-header">MATERIALS</div>
         <div class="sezione-body">
@@ -173,6 +178,7 @@
         </div>
       </div>
 
+      <!-- WAX -->
       <div class="sezione">
         <div class="sezione-header">WAX PROTOCOL</div>
         <div class="sezione-body">
@@ -197,57 +203,64 @@
 
     </div>
 
-    <div class="right-info">
-      <p class="right-subtitle">Configure your ski system</p>
+    <!-- ── COLONNA DESTRA ── -->
+    <div class="right-col">
+      <div class="dx-header">CONFIGURE YOUR SKI SYSTEM</div>
+      
+      <div class="right-info">
+        <div class="sci-overlay">
 
-      <div class="sci-overlay">
+          <!-- LENGTH -->
+          {#if attivo('length')}
+            <div class="linea v-up" style="left: 52%; top: -15%; height: 105%;"></div>
+            <div class="linea h-right" style="left: 52%; top: -15%; width: 18%;"></div>
+          {/if}
+          <button class="pallino" style="left: 52%; top: 90%"
+            onmouseenter={() => hover = 'length'}
+            onmouseleave={() => hover = null}
+            onclick={() => toggleFisso('length')}
+            class:attivo={attivo('length')}>
+          </button>
+          <div class="tooltip-box" class:visibile={attivo('length')} style="left: 66%; top: -25%; cursor: pointer;" onclick={() => goto('/athlete')}>
+            <p class="tooltip-title">LENGTH <span style="opacity: 0.5;">→ ATHLETE</span></p>
+            <p class="tooltip-desc">{descrizioni.length}</p>
+            <p class="tooltip-valore">{config.lunghezza} CM</p>
+          </div>
 
-        {#if attivo('length')}
-          <div class="linea v-up" style="left: 52%; top: -15%; height: 105%;"></div>
-          <div class="linea h-right" style="left: 52%; top: -15%; width: 18%;"></div>
-        {/if}
-        <button class="pallino" style="left: 52%; top: 90%"
-          onmouseenter={() => hover = 'length'}
-          onmouseleave={() => hover = null}
-          onclick={() => toggleFisso('length')}
-          class:attivo={attivo('length')}>
-        </button>
-        <div class="tooltip-box" class:visibile={attivo('length')} style="left: 66%; top: -25%">
-          <p class="tooltip-title">LENGTH</p>
-          <p class="tooltip-desc">{descrizioni.length}</p>
-          <p class="tooltip-valore">{config.lunghezza} CM</p>
+          <!-- WIDTH -->
+          {#if attivo('width')}
+            <div class="linea v-up" style="left: 20%; top: 88%; height: 62%;"></div>
+          {/if}
+          <button class="pallino" style="left: 20%; top: 150%"
+            onmouseenter={() => hover = 'width'}
+            onmouseleave={() => hover = null}
+            onclick={() => toggleFisso('width')}
+            class:attivo={attivo('width')}>
+          </button>
+         <div class="tooltip-box width-box" class:visibile={attivo('width')} style="left: 3.5%; top: 0%; cursor: pointer;" onclick={() => goto('/environment')}>
+            <p class="tooltip-title">WIDTH <span style="opacity: 0.5;">→ ENVIRONMENT</span></p>
+            <p class="tooltip-desc">{descrizioni.width}</p>
+            <p class="tooltip-valore">{config.larghezza} MM</p>
+          </div>
+
+          <!-- RADIUS -->
+          {#if attivo('radius')}
+            <div class="linea v-down" style="left: 28%; top: 200%; height: 33%;"></div>
+            <div class="linea h-right" style="left: 28%; top: 232%; width: 22%;"></div>
+          {/if}
+          <button class="pallino" style="left: 28%; top: 200%"
+            onmouseenter={() => hover = 'radius'}
+            onmouseleave={() => hover = null}
+            onclick={() => toggleFisso('radius')}
+            class:attivo={attivo('radius')}>
+          </button>
+          <div class="tooltip-box" class:visibile={attivo('radius')} style="left: 50%; top: 222%; cursor: pointer;" onclick={() => goto('/athlete')}>
+            <p class="tooltip-title">RADIUS <span style="opacity: 0.5;">→ ATHLETE</span></p>
+            <p class="tooltip-desc">{descrizioni.radius}</p>
+            <p class="tooltip-valore">{config.raggio} M</p>
+          </div>
+
         </div>
-
-        {#if attivo('width')}
-          <div class="linea v-up" style="left: 20%; top: 88%; height: 62%;"></div>
-        {/if}
-        <button class="pallino" style="left: 20%; top: 150%"
-          onmouseenter={() => hover = 'width'}
-          onmouseleave={() => hover = null}
-          onclick={() => toggleFisso('width')}
-          class:attivo={attivo('width')}>
-        </button>
-       <div class="tooltip-box width-box" class:visibile={attivo('width')} style="left: 3.5%; top: 0%">
-          <p class="tooltip-desc">{descrizioni.width}</p>
-          <p class="tooltip-valore">{config.larghezza} MM</p>
-        </div>
-
-        {#if attivo('radius')}
-          <div class="linea v-down" style="left: 28%; top: 200%; height: 33%;"></div>
-          <div class="linea h-right" style="left: 28%; top: 232%; width: 22%;"></div>
-        {/if}
-        <button class="pallino" style="left: 28%; top: 200%"
-          onmouseenter={() => hover = 'radius'}
-          onmouseleave={() => hover = null}
-          onclick={() => toggleFisso('radius')}
-          class:attivo={attivo('radius')}>
-        </button>
-        <div class="tooltip-box" class:visibile={attivo('radius')} style="left: 50%; top: 222%">
-          <p class="tooltip-title">RADIUS</p>
-          <p class="tooltip-desc">{descrizioni.radius}</p>
-          <p class="tooltip-valore">{config.raggio} M</p>
-        </div>
-
       </div>
     </div>
 
@@ -278,12 +291,26 @@
     border-right: 1.5px solid black; 
   }
 
+  /* ── STILE IDENTICO A ENVIRONMENT ── */
+  .left-intro {
+    display: block; 
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-top: 0;
+    margin-bottom: 24px;
+  }
+
   .desc {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     line-height: 1.6;
     color: #444;
-    margin-top: 0;
-    margin-bottom: 8px;
+    max-width: 54ch;
+    margin: 0;
   }
 
   .sezione { 
@@ -529,21 +556,29 @@
     margin-bottom: 0;
   }
 
-  /* ── DESTRA ── */
+  /* ── NUOVO LAYOUT COLONNA DESTRA ── */
+  .right-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dx-header {
+    padding: 24px 40px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-bottom: 1.5px solid black;
+    margin: 0;
+  }
+
   .right-info {
     position: relative;
     display: flex;
     flex-direction: column;
     padding: 40px; 
     gap: 24px; 
-  }
-
-  .right-subtitle {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin: 0;
+    flex: 1; 
   }
 
   .sci-overlay {
@@ -629,15 +664,24 @@
     width: 220px;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.25s;
+    transition: opacity 0.25s, transform 0.2s; 
     z-index: 20;
     margin: 0;
+  }
+
+  .tooltip-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   }
 
   .tooltip-box.visibile {
     opacity: 1;
     pointer-events: auto;
     transition-delay: 1.4s;
+  }
+
+  .tooltip-box.visibile:hover {
+    transition-delay: 0s;
   }
 
   .tooltip-box.width-box.visibile {
