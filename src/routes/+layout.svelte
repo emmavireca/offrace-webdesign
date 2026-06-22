@@ -28,7 +28,7 @@
           <span class="fase-num">Phase 1</span>
           <span class="fase-nome">Environment</span>
         </div>
-        {#if config.fase === 1 && config.venue}
+        {#if config.fase >= 1 && config.venue}
           <div class="fase-info">
             <span class="info-valore">{config.venue === 'bormio' ? 'Stelvio — Bormio' : 'Olympia — Cortina'}</span>
           </div>
@@ -46,7 +46,7 @@
           <span class="fase-num">Phase 2</span>
           <span class="fase-nome">Athlete</span>
         </div>
-        {#if config.fase === 2}
+        {#if config.fase >= 2}
           <div class="fase-info">
             <div class="info-riga">
               <span class="info-label">venue</span>
@@ -71,7 +71,7 @@
           <span class="fase-num">Phase 3</span>
           <span class="fase-nome">Equipment</span>
         </div>
-        {#if config.fase === 3}
+        {#if config.fase >= 3}
           <div class="fase-info">
             <div class="info-riga">
               <span class="info-label">geometry</span>
@@ -152,6 +152,7 @@
   }
 
   .fase {
+    flex: 1; /* <--- QUESTA RIGA RENDE I 3 BLOCCHI LARGHI ESATTAMENTE UGUALI */
     color: black;
     border: none;
     background: transparent;
@@ -165,9 +166,9 @@
     border-right: 1.5px solid black;
     transition: background 0.3s, color 0.3s;
     pointer-events: auto;
+    min-width: 0; 
   }
 
-  /* Rimuove la manina se la fase è futura (disabilitata) */
   .fase:disabled {
     cursor: default;
   }
@@ -219,6 +220,7 @@
     flex-direction: column;
     justify-content: center;
     line-height: 1.1; 
+    min-width: 0; 
   }
 
   .info-label {
@@ -235,6 +237,7 @@
   .info-row-bottom {
     display: flex;
     gap: 1rem;
+    min-width: 0;
   }
 
   .next {
@@ -254,6 +257,7 @@
     white-space: nowrap;
     transition: background 0.2s;
     pointer-events: auto;
+    flex-shrink: 0; 
   }
 
   .next:hover {
