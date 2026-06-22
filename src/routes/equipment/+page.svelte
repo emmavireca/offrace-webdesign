@@ -222,7 +222,7 @@
             class:attivo={attivo('length')}>
           </button>
           <div class="tooltip-box" class:visibile={attivo('length')} style="left: 66%; top: -25%; cursor: pointer;" onclick={() => goto('/athlete')}>
-            <p class="tooltip-title">LENGTH <span style="opacity: 0.5;">→ ATHLETE</span></p>
+            <p class="tooltip-title">LENGTH</p>
             <p class="tooltip-desc">{descrizioni.length}</p>
             <p class="tooltip-valore">{config.lunghezza} CM</p>
           </div>
@@ -238,7 +238,7 @@
             class:attivo={attivo('width')}>
           </button>
          <div class="tooltip-box width-box" class:visibile={attivo('width')} style="left: 3.5%; top: 0%; cursor: pointer;" onclick={() => goto('/environment')}>
-            <p class="tooltip-title">WIDTH <span style="opacity: 0.5;">→ ENVIRONMENT</span></p>
+            <p class="tooltip-title">WIDTH</p>
             <p class="tooltip-desc">{descrizioni.width}</p>
             <p class="tooltip-valore">{config.larghezza} MM</p>
           </div>
@@ -255,7 +255,7 @@
             class:attivo={attivo('radius')}>
           </button>
           <div class="tooltip-box" class:visibile={attivo('radius')} style="left: 50%; top: 222%; cursor: pointer;" onclick={() => goto('/athlete')}>
-            <p class="tooltip-title">RADIUS <span style="opacity: 0.5;">→ ATHLETE</span></p>
+            <p class="tooltip-title">RADIUS</p>
             <p class="tooltip-desc">{descrizioni.radius}</p>
             <p class="tooltip-valore">{config.raggio} M</p>
           </div>
