@@ -90,7 +90,6 @@
       <h1>Equipment</h1>
       <p class="desc">Every race is decided before the start. The equipment an athlete carries onto the slope is the result of years of research.</p>
 
-      <!-- GEOMETRY -->
       <div class="sezione">
         <div class="sezione-header">GEOMETRY</div>
         <div class="sezione-body tre-col">
@@ -151,7 +150,6 @@
         </div>
       </div>
 
-      <!-- MATERIALS -->
       <div class="sezione">
         <div class="sezione-header">MATERIALS</div>
         <div class="sezione-body">
@@ -175,7 +173,6 @@
         </div>
       </div>
 
-      <!-- WAX -->
       <div class="sezione">
         <div class="sezione-header">WAX PROTOCOL</div>
         <div class="sezione-body">
@@ -200,13 +197,11 @@
 
     </div>
 
-    <!-- ── COLONNA DESTRA ── -->
     <div class="right-info">
       <p class="right-subtitle">Configure your ski system</p>
 
       <div class="sci-overlay">
 
-        <!-- LENGTH : sale dritta poi gira a destra -->
         {#if attivo('length')}
           <div class="linea v-up" style="left: 52%; top: -15%; height: 105%;"></div>
           <div class="linea h-right" style="left: 52%; top: -15%; width: 18%;"></div>
@@ -223,7 +218,6 @@
           <p class="tooltip-valore">{config.lunghezza} CM</p>
         </div>
 
-        <!-- WIDTH : sale dritta e basta -->
         {#if attivo('width')}
           <div class="linea v-up" style="left: 20%; top: 88%; height: 62%;"></div>
         {/if}
@@ -238,7 +232,6 @@
           <p class="tooltip-valore">{config.larghezza} MM</p>
         </div>
 
-        <!-- RADIUS : scende un po' poi gira a destra -->
         {#if attivo('radius')}
           <div class="linea v-down" style="left: 28%; top: 200%; height: 33%;"></div>
           <div class="linea h-right" style="left: 28%; top: 232%; width: 22%;"></div>
@@ -277,45 +270,51 @@
   }
 
   .left {
-    padding: 2rem;
+    padding: 40px 40px 104px 40px; 
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 24px; 
     overflow-y: auto;
-    border-right: 2px solid black;
+    border-right: 1.5px solid black; 
   }
 
   .desc {
     font-size: 0.8rem;
     line-height: 1.6;
     color: #444;
+    margin-top: 0;
+    margin-bottom: 8px;
   }
 
-  .sezione { border: 2px solid black; }
+  .sezione { 
+    border: 1.5px solid black; 
+    margin-bottom: 0;
+  }
 
   .sezione-header {
     background: black;
     color: white;
-    padding: 0.4rem 0.75rem;
+    padding: 8px 24px; 
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.15em;
   }
 
-  .sezione-body { padding: 0.75rem; }
+  .sezione-body { padding: 24px; } 
 
   .tre-col {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 0;
+    padding: 0;
   }
 
   .col {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 0.75rem 0.5rem;
-    border-right: 1px solid black;
+    gap: 8px; 
+    padding: 16px 12px;
+    border-right: 1.5px solid black; 
   }
 
   .col:last-child { border-right: none; }
@@ -331,24 +330,28 @@
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.1em;
+    margin: 0;
   }
 
   .val-live {
     color: var(--mc-copper);
     font-size: 0.65rem;
     font-weight: 600;
+    margin: 0;
   }
 
   .range-labels {
     display: flex;
     justify-content: space-between;
     width: 100%;
+    margin-top: 4px;
   }
 
   .range-label {
     font-size: 0.5rem;
     color: #666;
     letter-spacing: 0.05em;
+    margin: 0;
   }
 
   .slider-h {
@@ -358,7 +361,7 @@
     height: 14px;
     background: transparent;
     cursor: pointer;
-    margin: 0;
+    margin: 4px 0 0 0;
     padding: 0;
   }
 
@@ -375,24 +378,26 @@
     border-radius: 50%;
     background: var(--mc-copper);
     cursor: grab;
-    outline: 2px solid black;
+    outline: 1.5px solid black; 
     margin-top: -6px;
   }
 
   .radius-svg {
     width: 100%;
     height: 60px;
+    margin-top: 4px;
   }
 
   .materiali-grid {
     display: flex;
     flex-direction: row;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
+    gap: 12px; 
+    margin-top: 0;
+    margin-bottom: 16px;
   }
 
   .mat-card {
-    border: 2px solid transparent;
+    border: 1.5px solid transparent; 
     background: none;
     cursor: pointer;
     padding: 0;
@@ -400,6 +405,7 @@
     height: 64px;
     overflow: hidden;
     flex-shrink: 0;
+    margin: 0;
   }
 
   .mat-card.selezionato { border-color: var(--mc-copper); }
@@ -415,19 +421,22 @@
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    margin-bottom: 0.25rem;
+    margin-top: 0;
+    margin-bottom: 8px;
   }
 
   .mat-desc {
     font-size: 0.75rem;
     line-height: 1.5;
     color: #444;
+    margin: 0;
   }
 
   .wax-row {
     display: flex;
     align-items: flex-end;
     gap: 0;
+    margin: 0;
   }
 
   .wax-label {
@@ -437,6 +446,7 @@
     white-space: nowrap;
     width: 140px;
     flex-shrink: 0;
+    margin: 0;
   }
 
   .wax-label::after {
@@ -447,6 +457,7 @@
     background: black;
     transform: skewX(-12deg);
     transform-origin: left;
+    margin-top: 4px;
   }
 
   .wax-track-wrap {
@@ -454,7 +465,7 @@
     flex-direction: column;
     gap: 4px;
     width: fit-content;
-    margin-left: 1rem;
+    margin-left: 16px; 
   }
 
   .wax-input {
@@ -484,6 +495,7 @@
     height: 28px;
     pointer-events: none;
     width: 120px;
+    margin: 0;
   }
 
   .wax-bacchetta {
@@ -501,17 +513,20 @@
     font-weight: 600;
     letter-spacing: 0.05em;
     white-space: nowrap;
-    margin-left: 1rem;
+    margin-left: 16px; 
     padding-bottom: 4px;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 
   .wax-desc {
     font-size: 0.75rem;
     line-height: 1.5;
     color: #444;
-    margin-top: 0.75rem;
-    border-left: 2px solid black;
-    padding-left: 0.75rem;
+    margin-top: 16px; 
+    border-left: 1.5px solid black; 
+    padding-left: 16px; 
+    margin-bottom: 0;
   }
 
   /* ── DESTRA ── */
@@ -519,8 +534,8 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: 2rem;
-    gap: 2rem;
+    padding: 40px; 
+    gap: 24px; 
   }
 
   .right-subtitle {
@@ -528,12 +543,14 @@
     font-weight: 600;
     letter-spacing: 0.15em;
     text-transform: uppercase;
+    margin: 0;
   }
 
   .sci-overlay {
     position: relative;
     width: 100%;
     height: 200px;
+    margin: 0;
   }
 
   /* PALLINI */
@@ -543,7 +560,7 @@
     height: 17px;
     border-radius: 50%;
     background: #BDF522;
-    border: 1.5px solid black;
+    border: 1.5px solid black; 
     animation: pulse 2s ease-out infinite;
     cursor: pointer;
     display: flex;
@@ -552,6 +569,8 @@
     transform: translate(-50%, -50%);
     transition: background 0.2s, transform 0.2s;
     z-index: 10;
+    margin: 0;
+    padding: 0;
   }
 
   .pallino:hover, .pallino.attivo {
@@ -561,10 +580,10 @@
   }
 
   @keyframes pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(189, 245, 34, 0.6); }
-  70%  { box-shadow: 0 0 0 12px rgba(189, 245, 34, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(189, 245, 34, 0); }
-}
+    0%   { box-shadow: 0 0 0 0 rgba(189, 245, 34, 0.6); }
+    70%  { box-shadow: 0 0 0 12px rgba(189, 245, 34, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(189, 245, 34, 0); }
+  }
 
   /* ── LINEE CONNETTRICI ── */
   .linea {
@@ -573,25 +592,22 @@
     z-index: 5;
   }
 
-  /* verticale che cresce verso l'ALTO (origine in basso = dal pallino) */
   .linea.v-up {
-    width: 2px;
+    width: 1.5px; 
     transform: translateX(-50%) scaleY(0);
     transform-origin: bottom;
     animation: growV 0.7s ease forwards;
   }
 
-  /* verticale che cresce verso il BASSO (origine in alto = dal pallino) */
   .linea.v-down {
-    width: 2px;
+    width: 1.5px; 
     transform: translateX(-50%) scaleY(0);
     transform-origin: top;
     animation: growV 0.7s ease forwards;
   }
 
-  /* orizzontale che cresce verso DESTRA, parte dopo la verticale */
   .linea.h-right {
-    height: 2px;
+    height: 1.5px; 
     transform: scaleX(0);
     transform-origin: left;
     animation: growH 0.7s ease 0.7s forwards;
@@ -608,13 +624,14 @@
   .tooltip-box {
     position: absolute;
     background: white;
-    border: 2px solid black;
-    padding: 1rem;
+    border: 1.5px solid black; 
+    padding: 16px; 
     width: 220px;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s;
     z-index: 20;
+    margin: 0;
   }
 
   .tooltip-box.visibile {
@@ -624,25 +641,28 @@
   }
 
   .tooltip-box.width-box.visibile {
-  transition-delay: 0.7s;
-}
+    transition-delay: 0.7s;
+  }
 
   .tooltip-title {
     font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.15em;
-    margin-bottom: 0.5rem;
+    margin-top: 0;
+    margin-bottom: 8px; 
   }
 
   .tooltip-desc {
     font-size: 0.75rem;
     line-height: 1.6;
+    margin: 0;
   }
 
   .tooltip-valore {
     font-size: 0.8rem;
     font-weight: 700;
     color: var(--mc-copper);
-    margin-top: 0.5rem;
+    margin-top: 8px; 
+    margin-bottom: 0;
   }
 </style>

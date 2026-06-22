@@ -44,7 +44,7 @@
     </div>
     <div class="sx-img">
       {#if pistaMostrata}
-        <img src={piste[pistaMostrata].img} alt={piste[pistaMostrata].nome} />
+        <img src={piste[pistaMostrata].img} alt={piste[piste[pistaMostrata].nome]} />
       {/if}
     </div>
   </div>
@@ -92,7 +92,7 @@
   .page {
     position: fixed;
     inset: 0;
-    bottom: 64px;
+    bottom: 64px; /* Lascia lo spazio esatto per l'altezza del footer layout */
     display: grid;
     grid-template-columns: 1fr 1fr;
     overflow: hidden;
@@ -100,15 +100,15 @@
 
   /* ── SINISTRA ── */
   .col-sx {
-    border-right: 2px solid black;
+    border-right: 1.5px solid black; /* Uniformato a 1.5px */
     display: flex;
     flex-direction: column;
     overflow: hidden;
   }
 
   .sx-top {
-    padding: 2.5rem;
-    border-bottom: 2px solid black;
+    padding: 40px; /* Uniformato a 40px (coerente con i 2.5rem/40px di tutto il progetto) */
+    border-bottom: 1.5px solid black; /* Uniformato a 1.5px */
   }
 
   .sx-top h1 {
@@ -116,7 +116,8 @@
     font-weight: 700;
     letter-spacing: -0.03em;
     line-height: 1;
-    margin-bottom: 1.25rem;
+    margin-top: 0;
+    margin-bottom: 24px; /* Uniformato a multiplo */
   }
 
   .desc {
@@ -124,6 +125,7 @@
     line-height: 1.6;
     color: #444;
     max-width: 54ch;
+    margin: 0;
   }
 
   .sx-img {
@@ -131,7 +133,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
+    padding: 40px; /* Uniformato a 40px */
   }
 
   .sx-img img {
@@ -145,26 +147,27 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    padding-bottom: 40px; /* Evita collisioni visive con il fondo o con il footer */
   }
 
   .dx-header {
-    padding: 1.5rem 2.5rem;
+    padding: 24px 40px; /* Uniformato l'allineamento orizzontale a 40px */
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    border-bottom: 2px solid black;
+    border-bottom: 1.5px solid black; /* Uniformato a 1.5px */
   }
 
   .pista {
     border: none;
-    border-bottom: 2px solid black;
+    border-bottom: 1.5px solid black; /* Uniformato a 1.5px */
     background: transparent;
-    padding: 1.75rem 2.5rem;
+    padding: 28px 40px; /* Allineato orizzontalmente a 40px */
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 8px; /* Arrotondato a multiplo preciso */
     text-align: left;
     font-family: inherit;
     transition: background 0.2s, color 0.2s;
@@ -184,6 +187,7 @@
     font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1;
+    margin: 0;
   }
 
   .track-label {
@@ -191,7 +195,8 @@
     font-weight: 700;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    margin-top: 0.5rem;
+    margin-top: 8px; /* Uniformato */
+    margin-bottom: 0;
   }
 
   .track-desc {
@@ -199,15 +204,16 @@
     line-height: 1.55;
     opacity: 0.7;
     max-width: 42ch;
-    margin-bottom: 0.5rem;
+    margin-top: 0;
+    margin-bottom: 8px; /* Uniformato */
   }
 
   /* STATS */
   .stats {
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    margin-top: 0.5rem;
+    gap: 4px; /* Arrotondato a multiplo di 4 */
+    margin-top: 8px; /* Uniformato */
   }
 
   .stat {
@@ -216,7 +222,7 @@
     align-items: center;
     background: black;
     color: white;
-    padding: 0.5rem 0.9rem;
+    padding: 8px 16px; /* Uniformato a pixel puliti */
     font-size: 0.7rem;
     letter-spacing: 0.1em;
   }
@@ -229,21 +235,23 @@
   .stat-label {
     font-weight: 700;
     text-transform: uppercase;
+    margin: 0;
   }
 
   .stat-val {
     font-weight: 600;
+    margin: 0;
   }
 
   .stat-terrain {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px; /* Arrotondato */
   }
 
   .dot {
-    width: 7px;
-    height: 7px;
+    width: 8px; /* Arrotondato */
+    height: 8px; /* Arrotondato */
     border-radius: 50%;
     border: 1px solid currentColor;
     display: inline-block;
@@ -257,7 +265,7 @@
     font-size: 0.55rem;
     text-transform: lowercase;
     letter-spacing: 0.05em;
-    margin-left: 0.4rem;
+    margin-left: 8px; /* Uniformato */
     opacity: 0.8;
   }
 </style>

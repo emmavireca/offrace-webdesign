@@ -26,7 +26,6 @@
 {:else}
   <div class="home">
 
-    <!-- ── FASCIA ALTA : due celle ── -->
     <div class="riga-top">
       <div class="cella bordo-r">
         <h3 class="num-title">01_Performance</h3>
@@ -38,7 +37,6 @@
       </div>
     </div>
 
-    <!-- ── BANDA EQUAZIONE ── -->
     <div class="banda">
       <span>ENVIRONMENT</span>
       <span class="op">+</span>
@@ -49,7 +47,6 @@
       <span>PERFORMANCE</span>
     </div>
 
-    <!-- ── FASCIA BASSA : tre colonne ── -->
     <div class="riga-bottom">
 
       <div class="cella bordo-r">
@@ -133,10 +130,12 @@
     100% { transform: translateX(2rem); opacity: 1; }
   }
 
-  /* ── HOME ── */
+  /* ── HOME (Desktop-Only, Bloccata a schermo) ── */
   .home {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
     bottom: 64px;
     display: grid;
     grid-template-rows: auto auto 1fr;
@@ -174,10 +173,10 @@
   }
 
   .riga-top .cella {
-    padding: 2.25rem 2.5rem;
+    padding: 2rem 2.5rem;
   }
 
-  /* BANDA */
+  /* BANDA EQUAZIONE */
   .banda {
     display: flex;
     align-items: center;
@@ -201,22 +200,26 @@
   .riga-bottom {
     display: grid;
     grid-template-columns: 0.8fr 2fr 0.8fr;
+    min-height: 0; 
     overflow: hidden;
   }
 
   .riga-bottom .cella {
-    padding: 2rem 2.25rem;
-    overflow-y: auto;
+    padding: 2rem 2.5rem;
+    height: 100%;
+    overflow-y: auto; 
   }
 
   .cella-occhiali {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  position: relative;
-  z-index: 5;
-}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+    z-index: 5;
+    height: 100%;
+    overflow: hidden;
+  }
 
   /* TABELLA REGULATIONS */
   .reg-list {
@@ -240,7 +243,7 @@
   }
 
   .reg-row p {
-    padding: 0.85rem;
+    padding: 1rem;
     font-size: 0.7rem;
     line-height: 1.5;
     color: #444;
