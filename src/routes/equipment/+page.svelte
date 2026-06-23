@@ -3,6 +3,7 @@
   import Scene from '$lib/components/Scene.svelte'
   import { config } from '$lib/config.svelte.js'
   import { goto } from '$app/navigation' 
+  import { slide } from 'svelte/transition'
 
   config.fase = 3
 
@@ -24,7 +25,7 @@
 
   let waxDesc = $derived(
     ceraIndex < 0.66
-      ? 'Fluorocarbon wax is built on a carbon-fluorine molecular structure, one of the strongest chemical bonds in organic chemistry. PFAS molecules do not degrade, do not absorb water, and create a near-perfectly hydrophobic surface regardless of snow temperature or humidity. This chemical stability is what made fluorocarbon wax dominant across all conditions with no significant performance drop between extremes. It is also what makes PFAS compounds environmentally persistent and toxic when inhaled during application. Banned by FIS in 2022, its  friction coefficient remains the lowest ever recorded in competitive alpine skiing.'
+      ? 'Fluorocarbon wax is built on a carbon-fluorine molecular structure, one of the strongest chemical bonds in organic chemistry. PFAS molecules do not degrade, do not absorb water, and create a near-perfectly hydrophobic surface regardless of snow temperature or humidity. This chemical stability is what made fluorocarbon wax dominant across all conditions with no significant performance drop between extremes. It is also what makes PFAS compounds environmentally persistent and toxic when inhaled during application. Banned by FIS in 2022, its friction coefficient remains the lowest ever recorded in competitive alpine skiing.'
       : ceraIndex < 1.33
         ? config.venue === 'bormio'
           ? 'High-purity paraffin with additives graphite. Graphite is a form of carbon with a layered molecular structure : the layers slide over each other with almost no resistance, which is why graphite is used as a dry lubricant in industrial applications. When incorporated into race wax, graphite particles embed in the base surface and reduce static friction at the ski-snow contact point. It is most effective on cold, dry snow where the water film is minimal and mechanical friction dominates. At temperatures close to 0°C, where the water film becomes abundant, graphite loses its advantage and silicone-based additives perform better.'
@@ -77,6 +78,11 @@
     if (ang > Math.PI) ang = Math.PI
     config.raggio = Math.round(radMin + (1 - ang / Math.PI) * (radMax - radMin))
   }
+
+  // --- STATO ACCORDION ---
+  // Inizializza su 'geometry' affinché sia l'unico aperto al caricamento
+  let accordionOpen = $state('geometry')
+
 </script>
 
 <div class="viewport">
@@ -87,130 +93,140 @@
   <div class="overlay">
 
     <div class="left">
-      <!-- Avvolto in left-intro per avere lo stesso comportamento di Environment e Athlete -->
       <div class="left-intro">
         <h1>Equipment</h1>
         <p class="desc">Every race is decided before the start. The equipment an athlete carries onto the slope is the result of years of research.</p>
       </div>
 
-      <!-- GEOMETRY -->
       <div class="sezione">
-        <div class="sezione-header">GEOMETRY</div>
-        <div class="sezione-body tre-col">
-
-          <div class="col">
-            <div class="col-header">
-              <span class="col-title">LENGTH:</span>
-              <span class="val-live">{config.lunghezza} CM</span>
-            </div>
-            <div class="range-labels">
-              <span class="range-label">MIN {config.venue === 'bormio' ? '218' : '210'}</span>
-              <span class="range-label">MAX {config.venue === 'bormio' ? '226' : '218'}</span>
-            </div>
-            <input type="range"
-              min={config.venue === 'bormio' ? 218 : 210}
-              max={config.venue === 'bormio' ? 226 : 218}
-              step={1}
-              bind:value={config.lunghezza}
-              class="slider-h"
-            />
-          </div>
-
-          <div class="col">
-            <div class="col-header">
-              <span class="col-title">WIDTH:</span>
-              <span class="val-live">{config.larghezza} MM</span>
-            </div>
-            <div class="range-labels">
-              <span class="range-label">MIN 63</span>
-              <span class="range-label">MAX 68</span>
-            </div>
-            <input type="range"
-              min={63} max={68} step={1}
-              bind:value={config.larghezza}
-              class="slider-h"
-            />
-          </div>
-
-          <div class="col">
-            <div class="col-header">
-              <span class="col-title">RADIUS:</span>
-              <span class="val-live">{config.raggio} M</span>
-            </div>
-            <div class="range-labels">
-              <span class="range-label">MIN {config.venue === 'bormio' ? '45' : '40'}</span>
-              <span class="range-label">MAX {config.venue === 'bormio' ? '55' : '50'}</span>
-            </div>
-            <svg viewBox="0 -5 200 100" class="radius-svg"
-              onmousedown={() => { dragging = true }}
-              onmousemove={onDrag}
-              onmouseup={() => { dragging = false }}
-            >
-              <path d="M 10 100 A 90 90 0 0 1 190 100" fill="none" stroke="#000" stroke-width="3.5"/>
-              <circle cx={handleX} cy={handleY} r="12" fill="var(--mc-copper)" stroke="black" stroke-width="3" style="cursor:grab"/>
-            </svg>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- MATERIALS -->
-      <div class="sezione">
-        <div class="sezione-header">MATERIALS</div>
-        <div class="sezione-body">
-          <div class="materiali-grid">
-            {#each materiali as mat}
-              <button
-                class="mat-card"
-                class:selezionato={config.materiale === mat.id}
-                onclick={() => config.materiale = mat.id}
-              >
-                <img src={mat.img} alt={mat.label} class="mat-img" />
-              </button>
-            {/each}
-          </div>
-          <p class="mat-label">{materiali.find(m => m.id === config.materiale)?.label}</p>
-          <p class="mat-desc">
-            {#if config.materiale === 'wood'}Wood core is the structural foundation of almost every race ski. Lightweight and naturally dampening, it absorbs vibration along the full length of the ski and defines its base flex profile. Accessible across all budget levels.
-            {:else if config.materiale === 'carbon'}Carbon fiber is layered into specific zones of the ski to reduce mass and increase longitudinal stiffness. Lighter than titanal, with less dampening, optimised for power transfer rather than vibration absorption.
-            {:else}Titanal is an aluminium alloy laminated into the ski's core structure. It increases torisional stiffness and dampens high frequency vibrations at speed, reducing energy loss on hard, uneven snow.{/if}
-          </p>
-        </div>
-      </div>
-
-      <!-- WAX -->
-      <div class="sezione">
-        <div class="sezione-header">WAX PROTOCOL</div>
-        <div class="sezione-body">
-          <div class="wax-row">
-            <p class="wax-label">{waxLabel}</p>
-            <div class="wax-track-wrap">
-              <input type="range" min={0} max={2} step={0.01}
-                bind:value={ceraIndex}
-                class="wax-input"
-              />
-              <div class="wax-track">
-                {#each Array(10) as _, i}
-                  <div class="wax-bacchetta" class:piena={i / 10 < (ceraIndex + 0.2) / 2}></div>
-                {/each}
+        <button class="sezione-header" onclick={() => accordionOpen = 'geometry'}>
+          <span>GEOMETRY</span>
+          <span class="accordion-icon">{accordionOpen === 'geometry' ? '−' : '+'}</span>
+        </button>
+        
+        {#if accordionOpen === 'geometry'}
+          <div class="sezione-body tre-col" transition:slide>
+            <div class="col">
+              <div class="col-header">
+                <span class="col-title">LENGTH:</span>
+                <span class="val-live">{config.lunghezza} CM</span>
               </div>
+              <div class="range-labels">
+                <span class="range-label">MIN {config.venue === 'bormio' ? '218' : '210'}</span>
+                <span class="range-label">MAX {config.venue === 'bormio' ? '226' : '218'}</span>
+              </div>
+              <input type="range"
+                min={config.venue === 'bormio' ? 218 : 210}
+                max={config.venue === 'bormio' ? 226 : 218}
+                step={1}
+                bind:value={config.lunghezza}
+                class="slider-h"
+              />
             </div>
-            <p class="wax-mu">{waxMu}</p>
+
+            <div class="col">
+              <div class="col-header">
+                <span class="col-title">WIDTH:</span>
+                <span class="val-live">{config.larghezza} MM</span>
+              </div>
+              <div class="range-labels">
+                <span class="range-label">MIN 63</span>
+                <span class="range-label">MAX 68</span>
+              </div>
+              <input type="range"
+                min={63} max={68} step={1}
+                bind:value={config.larghezza}
+                class="slider-h"
+              />
+            </div>
+
+            <div class="col">
+              <div class="col-header">
+                <span class="col-title">RADIUS:</span>
+                <span class="val-live">{config.raggio} M</span>
+              </div>
+              <div class="range-labels">
+                <span class="range-label">MIN {config.venue === 'bormio' ? '45' : '40'}</span>
+                <span class="range-label">MAX {config.venue === 'bormio' ? '55' : '50'}</span>
+              </div>
+              <svg viewBox="0 -5 200 100" class="radius-svg"
+                onmousedown={() => { dragging = true }}
+                onmousemove={onDrag}
+                onmouseup={() => { dragging = false }}
+              >
+                <path d="M 10 100 A 90 90 0 0 1 190 100" fill="none" stroke="#000" stroke-width="3.5"/>
+                <circle cx={handleX} cy={handleY} r="12" fill="var(--mc-copper)" stroke="black" stroke-width="3" style="cursor:grab"/>
+              </svg>
+            </div>
           </div>
-          <p class="wax-desc">{waxDesc}</p>
-        </div>
+        {/if}
+      </div>
+
+      <div class="sezione">
+        <button class="sezione-header" onclick={() => accordionOpen = 'materials'}>
+          <span>MATERIALS</span>
+          <span class="accordion-icon">{accordionOpen === 'materials' ? '−' : '+'}</span>
+        </button>
+        
+        {#if accordionOpen === 'materials'}
+          <div class="sezione-body" transition:slide>
+            <div class="materiali-grid">
+              {#each materiali as mat}
+                <button
+                  class="mat-card"
+                  class:selezionato={config.materiale === mat.id}
+                  onclick={() => config.materiale = mat.id}
+                >
+                  <img src={mat.img} alt={mat.label} class="mat-img" />
+                </button>
+              {/each}
+            </div>
+            <p class="mat-label">{materiali.find(m => m.id === config.materiale)?.label}</p>
+            <p class="mat-desc">
+              {#if config.materiale === 'wood'}Wood core is the structural foundation of almost every race ski. Lightweight and naturally dampening, it absorbs vibration along the full length of the ski and defines its base flex profile. Accessible across all budget levels.
+              {:else if config.materiale === 'carbon'}Carbon fiber is layered into specific zones of the ski to reduce mass and increase longitudinal stiffness. Lighter than titanal, with less dampening, optimised for power transfer rather than vibration absorption.
+              {:else}Titanal is an aluminium alloy laminated into the ski's core structure. It increases torisional stiffness and dampens high frequency vibrations at speed, reducing energy loss on hard, uneven snow.{/if}
+            </p>
+          </div>
+        {/if}
+      </div>
+
+      <div class="sezione">
+        <button class="sezione-header" onclick={() => accordionOpen = 'wax'}>
+          <span>WAX PROTOCOL</span>
+          <span class="accordion-icon">{accordionOpen === 'wax' ? '−' : '+'}</span>
+        </button>
+        
+        {#if accordionOpen === 'wax'}
+          <div class="sezione-body" transition:slide>
+            <div class="wax-row">
+              <p class="wax-label">{waxLabel}</p>
+              <div class="wax-track-wrap">
+                <input type="range" min={0} max={2} step={0.01}
+                  bind:value={ceraIndex}
+                  class="wax-input"
+                />
+                <div class="wax-track">
+                  {#each Array(10) as _, i}
+                    <div class="wax-bacchetta" class:piena={i / 10 < (ceraIndex + 0.2) / 2}></div>
+                  {/each}
+                </div>
+              </div>
+              <p class="wax-mu">{waxMu}</p>
+            </div>
+            <p class="wax-desc">{waxDesc}</p>
+          </div>
+        {/if}
       </div>
 
     </div>
 
-    <!-- ── COLONNA DESTRA ── -->
     <div class="right-col">
       <div class="dx-header">CONFIGURE YOUR SKI SYSTEM</div>
       
       <div class="right-info">
         <div class="sci-overlay">
 
-          <!-- LENGTH -->
           {#if attivo('length')}
             <div class="linea v-up" style="left: 52%; top: -15%; height: 105%;"></div>
             <div class="linea h-right" style="left: 52%; top: -15%; width: 18%;"></div>
@@ -227,7 +243,6 @@
             <p class="tooltip-valore">{config.lunghezza} CM</p>
           </div>
 
-          <!-- WIDTH -->
           {#if attivo('width')}
             <div class="linea v-up" style="left: 20%; top: 88%; height: 62%;"></div>
           {/if}
@@ -243,7 +258,6 @@
             <p class="tooltip-valore">{config.larghezza} MM</p>
           </div>
 
-          <!-- RADIUS -->
           {#if attivo('radius')}
             <div class="linea v-down" style="left: 28%; top: 200%; height: 33%;"></div>
             <div class="linea h-right" style="left: 28%; top: 232%; width: 22%;"></div>
@@ -316,15 +330,36 @@
   .sezione { 
     border: 1.5px solid black; 
     margin-bottom: 0;
+    background: var(--mc-bg);
   }
 
+  /* MODIFICA: Da div a bottone flessibile */
   .sezione-header {
     background: black;
     color: white;
-    padding: 8px 24px; 
+    padding: 12px 24px; /* Aumentato leggermente il padding per comodità al click */
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.15em;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-family: inherit;
+  }
+
+  .sezione-header:hover {
+    background: #1a1a1a;
+  }
+
+  .accordion-icon {
+    color: #BDF522; /* Verde fluo usato nei pallini e negli slider */
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 1;
   }
 
   .sezione-body { padding: 24px; } 
