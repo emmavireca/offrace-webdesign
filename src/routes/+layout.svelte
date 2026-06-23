@@ -8,11 +8,17 @@
 
   let isHome = $derived($page.url.pathname === '/')
 
+  // Tiene traccia della fase massima raggiunta per mantenere i dati visibili se si torna indietro
+  let maxFase = $state(0)
+
   $effect(() => {
     if (isHome) {
-      config.introFinita = false;
+      config.introFinita = false
+      maxFase = 0 // Resetta quando si torna alla home
+    } else if (config.fase > maxFase) {
+      maxFase = config.fase // Aggiorna il traguardo massimo raggiunto
     }
-  });
+  })
 
   let mostraBarra = $derived(!isHome || config.introFinita)
 </script>
@@ -21,19 +27,19 @@
 
 <footer class="barra" class:nascosta={!mostraBarra} class:home={isHome}>
   
-  <button type="button" class="brand" onclick={() => { config.fase = 0; config.introFinita = false; goto('/'); }}>
+  <button type="button" class="brand" onclick={() => { config.fase = 0; config.introFinita = false; maxFase = 0; goto('/'); }}>
     OFFRACE
   </button>
   
   <div class="fasi">
     {#if !isHome}
       
-      <button type="button" class="fase" class:attiva={config.fase === 1} disabled={config.fase < 1} onclick={() => goto('/environment')}>
+      <button type="button" class="fase" class:attiva={config.fase === 1} disabled={maxFase < 1} onclick={() => goto('/environment')}>
         <div class="fase-label">
           <span class="fase-num">Phase 1</span>
           <span class="fase-nome">Environment</span>
         </div>
-        {#if config.fase >= 1 && config.venue}
+        {#if maxFase >= 1}
           <div class="fase-info">
             <div class="info-block">
               <span class="info-label">TRACK</span>
@@ -49,12 +55,12 @@
         {/if}
       </button>
       
-      <button type="button" class="fase" class:attiva={config.fase === 2} disabled={config.fase < 2} onclick={() => goto('/athlete')}>
+      <button type="button" class="fase" class:attiva={config.fase === 2} disabled={maxFase < 2} onclick={() => goto('/athlete')}>
         <div class="fase-label">
           <span class="fase-num">Phase 2</span>
           <span class="fase-nome">Athlete</span>
         </div>
-        {#if config.fase >= 2}
+        {#if maxFase >= 2}
           <div class="fase-info">
             <div class="info-block">
               <span class="info-label">TRAJECTORY DEVIATION & RFD</span>
@@ -67,19 +73,19 @@
               </div>
               <div class="info-block">
                 <span class="info-label">SUIT</span>
-                <span class="info-valore">{config.tutaIndex ? (config.tutaIndex === 1 ? 'LEGAL' : config.tutaIndex === 2 ? 'BORDERLINE' : 'DOPING') : '—'}</span>
+                <span class="info-valore">{config.tutaIndex ? (config.tutaIndex === 1 ? 'LEGAL' : config.tutaIndex === 2 ? 'BORDERLINE' : 'DOPING') : 'STANDARD'}</span>
               </div>
             </div>
           </div>
         {/if}
       </button>
 
-      <button type="button" class="fase" class:attiva={config.fase === 3} disabled={config.fase < 3} onclick={() => goto('/equipment')}>
+      <button type="button" class="fase" class:attiva={config.fase === 3} disabled={maxFase < 3} onclick={() => goto('/equipment')}>
         <div class="fase-label">
           <span class="fase-num">Phase 3</span>
           <span class="fase-nome">Equipment</span>
         </div>
-        {#if config.fase >= 3}
+        {#if maxFase >= 3}
           <div class="fase-info">
             <div class="info-block">
               <span class="info-label">GEOMETRY</span>
@@ -120,7 +126,6 @@
     display: flex; align-items: stretch; z-index: 100;
     pointer-events: auto;
     
-    /* MODIFICATO: La barra parte da sinistra (-100%) e scorre verso destra (0) */
     transform: translateX(-100%);
     animation: slideRightBar 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   }
@@ -147,7 +152,6 @@
     border: none; border-right: 1.5px solid black; background: transparent;
     color: black; white-space: nowrap; cursor: pointer; transition: background 0.2s;
     
-    /* Parte trasparente e leggermente a sinistra, arriva dopo la barra */
     opacity: 0;
     animation: slideRightBrand 0.6s ease 0.4s forwards;
   }
@@ -185,14 +189,12 @@
   .info-label { font-size: 0.55rem; font-weight: 400; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.5; line-height: 1; }
   .info-valore { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.02em; text-transform: uppercase; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  /* ── PULSANTE DESTRO ── */
   .next {
     display: flex; align-items: center; justify-content: center; padding: 0 40px;
     background: black; color: white; border: none; font-size: 0.75rem;
     font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase;
     cursor: pointer; font-family: inherit; white-space: nowrap; transition: background 0.2s; flex-shrink: 0; 
     
-    /* Appare in dissolvenza insieme alla scritta OFFRACE */
     opacity: 0;
     animation: fadeInText 0.6s ease 0.4s forwards;
   }
