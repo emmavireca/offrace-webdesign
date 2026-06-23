@@ -79,7 +79,6 @@
     config.raggio = Math.round(radMin + (1 - ang / Math.PI) * (radMax - radMin))
   }
 
-  // --- STATO ACCORDION ---
   // Inizializza su 'geometry' affinché sia l'unico aperto al caricamento
   let accordionOpen = $state('geometry')
 
@@ -153,9 +152,12 @@
                 onmousedown={() => { dragging = true }}
                 onmousemove={onDrag}
                 onmouseup={() => { dragging = false }}
+                onmouseleave={() => { dragging = false }}
               >
                 <path d="M 10 100 A 90 90 0 0 1 190 100" fill="none" stroke="#000" stroke-width="3.5"/>
-                <circle cx={handleX} cy={handleY} r="12" fill="var(--mc-copper)" stroke="black" stroke-width="3" style="cursor:grab"/>
+                <g transform="translate({handleX}, {handleY})">
+                  <circle class="radius-thumb" cx="0" cy="0" r="12" stroke-width="3"/>
+                </g>
               </svg>
             </div>
           </div>
@@ -305,7 +307,6 @@
     border-right: 1.5px solid black; 
   }
 
-  /* ── STILE IDENTICO A ENVIRONMENT ── */
   .left-intro {
     display: block; 
   }
@@ -333,11 +334,10 @@
     background: var(--mc-bg);
   }
 
-  /* MODIFICA: Da div a bottone flessibile */
   .sezione-header {
     background: black;
     color: white;
-    padding: 12px 24px; /* Aumentato leggermente il padding per comodità al click */
+    padding: 12px 24px;
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.15em;
@@ -356,7 +356,7 @@
   }
 
   .accordion-icon {
-    color: #BDF522; /* Verde fluo usato nei pallini e negli slider */
+    color: #BDF522; 
     font-size: 1.2rem;
     font-weight: 400;
     line-height: 1;
@@ -416,15 +416,20 @@
     margin: 0;
   }
 
+  /* ── SLIDER LENGTH E WIDTH ── */
   .slider-h {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
     height: 14px;
     background: transparent;
-    cursor: pointer;
+    cursor: grab;
     margin: 4px 0 0 0;
     padding: 0;
+  }
+
+  .slider-h:active {
+    cursor: grabbing;
   }
 
   .slider-h::-webkit-slider-runnable-track {
@@ -439,17 +444,45 @@
     height: 14px;
     border-radius: 50%;
     background: var(--mc-copper);
-    cursor: grab;
     outline: 1.5px solid black; 
     margin-top: -6px;
+    transition: transform 0.2s, background 0.2s, outline-color 0.2s;
   }
 
+  /* Inversione e ingrandimento su hover/active */
+  .slider-h:hover::-webkit-slider-thumb,
+  .slider-h:active::-webkit-slider-thumb {
+    transform: scale(1.3);
+    background: black;
+    outline-color: var(--mc-copper);
+  }
+
+  /* ── SLIDER RADIUS ── */
   .radius-svg {
     width: 100%;
     height: 60px;
     margin-top: 4px;
+    cursor: grab;
   }
 
+  .radius-svg:active {
+    cursor: grabbing;
+  }
+
+  .radius-thumb {
+    fill: var(--mc-copper);
+    stroke: black;
+    transition: fill 0.2s, stroke 0.2s, transform 0.2s;
+  }
+
+  .radius-svg:hover .radius-thumb,
+  .radius-svg:active .radius-thumb {
+    fill: black;
+    stroke: var(--mc-copper);
+    transform: scale(1.3);
+  }
+
+  /* ── CARDS MATERIALI ── */
   .materiali-grid {
     display: flex;
     flex-direction: row;
@@ -468,6 +501,11 @@
     overflow: hidden;
     flex-shrink: 0;
     margin: 0;
+    transition: transform 0.2s;
+  }
+
+  .mat-card:hover {
+    transform: scale(1.05);
   }
 
   .mat-card.selezionato { border-color: var(--mc-copper); }
@@ -530,14 +568,19 @@
     margin-left: 16px; 
   }
 
+  /* ── SLIDER WAX ── */
   .wax-input {
     width: 120px;
     -webkit-appearance: none;
     appearance: none;
     height: 2px;
     background: transparent;
-    cursor: pointer;
+    cursor: grab;
     margin: 0;
+  }
+
+  .wax-input:active {
+    cursor: grabbing;
   }
 
   .wax-input::-webkit-slider-thumb {
@@ -545,9 +588,17 @@
     appearance: none;
     width: 14px;
     height: 12px;
+    /* Immagine default: sfondo fluo, bordo nero */
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12'><polygon points='7,11 1,1 13,1' fill='%23BDF522' stroke='black' stroke-width='1.5' stroke-linejoin='round'/></svg>") no-repeat center;
     border: none;
-    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  /* Inversione: sfondo nero, bordo fluo */
+  .wax-input:hover::-webkit-slider-thumb,
+  .wax-input:active::-webkit-slider-thumb {
+    transform: scale(1.3);
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12'><polygon points='7,11 1,1 13,1' fill='black' stroke='%23BDF522' stroke-width='1.5' stroke-linejoin='round'/></svg>") no-repeat center;
   }
 
   .wax-track {
@@ -591,7 +642,6 @@
     margin-bottom: 0;
   }
 
-  /* ── NUOVO LAYOUT COLONNA DESTRA ── */
   .right-col {
     display: flex;
     flex-direction: column;
@@ -623,7 +673,6 @@
     margin: 0;
   }
 
-  /* PALLINI */
   .pallino {
     position: absolute;
     width: 17px;
@@ -655,7 +704,6 @@
     100% { box-shadow: 0 0 0 0 rgba(189, 245, 34, 0); }
   }
 
-  /* ── LINEE CONNETTRICI ── */
   .linea {
     position: absolute;
     background: black;
@@ -690,7 +738,6 @@
     to { transform: scaleX(1); }
   }
 
-  /* ── BOX ── */
   .tooltip-box {
     position: absolute;
     background: white;

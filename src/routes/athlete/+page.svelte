@@ -109,6 +109,8 @@
                   <span style="left: 100%">40cm</span>
                 </div>
                 <div class="ruler-container">
+                  <!-- L'input è posizionato prima per poter usare il selettore CSS adiacente (+) -->
+                  <input type="range" min="5" max="40" step="1" bind:value={config.deviazione} class="ruler-input" />
                   <svg class="ruler-svg" viewBox="0 0 400 24" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
                     <line x1="0" y1="1" x2="400" y2="1" stroke="black" stroke-width="1.5"/>
                     {#each Array(41) as _, i}
@@ -119,15 +121,15 @@
                         stroke-width={[0,5,10,20,40].includes(i) ? 1.5 : 1}
                       />
                     {/each}
-                    <polygon
-                      points="{config.deviazione * 10},1 {config.deviazione * 10 - 7},14 {config.deviazione * 10 + 7},14"
-                      fill="#BDF522"
-                      stroke="black"
-                      stroke-width="1.5"
-                      stroke-linejoin="round"
-                    />
+                    <g transform="translate({config.deviazione * 10}, 0)">
+                      <polygon
+                        class="ruler-thumb"
+                        points="0,1 -7,14 7,14"
+                        stroke-width="1.5"
+                        stroke-linejoin="round"
+                      />
+                    </g>
                   </svg>
-                  <input type="range" min="5" max="40" step="1" bind:value={config.deviazione} class="ruler-input" />
                 </div>
               </div>
               <p class="pannello-desc">Trajectory deviation measures the average distance between the athlete's actual line and the optimal racing trajectory across a full descent. A deviation of 10–15 cm at high speed does not stay isolated: it alters the entry angle into the next gate, forces a micro-correction, and compounds across every subsequent section. It is the single strongest predictor of final race time — and the primary driver of DNF risk when combined with high force output.</p>
@@ -156,14 +158,14 @@
                   {@const y2 = 100 - (isMajor ? 74 : 81) * Math.sin(a)}
                   <line {x1} {y1} {x2} {y2} stroke="black" stroke-width={isMajor ? 2 : 1}/>
                 {/each}
-                <polygon
-                  points="100,25 92,100 108,100"
-                  fill="var(--mc-copper)"
-                  stroke="black"
-                  stroke-width="1.5"
-                  stroke-linejoin="round"
-                  transform="rotate({rfdRotation}, 100, 100)"
-                />
+                <g transform="rotate({rfdRotation}, 100, 100)">
+                  <polygon
+                    class="rdf-thumb"
+                    points="100,25 92,100 108,100"
+                    stroke-width="1.5"
+                    stroke-linejoin="round"
+                  />
+                </g>
               </svg>
             </div>
             <p class="pannello-desc">RDF — Rate of Force Development — measures how quickly the athlete can generate and apply muscular force, expressed in Newtons per second. It is not the same as maximum strength: two athletes can have identical peak force but entirely different RFD values, meaning one reaches that peak in 150 milliseconds and the other in 300. In alpine skiing, those 150 milliseconds are the difference between a clean edge engagement and a lost gate.</p>
@@ -215,9 +217,8 @@
     min-height: 0;
   }
 
-  /* ── STILE IDENTICO A ENVIRONMENT ── */
   .left-intro {
-    display: block; /* Sostituisce il vecchio flex/gap per uniformità */
+    display: block; 
   }
 
   h1 {
@@ -292,21 +293,26 @@
   }
 
   .mass-btn {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
     border: 1.5px solid black;
-    background: transparent;
-    font-size: 18px;
+    background: #BDF522;
+    color: black;
+    font-size: 16px;
+    line-height: 1;
     cursor: pointer;
-    font-family: inherit;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 0;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
   }
 
   .mass-btn:hover {
     background: black;
-    color: white;
+    color: #BDF522;
+    transform: scale(1.15);
   }
 
   .mass-value {
@@ -363,8 +369,28 @@
     width: 100%;
     height: 100%;
     opacity: 0;
-    cursor: pointer;
+    cursor: grab;
     margin: 0;
+    z-index: 2;
+  }
+
+  .ruler-input:active {
+    cursor: grabbing;
+  }
+
+  /* Effetti di Hover sul triangolino del righello */
+  .ruler-thumb {
+    fill: #BDF522;
+    stroke: black;
+    transition: fill 0.2s, stroke 0.2s, transform 0.2s;
+    transform-origin: 0px 7.5px;
+  }
+
+  .ruler-input:hover + .ruler-svg .ruler-thumb,
+  .ruler-input:active + .ruler-svg .ruler-thumb {
+    fill: black;
+    stroke: #BDF522;
+    transform: scale(1.3);
   }
 
   .rdf-body {
@@ -386,8 +412,27 @@
   .rdf-svg {
     width: 160px;
     height: 90px;
-    cursor: crosshair;
+    cursor: grab;
     user-select: none;
+  }
+
+  .rdf-svg:active {
+    cursor: grabbing;
+  }
+
+  /* Effetti di hover sull'indicatore RDF */
+  .rdf-thumb {
+    fill: var(--mc-copper);
+    stroke: black;
+    transition: fill 0.2s, stroke 0.2s, transform 0.2s;
+    transform-origin: 100px 100px;
+  }
+
+  .rdf-svg:hover .rdf-thumb,
+  .rdf-svg:active .rdf-thumb {
+    fill: black;
+    stroke: var(--mc-copper);
+    transform: scale(1.15);
   }
 
   .rdf-value {

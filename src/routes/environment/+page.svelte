@@ -36,7 +36,6 @@
 
 <div class="page">
 
-  <!-- ── COLONNA SINISTRA ── -->
   <div class="col-sx">
     <div class="sx-top">
       <h1>Environment</h1>
@@ -49,7 +48,6 @@
     </div>
   </div>
 
-  <!-- ── COLONNA DESTRA ── -->
   <div class="col-dx">
     <div class="dx-header">CHOOSE YOUR TRACK</div>
 
@@ -59,7 +57,10 @@
         class:attiva={config.venue === id}
         onclick={() => scegli(id)}
       >
-        <h2>{p.nome}</h2>
+        <div class="pista-title-row">
+          <h2>{p.nome}</h2>
+          <div class="radio-circle"></div>
+        </div>
         <p class="track-label">{p.track}</p>
         <p class="track-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
 
@@ -100,15 +101,15 @@
 
   /* ── SINISTRA ── */
   .col-sx {
-    border-right: 1.5px solid black; /* Uniformato a 1.5px */
+    border-right: 1.5px solid black; 
     display: flex;
     flex-direction: column;
     overflow: hidden;
   }
 
   .sx-top {
-    padding: 40px; /* Uniformato a 40px (coerente con i 2.5rem/40px di tutto il progetto) */
-    border-bottom: 1.5px solid black; /* Uniformato a 1.5px */
+    padding: 40px; 
+    border-bottom: 1.5px solid black; 
   }
 
   .sx-top h1 {
@@ -117,7 +118,7 @@
     letter-spacing: -0.03em;
     line-height: 1;
     margin-top: 0;
-    margin-bottom: 24px; /* Uniformato a multiplo */
+    margin-bottom: 24px; 
   }
 
   .desc {
@@ -133,7 +134,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px; /* Uniformato a 40px */
+    padding: 40px; 
   }
 
   .sx-img img {
@@ -147,27 +148,27 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    padding-bottom: 40px; /* Evita collisioni visive con il fondo o con il footer */
+    padding-bottom: 40px; 
   }
 
   .dx-header {
-    padding: 24px 40px; /* Uniformato l'allineamento orizzontale a 40px */
+    padding: 24px 40px; 
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    border-bottom: 1.5px solid black; /* Uniformato a 1.5px */
+    border-bottom: 1.5px solid black; 
   }
 
   .pista {
     border: none;
-    border-bottom: 1.5px solid black; /* Uniformato a 1.5px */
+    border-bottom: 1.5px solid black; 
     background: transparent;
-    padding: 28px 40px; /* Allineato orizzontalmente a 40px */
+    padding: 28px 40px; 
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    gap: 8px; /* Arrotondato a multiplo preciso */
+    gap: 8px; 
     text-align: left;
     font-family: inherit;
     transition: background 0.2s, color 0.2s;
@@ -182,6 +183,14 @@
     color: black;
   }
 
+  /* NUOVO: Raggruppamento per titolo e pallino indicatore */
+  .pista-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
   .pista h2 {
     font-size: clamp(1.8rem, 3vw, 2.6rem);
     font-weight: 700;
@@ -190,12 +199,40 @@
     margin: 0;
   }
 
+  /* NUOVO: Pallino di selezione stile slider */
+  .radio-circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1.5px solid black;
+    background: transparent;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    flex-shrink: 0;
+  }
+
+  /* Ingrandimento al passaggio del mouse sulla card */
+  .pista:hover .radio-circle {
+    transform: scale(1.15);
+  }
+
+  /* Stato attivo: riempimento fluo */
+  .pista.attiva .radio-circle {
+    background: #BDF522;
+    border-color: black;
+  }
+
+  /* Inversione dei colori al passaggio del mouse sulla card attiva */
+  .pista.attiva:hover .radio-circle {
+    background: black;
+    border-color: #BDF522;
+  }
+
   .track-label {
     font-size: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.15em;
     text-transform: uppercase;
-    margin-top: 8px; /* Uniformato */
+    margin-top: 8px; 
     margin-bottom: 0;
   }
 
@@ -205,15 +242,15 @@
     opacity: 0.7;
     max-width: 42ch;
     margin-top: 0;
-    margin-bottom: 8px; /* Uniformato */
+    margin-bottom: 8px; 
   }
 
   /* STATS */
   .stats {
     display: flex;
     flex-direction: column;
-    gap: 4px; /* Arrotondato a multiplo di 4 */
-    margin-top: 8px; /* Uniformato */
+    gap: 4px; 
+    margin-top: 8px; 
   }
 
   .stat {
@@ -222,7 +259,7 @@
     align-items: center;
     background: black;
     color: white;
-    padding: 8px 16px; /* Uniformato a pixel puliti */
+    padding: 8px 16px; 
     font-size: 0.7rem;
     letter-spacing: 0.1em;
   }
@@ -246,12 +283,12 @@
   .stat-terrain {
     display: flex;
     align-items: center;
-    gap: 8px; /* Arrotondato */
+    gap: 8px; 
   }
 
   .dot {
-    width: 8px; /* Arrotondato */
-    height: 8px; /* Arrotondato */
+    width: 8px; 
+    height: 8px; 
     border-radius: 50%;
     border: 1px solid currentColor;
     display: inline-block;
@@ -265,7 +302,7 @@
     font-size: 0.55rem;
     text-transform: lowercase;
     letter-spacing: 0.05em;
-    margin-left: 8px; /* Uniformato */
+    margin-left: 8px; 
     opacity: 0.8;
   }
 </style>
