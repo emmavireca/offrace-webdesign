@@ -743,7 +743,7 @@
     background: white;
     border: 1.5px solid black; 
     padding: 16px; 
-    width: 220px;
+    width: 620px;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s, transform 0.2s; 

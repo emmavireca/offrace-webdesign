@@ -7,6 +7,7 @@
   let { children } = $props()
 
   let isHome = $derived($page.url.pathname === '/')
+  let isResult = $derived($page.url.pathname === '/result')
 
   // Tiene traccia della fase massima raggiunta per mantenere i dati visibili se si torna indietro
   let maxFase = $state(0)
@@ -110,12 +111,13 @@
   
   <button type="button" class="next" onclick={() => {
       if (isHome) goto('/environment')
+      else if (isResult) { config.fase = 0; config.introFinita = false; goto('/'); }
       else {
         const rotte = ['/environment', '/athlete', '/equipment', '/result'];
         goto(rotte[config.fase] || '/result');
       }
     }}>
-    {isHome ? 'START SIMULATION →' : 'NEXT PHASE →'}
+    {isHome ? 'START SIMULATION →' : isResult ? 'END SIMULATION →' : 'NEXT PHASE →'}
   </button>
 </footer>
 
