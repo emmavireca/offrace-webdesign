@@ -4,6 +4,7 @@
   import { config } from '$lib/config.svelte.js'
   import { goto } from '$app/navigation' 
   import { slide } from 'svelte/transition'
+  import { onMount } from 'svelte'
 
   config.fase = 3
 
@@ -52,6 +53,14 @@
   function attivo(nome) {
     return hover === nome || fissi[nome]
   }
+
+  function startZoom(key) { config.zoomTarget = key }
+
+    onMount(() => {
+      const rilascia = () => { config.zoomTarget = null }
+      window.addEventListener('pointerup', rilascia)
+      return () => window.removeEventListener('pointerup', rilascia)
+    })
 
   const descrizioni = {
     length: 'Affects load distribution along the edge contact area. A longer ski increases stability at high speed and improves edge hold on hardpack, but reduces responsiveness.',
@@ -119,6 +128,7 @@
                 max={config.venue === 'bormio' ? 226 : 218}
                 step={1}
                 bind:value={config.lunghezza}
+                  onpointerdown={() => startZoom('length')}
                 class="slider-h"
               />
             </div>
@@ -135,6 +145,7 @@
               <input type="range"
                 min={63} max={68} step={1}
                 bind:value={config.larghezza}
+                  onpointerdown={() => startZoom('width')}
                 class="slider-h"
               />
             </div>
@@ -149,7 +160,7 @@
                 <span class="range-label">MAX {config.venue === 'bormio' ? '55' : '50'}</span>
               </div>
               <svg viewBox="0 -5 200 100" class="radius-svg"
-                onmousedown={() => { dragging = true }}
+                onmousedown={() => { dragging = true; startZoom('radius') }}
                 onmousemove={onDrag}
                 onmouseup={() => { dragging = false }}
                 onmouseleave={() => { dragging = false }}
@@ -228,7 +239,7 @@
       
       <div class="right-info">
         <div class="sci-overlay">
-
+{#if !config.zoomAttivo}
           {#if attivo('length')}
             <div class="linea v-up" style="left: 52%; top: -15%; height: 105%;"></div>
             <div class="linea h-right" style="left: 52%; top: -15%; width: 18%;"></div>
@@ -275,7 +286,7 @@
             <p class="tooltip-desc">{descrizioni.radius}</p>
             <p class="tooltip-valore">{config.raggio} M</p>
           </div>
-
+{/if}
         </div>
       </div>
     </div>
@@ -305,6 +316,7 @@
     gap: 24px; 
     overflow-y: auto;
     border-right: 1.5px solid black; 
+    background: var(--mc-bg);
   }
 
   .left-intro {
@@ -664,6 +676,7 @@
     padding: 40px; 
     gap: 24px; 
     flex: 1; 
+    overflow: hidden;
   }
 
   .sci-overlay {
