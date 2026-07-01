@@ -39,7 +39,8 @@
   <div class="col-sx">
     <div class="sx-top">
       <h1>Environment</h1>
-      <p class="desc">Every race is decided before the start. The equipment an athlete carries onto the slope is the result of years of research, proprietary materials, and technical expertise that most teams cannot access. Geometry, construction, and surface treatment are not neutral choices — they are variables that directly affect speed and stability.</p>
+      <p class="desc">The environment where the race takes place dictates its physical characteristics and unique challenges. To face them, the athlete must be fully prepared, combining physical endurance with a strategic study of the most advantageous trajectories.
+</p>
     </div>
     <div class="sx-img">
       {#if pistaMostrata}
@@ -64,7 +65,7 @@
           <div class="radio-circle"></div>
         </div>
         <p class="track-label">{p.track}</p>
-        <p class="track-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+        <p class="track-desc">As a men's course, it requires elite physical conditioning because the high speed severely tests joint endurance.</p>
 
         <div class="stats">
           <div class="stat">

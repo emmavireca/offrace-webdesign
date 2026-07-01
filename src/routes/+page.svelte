@@ -24,11 +24,11 @@
     <div class="riga-top">
       <div class="cella bordo-r">
         <h3 class="num-title">01_Performance</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+        <p>Alpine skiing performance is the outcome of a complex, interconnected system. It is driven by the athlete, the equipment, the environment, the regulations, and the timing and precision measurement systems.</p>
       </div>
       <div class="cella">
         <h3 class="num-title">02_More than an athlete</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p>An athlete's success is about more than just talent and physical or mental preparation. While these are obviously essential, they are often not enough to reach the top. The equipment they use also plays a crucial role.</p>
       </div>
     </div>
 
@@ -52,8 +52,7 @@
 
       <div class="cella bordo-r">
         <h3 class="num-title">03_Technodoping</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        <p>Dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+        <p>Technodoping is an interconnected system. It involves technologies that enhance performance to the point of challenging the very concept of sport as something comparable, merit-based, and governable. The core issue is determining whether performance can still be fundamentally credited to the athlete, or if it has simply become the product of a technical advantage gained through superior resources.</p>
       </div>
 
       <div class="cella-occhiali bordo-r">
@@ -62,20 +61,20 @@
 
       <div class="cella no-scroll">
         <h3 class="num-title">04_Regulations</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
+        <p>The International Ski Federation's rules define the framework for what is possible in terms of performance.</p>
 
         <div class="reg-list">
           <div class="reg-row">
             <span class="reg-num">1</span>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>Gender-specific ski geometry (male or female): length and turning radius.</p>
           </div>
           <div class="reg-row">
             <span class="reg-num">2</span>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+            <p>The core and composite materials of the ski layers.</p>
           </div>
           <div class="reg-row">
             <span class="reg-num">3</span>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+            <p>The type of ski wax applied to the base for snow contact.</p>
           </div>
         </div>
       </div>
