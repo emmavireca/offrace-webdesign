@@ -22,6 +22,8 @@
     enableZoom={false}
     enablePan={false}
     target={[0, -1.5, 0]}
+    autoRotate
+    autoRotateSpeed={1.5}
   />
 </T.PerspectiveCamera>
 <T.AmbientLight intensity={1} />
