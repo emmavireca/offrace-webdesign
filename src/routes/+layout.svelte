@@ -66,7 +66,7 @@
         {#if maxFase >= 2}
           <div class="fase-info">
             <div class="info-block">
-              <span class="info-label">TRAJ. DEV & RFD</span>
+              <span class="info-label">TRAJECTORY DEV & RFD</span>
               <span class="info-valore">DEV {config.deviazione || '—'}CM &nbsp; RFD {config.rfd || '—'}N/S</span>
             </div>
             <div class="info-row-bottom">
