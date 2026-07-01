@@ -60,7 +60,7 @@
         <OcchialiDither />
       </div>
 
-      <div class="cella">
+      <div class="cella no-scroll">
         <h3 class="num-title">04_Regulations</h3>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
 
@@ -137,7 +137,7 @@
 
   .bordo-r { border-right: 1.5px solid black; }
 
-  /* ── TIPOGRAFIA & DISTANZE (Standardizzate a 40px/24px) ── */
+  /* ── TIPOGRAFIA & DISTANZE ── */
   .num-title {
     font-size: clamp(1rem, 1.4vw, 1.25rem);
     font-weight: 800;
@@ -224,7 +224,7 @@
   .riga-bottom .cella {
     padding: 40px;
     height: 100%;
-    overflow-y: auto; 
+    overflow: hidden; /* Fissato: rimosso auto */
   }
 
   .cella-occhiali {
@@ -238,10 +238,9 @@
     overflow: hidden;
   }
 
-  /* ── TABELLA REGULATIONS (Estesa) ── */
+  /* ── TABELLA REGULATIONS ── */
   .reg-list {
     margin-top: 24px;
-    /* I margini negativi estendono la riga coprendo esattamente il padding di 40px della cella */
     margin-left: -40px;
     margin-right: -40px;
     border-top: 1.5px solid black;
@@ -249,10 +248,14 @@
 
   .reg-row {
     display: flex;
-    gap: 24px; /* Stessa distanza logica del resto del sito */
-    /* Rimettiamo i 40px orizzontali per riallineare il contenuto col resto della cella */
+    gap: 24px;
     padding: 16px 40px; 
     border-bottom: 1.5px solid black;
+  }
+
+  /* Rimuove il bordo dall'ultima riga */
+  .reg-row:last-child {
+    border-bottom: none;
   }
 
   .reg-num {
@@ -260,7 +263,7 @@
     font-family: 'Geist Mono', monospace;
     font-weight: 700;
     font-size: 0.85rem;
-    padding-top: 1px; /* Riallineamento ottico col testo */
+    padding-top: 1px;
   }
 
   .reg-row p {
@@ -268,6 +271,6 @@
     line-height: 1.6;
     color: #444;
     margin: 0;
-    padding: 0; /* Il padding ora è gestito direttamente dalla riga */
+    padding: 0;
   }
 </style>
