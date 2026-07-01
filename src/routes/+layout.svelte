@@ -49,8 +49,8 @@
             </div>
             <div class="info-row-bottom">
               <div class="info-block">
-                <span class="info-label">GENDER</span>
-                <span class="info-valore">{config.venue === 'bormio' ? 'MALE' : 'FEMALE'}</span>
+                <span class="info-label">TYPE</span>
+                <span class="info-valore">{config.venue === 'bormio' ? 'MALE TRACK' : 'FEMALE TRACK'}</span>
               </div>
             </div>
           </div>
