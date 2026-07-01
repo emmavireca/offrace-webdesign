@@ -158,6 +158,6 @@
   aspect-ratio: 16/9;
   object-fit: contain;
   display: block;
-  transform: translate(-20px,-70px) scale(1.8);
+  transform: translate(-20px,-30px) scale(1.8);
 }
 </style>
