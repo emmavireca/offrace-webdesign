@@ -56,11 +56,11 @@
 
   function startZoom(key) { config.zoomTarget = key }
 
-    onMount(() => {
-      const rilascia = () => { config.zoomTarget = null }
-      window.addEventListener('pointerup', rilascia)
-      return () => window.removeEventListener('pointerup', rilascia)
-    })
+  onMount(() => {
+    const rilascia = () => { config.zoomTarget = null }
+    window.addEventListener('pointerup', rilascia)
+    return () => window.removeEventListener('pointerup', rilascia)
+  })
 
   const descrizioni = {
     length: 'Affects load distribution along the edge contact area. A longer ski increases stability at high speed and improves edge hold on hardpack, but reduces responsiveness.',
@@ -88,9 +88,7 @@
     config.raggio = Math.round(radMin + (1 - ang / Math.PI) * (radMax - radMin))
   }
 
-  // Inizializza su 'geometry' affinché sia l'unico aperto al caricamento
   let accordionOpen = $state('geometry')
-
 </script>
 
 <div class="viewport">
@@ -99,13 +97,13 @@
   </Canvas>
 
   <div class="overlay">
-
     <div class="left">
       <div class="left-intro">
         <h1>Equipment</h1>
         <p class="desc">Every race is decided before the start. The equipment an athlete carries onto the slope is the result of years of research.</p>
       </div>
 
+      <!-- SEZIONE GEOMETRY -->
       <div class="sezione">
         <button class="sezione-header" onclick={() => accordionOpen = 'geometry'}>
           <span>GEOMETRY</span>
@@ -128,7 +126,7 @@
                 max={config.venue === 'bormio' ? 226 : 218}
                 step={1}
                 bind:value={config.lunghezza}
-                  onpointerdown={() => startZoom('length')}
+                onpointerdown={() => startZoom('length')}
                 class="slider-h"
               />
             </div>
@@ -145,7 +143,7 @@
               <input type="range"
                 min={63} max={68} step={1}
                 bind:value={config.larghezza}
-                  onpointerdown={() => startZoom('width')}
+                onpointerdown={() => startZoom('width')}
                 class="slider-h"
               />
             </div>
@@ -175,6 +173,7 @@
         {/if}
       </div>
 
+      <!-- SEZIONE MATERIALS -->
       <div class="sezione">
         <button class="sezione-header" onclick={() => accordionOpen = 'materials'}>
           <span>MATERIALS</span>
@@ -204,6 +203,7 @@
         {/if}
       </div>
 
+      <!-- SEZIONE WAX PROTOCOL -->
       <div class="sezione">
         <button class="sezione-header" onclick={() => accordionOpen = 'wax'}>
           <span>WAX PROTOCOL</span>
@@ -221,7 +221,12 @@
                 />
                 <div class="wax-track">
                   {#each Array(10) as _, i}
-                    <div class="wax-bacchetta" class:piena={i / 10 < (ceraIndex + 0.2) / 2}></div>
+                    {@const isPiena = i / 10 < (ceraIndex + 0.2) / 2}
+                    <div 
+                      class="wax-bacchetta" 
+                      class:piena={isPiena}
+                      style="--index: {i};"
+                    ></div>
                   {/each}
                 </div>
               </div>
@@ -231,66 +236,65 @@
           </div>
         {/if}
       </div>
-
     </div>
 
+    <!-- COLONNA DESTRA (3D OVERLAY) -->
     <div class="right-col">
       <div class="dx-header">CONFIGURE YOUR SKI SYSTEM</div>
       
       <div class="right-info">
         <div class="sci-overlay">
-{#if !config.zoomAttivo}
-          {#if attivo('length')}
-            <div class="linea v-up" style="left: 52%; top: -15%; height: 105%;"></div>
-            <div class="linea h-right" style="left: 52%; top: -15%; width: 18%;"></div>
-          {/if}
-          <button class="pallino" style="left: 52%; top: 90%"
-            onmouseenter={() => hover = 'length'}
-            onmouseleave={() => hover = null}
-            onclick={() => toggleFisso('length')}
-            class:attivo={attivo('length')}>
-          </button>
-          <div class="tooltip-box" class:visibile={attivo('length')} style="left: 66%; top: -25%; cursor: pointer;" onclick={() => goto('/athlete')}>
-            <p class="tooltip-title">LENGTH</p>
-            <p class="tooltip-desc">{descrizioni.length}</p>
-            <p class="tooltip-valore">{config.lunghezza} CM</p>
-          </div>
+          {#if !config.zoomAttivo}
+            {#if attivo('length')}
+              <div class="linea v-up" style="left: 52%; top: -15%; height: 105%;"></div>
+              <div class="linea h-right" style="left: 52%; top: -15%; width: 18%;"></div>
+            {/if}
+            <button class="pallino" style="left: 52%; top: 90%"
+              onmouseenter={() => hover = 'length'}
+              onmouseleave={() => hover = null}
+              onclick={() => toggleFisso('length')}
+              class:attivo={attivo('length')}>
+            </button>
+            <div class="tooltip-box" class:visibile={attivo('length')} style="left: 66%; top: -25%; cursor: pointer;" onclick={() => goto('/athlete')}>
+              <p class="tooltip-title">LENGTH</p>
+              <p class="tooltip-desc">{descrizioni.length}</p>
+              <p class="tooltip-valore">{config.lunghezza} CM</p>
+            </div>
 
-          {#if attivo('width')}
-            <div class="linea v-up" style="left: 20%; top: 88%; height: 62%;"></div>
-          {/if}
-          <button class="pallino" style="left: 20%; top: 150%"
-            onmouseenter={() => hover = 'width'}
-            onmouseleave={() => hover = null}
-            onclick={() => toggleFisso('width')}
-            class:attivo={attivo('width')}>
-          </button>
-         <div class="tooltip-box width-box" class:visibile={attivo('width')} style="left: 3.5%; top: 0%; cursor: pointer;" onclick={() => goto('/environment')}>
-            <p class="tooltip-title">WIDTH</p>
-            <p class="tooltip-desc">{descrizioni.width}</p>
-            <p class="tooltip-valore">{config.larghezza} MM</p>
-          </div>
+            {#if attivo('width')}
+              <div class="linea v-up" style="left: 20%; top: 88%; height: 62%;"></div>
+            {/if}
+            <button class="pallino" style="left: 20%; top: 150%"
+              onmouseenter={() => hover = 'width'}
+              onmouseleave={() => hover = null}
+              onclick={() => toggleFisso('width')}
+              class:attivo={attivo('width')}>
+            </button>
+            <div class="tooltip-box width-box" class:visibile={attivo('width')} style="left: 3.5%; top: 0%; cursor: pointer;" onclick={() => goto('/environment')}>
+              <p class="tooltip-title">WIDTH</p>
+              <p class="tooltip-desc">{descrizioni.width}</p>
+              <p class="tooltip-valore">{config.larghezza} MM</p>
+            </div>
 
-          {#if attivo('radius')}
-            <div class="linea v-down" style="left: 28%; top: 200%; height: 33%;"></div>
-            <div class="linea h-right" style="left: 28%; top: 232%; width: 22%;"></div>
+            {#if attivo('radius')}
+              <div class="linea v-down" style="left: 28%; top: 200%; height: 33%;"></div>
+              <div class="linea h-right" style="left: 28%; top: 232%; width: 22%;"></div>
+            {/if}
+            <button class="pallino" style="left: 28%; top: 200%"
+              onmouseenter={() => hover = 'radius'}
+              onmouseleave={() => hover = null}
+              onclick={() => toggleFisso('radius')}
+              class:attivo={attivo('radius')}>
+            </button>
+            <div class="tooltip-box" class:visibile={attivo('radius')} style="left: 50%; top: 222%; cursor: pointer;" onclick={() => goto('/athlete')}>
+              <p class="tooltip-title">RADIUS</p>
+              <p class="tooltip-desc">{descrizioni.radius}</p>
+              <p class="tooltip-valore">{config.raggio} M</p>
+            </div>
           {/if}
-          <button class="pallino" style="left: 28%; top: 200%"
-            onmouseenter={() => hover = 'radius'}
-            onmouseleave={() => hover = null}
-            onclick={() => toggleFisso('radius')}
-            class:attivo={attivo('radius')}>
-          </button>
-          <div class="tooltip-box" class:visibile={attivo('radius')} style="left: 50%; top: 222%; cursor: pointer;" onclick={() => goto('/athlete')}>
-            <p class="tooltip-title">RADIUS</p>
-            <p class="tooltip-desc">{descrizioni.radius}</p>
-            <p class="tooltip-valore">{config.raggio} M</p>
-          </div>
-{/if}
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -461,7 +465,6 @@
     transition: transform 0.2s, background 0.2s, outline-color 0.2s;
   }
 
-  /* Inversione e ingrandimento su hover/active */
   .slider-h:hover::-webkit-slider-thumb,
   .slider-h:active::-webkit-slider-thumb {
     transform: scale(1.3);
@@ -578,6 +581,7 @@
     gap: 4px;
     width: fit-content;
     margin-left: 16px; 
+    position: relative;
   }
 
   /* ── SLIDER WAX ── */
@@ -585,9 +589,11 @@
     width: 120px;
     -webkit-appearance: none;
     appearance: none;
-    height: 2px;
+    height: 12px;
     background: transparent;
     cursor: grab;
+    position: relative;
+    z-index: 5;
     margin: 0;
   }
 
@@ -595,18 +601,27 @@
     cursor: grabbing;
   }
 
+  .wax-input::-webkit-slider-runnable-track {
+    background: transparent !important;
+    border: none !important;
+    height: 0px !important;
+  }
+  .wax-input::-moz-range-track {
+    background: transparent !important;
+    border: none !important;
+    height: 0px !important;
+  }
+
   .wax-input::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 14px;
     height: 12px;
-    /* Immagine default: sfondo fluo, bordo nero */
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12'><polygon points='7,11 1,1 13,1' fill='%23BDF522' stroke='black' stroke-width='1.5' stroke-linejoin='round'/></svg>") no-repeat center;
     border: none;
     transition: transform 0.2s;
   }
 
-  /* Inversione: sfondo nero, bordo fluo */
   .wax-input:hover::-webkit-slider-thumb,
   .wax-input:active::-webkit-slider-thumb {
     transform: scale(1.3);
@@ -625,13 +640,17 @@
 
   .wax-bacchetta {
     width: 5px;
-    height: 16px;
+    height: 12px;
     background: #ccc;
     transform: skewX(-12deg);
     flex: none;
+    transition: height 0.2s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.2s ease;
   }
 
-  .wax-bacchetta.piena { background: black; }
+  .wax-bacchetta.piena { 
+    background: black; 
+    height: calc(14px + var(--index) * 1.4px);
+  }
 
   .wax-mu {
     font-size: 0.75rem;
