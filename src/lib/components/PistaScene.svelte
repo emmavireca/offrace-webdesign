@@ -12,8 +12,8 @@
   // camera diversa per ogni pista
   let cam = $derived(
     src.includes('bormio')
-      ? { pos: [6, 4, 7], fov: 60 }   // ← valori per BORMIO
-      : { pos: [4, 3, 6], fov: 55 }   // ← valori per OLYMPIA
+      ? { pos: [6, 4, 7], fov: 70 }   // ← valori per BORMIO
+      : { pos: [4, 3, 6], fov: 75 }   // ← valori per OLYMPIA
   )
 </script>
 {#key src}
