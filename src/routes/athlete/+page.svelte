@@ -178,7 +178,7 @@
       <div class="dx-header">CONFIGURE YOUR ATHLETE</div>
       
       <div class="viewer-container">
-        <AtletaViewer {modello} />
+        <AtletaViewer {modello} rfd={config.rfd} deviazione={config.deviazione}/>
         {#if staEscendo && tutaPrecedente}
           <img class="tuta {config.venue === 'bormio' ? 'tuta-uomo' : 'tuta-donna'} esce-{direzione}" src={tutaPrecedente} alt="tuta precedente" />
         {/if}
@@ -188,6 +188,7 @@
           {/if}
         {/key}
       </div>
+
     </div>
 
   </main>

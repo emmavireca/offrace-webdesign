@@ -2,16 +2,15 @@
   import { Canvas } from '@threlte/core'
   import AtletaScene from './AtletaScene.svelte'
 
-  let { modello } = $props()
+  // Riceve sia il modello che l'rfd dalla pagina principale
+  let { modello, rfd, deviazione } = $props()
 </script>
 
 <div class="viewer">
   <Canvas>
-    <AtletaScene {modello} />
+    <AtletaScene {modello} {rfd} {deviazione}/>
   </Canvas>
 </div>
-
-
 
 <style>
   .viewer {
