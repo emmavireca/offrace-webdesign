@@ -22,8 +22,12 @@
   })
 </script>
 
-<T.PerspectiveCamera makeDefault position={[0, 1, 4]} fov={50}>
-  <OrbitControls />
+<T.PerspectiveCamera makeDefault position={[1, 1, 4]} fov={40}>
+  <OrbitControls
+    autoRotate
+    autoRotateSpeed={2}
+    enableZoom={false}
+  />
 </T.PerspectiveCamera>
 
 <T.DirectionalLight position={[2, 3, 2]} intensity={2} />

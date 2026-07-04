@@ -46,6 +46,10 @@ get rfd() { return _config.rfd },
 set rfd(v) { _config.rfd = v },
 get deviazione() { return _config.deviazione },
 set deviazione(v) { _config.deviazione = v },
+get zoomAttivo() { return _config.zoomAttivo },
+set zoomAttivo(v) { _config.zoomAttivo = v },
+get zoomTarget() { return _config.zoomTarget },
+set zoomTarget(v) { _config.zoomTarget = v },
 }
 
 
