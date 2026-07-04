@@ -246,8 +246,8 @@
         <div class="sci-overlay">
           {#if !config.zoomAttivo}
             {#if attivo('length')}
-              <div class="linea v-up" style="left: 52%; top: -15%; height: 105%;"></div>
-              <div class="linea h-right" style="left: 52%; top: -15%; width: 18%;"></div>
+              <div class="linea v-up" style="left: 52%; top: 0%; height: 90%;"></div>
+              <div class="linea h-right" style="left: 52%; top: 0%; width: 10%;"></div>
             {/if}
             <button class="pallino" style="left: 52%; top: 90%"
               onmouseenter={() => hover = 'length'}
@@ -255,7 +255,7 @@
               onclick={() => toggleFisso('length')}
               class:attivo={attivo('length')}>
             </button>
-            <div class="tooltip-box" class:visibile={attivo('length')} style="left: 66%; top: -25%; cursor: pointer;" onclick={() => goto('/athlete')}>
+            <div class="tooltip-box" class:visibile={attivo('length')} style="left: 58%; top: -15%; cursor: pointer;" onclick={() => goto('/athlete')}>
               <p class="tooltip-title">LENGTH</p>
               <p class="tooltip-desc">{descrizioni.length}</p>
               <p class="tooltip-valore">{config.lunghezza} CM</p>
@@ -270,7 +270,7 @@
               onclick={() => toggleFisso('width')}
               class:attivo={attivo('width')}>
             </button>
-            <div class="tooltip-box width-box" class:visibile={attivo('width')} style="left: 3.5%; top: 0%; cursor: pointer;" onclick={() => goto('/environment')}>
+            <div class="tooltip-box width-box" class:visibile={attivo('width')} style="left: 3.5%; top: 8%; cursor: pointer;" onclick={() => goto('/environment')}>
               <p class="tooltip-title">WIDTH</p>
               <p class="tooltip-desc">{descrizioni.width}</p>
               <p class="tooltip-valore">{config.larghezza} MM</p>
@@ -286,7 +286,7 @@
               onclick={() => toggleFisso('radius')}
               class:attivo={attivo('radius')}>
             </button>
-            <div class="tooltip-box" class:visibile={attivo('radius')} style="left: 50%; top: 222%; cursor: pointer;" onclick={() => goto('/athlete')}>
+            <div class="tooltip-box" class:visibile={attivo('radius')} style="left: 50%; top: 210%; cursor: pointer;" onclick={() => goto('/athlete')}>
               <p class="tooltip-title">RADIUS</p>
               <p class="tooltip-desc">{descrizioni.radius}</p>
               <p class="tooltip-valore">{config.raggio} M</p>
@@ -799,7 +799,7 @@
     background: white;
     border: 1.5px solid black; 
     padding: 16px; 
-    width: 220px;
+    width: 280px;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s, transform 0.2s; 
