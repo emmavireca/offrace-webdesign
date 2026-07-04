@@ -2,6 +2,7 @@
   import { goto } from '$app/navigation'
   import { config } from '$lib/config.svelte.js'
   import AtletaViewer from '$lib/components/AtletaViewer.svelte'
+  import { slide } from 'svelte/transition'
 
   config.fase = 2
   const massaMin = config.venue === 'bormio' ? 85 : 65
@@ -72,6 +73,9 @@
     'Questa tuta si avvicina ai limiti regolamentari. Tecnicamente legale, ma offre un vantaggio aerodinamico significativo.',
     'Questa tuta supera i limiti FIS. Classificata come techno-doping — vantaggio sleale e non ammesso in gara.'
   ]
+
+  // Gestione stato Accordion
+  let accordionOpen = $state('mass')
 </script>
 
 <div class="page">
@@ -83,24 +87,40 @@
         <p class="desc">The athlete is not a fixed variable. Body composition, neuromuscular capacity, and technical precision are not equal across competitors — and none of them are regulated. While equipment is subject to FIS specifications and wax protocols are enforced at the gate, the physical profile of the athlete remains entirely outside the compliance system.</p>
       </div>
 
-      <div class="pannelli">
-        <div class="pannelli-row">
-          <div class="pannello pannello-small">
-            <div class="pannello-header">BODY MASS</div>
-            <div class="pannello-body">
-              <div class="mass-control">
-                <button class="mass-btn" onclick={() => { if (config.massa > massaMin) config.massa-- }}>−</button>
-                <span class="mass-value">{config.massa} <span class="mass-unit">kg</span></span>
-                <button class="mass-btn" onclick={() => { if (config.massa < massaMax) config.massa++ }}>+</button>
+      <div class="accordion-group">
+        
+        <div class="sezione">
+          <button class="sezione-header" onclick={() => accordionOpen = 'mass'}>
+            <span>BODY MASS</span>
+            <span class="accordion-icon">{accordionOpen === 'mass' ? '−' : '+'}</span>
+          </button>
+          
+          {#if accordionOpen === 'mass'}
+            <div class="sezione-body" transition:slide>
+              <div class="mass-row">
+                <div class="mass-control">
+                  <button class="mass-btn" onclick={() => { if (config.massa > massaMin) config.massa-- }}>−</button>
+                  <span class="mass-value">{config.massa} <span class="mass-unit">kg</span></span>
+                  <button class="mass-btn" onclick={() => { if (config.massa < massaMax) config.massa++ }}>+</button>
+                </div>
               </div>
               <p class="pannello-desc">Body mass determines the amount of potential energy an athlete carries into the descent. A higher mass accelerates faster on straight sections where gravitational pull dominates, but increases joint load in technical sections and reduces responsiveness in direction changes.</p>
             </div>
-          </div>
+          {/if}
+        </div>
 
-          <div class="pannello pannello-large">
-            <div class="pannello-header">TRAJECTORY DEVIATION</div>
-            <div class="pannello-body">
+        <div class="sezione">
+          <button class="sezione-header" onclick={() => accordionOpen = 'trajectory'}>
+            <span>TRAJECTORY DEVIATION</span>
+            <span class="accordion-icon">{accordionOpen === 'trajectory' ? '−' : '+'}</span>
+          </button>
+          
+          {#if accordionOpen === 'trajectory'}
+            <div class="sezione-body" transition:slide>
               <div class="ruler-wrap">
+                <div class="ruler-header">
+                   <span class="val-live">{config.deviazione} CM</span>
+                </div>
                 <div class="ruler-labels">
                   <span style="left: 0%">0</span>
                   <span style="left: 12.5%">5cm</span>
@@ -109,7 +129,6 @@
                   <span style="left: 100%">40cm</span>
                 </div>
                 <div class="ruler-container">
-                  <!-- L'input è posizionato prima per poter usare il selettore CSS adiacente (+) -->
                   <input type="range" min="5" max="40" step="1" bind:value={config.deviazione} class="ruler-input" />
                   <svg class="ruler-svg" viewBox="0 0 400 24" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
                     <line x1="0" y1="1" x2="400" y2="1" stroke="black" stroke-width="1.5"/>
@@ -134,61 +153,67 @@
               </div>
               <p class="pannello-desc">Trajectory deviation measures the average distance between the athlete's actual line and the optimal racing trajectory across a full descent. A deviation of 10–15 cm at high speed does not stay isolated: it alters the entry angle into the next gate, forces a micro-correction, and compounds across every subsequent section. It is the single strongest predictor of final race time — and the primary driver of DNF risk when combined with high force output.</p>
             </div>
-          </div>
+          {/if}
         </div>
 
-        <div class="pannello">
-          <div class="pannello-header">RDF — RATE OF FORCE DEVELOPMENT</div>
-          <div class="pannello-body rdf-body">
-            <div class="rdf-gauge">
-              <p class="rdf-value">{config.rfd} <span class="rdf-unit">N/s</span></p>
-              <svg viewBox="0 0 200 110" class="rdf-svg"
-                onpointerdown={onRdfPointerDown}
-                onpointermove={onRdfPointerMove}
-                onpointerup={onRdfPointerUp}
-                onpointerleave={onRdfPointerUp}
-              >
-                <path d="M 10 100 A 90 90 0 0 1 190 100" fill="none" stroke="black" stroke-width="2.5"/>
-                {#each Array(10) as _, i}
-                  {@const a = (Math.PI * i) / 9}
-                  {@const isMajor = i % 3 === 0}
-                  {@const x1 = 100 - 90 * Math.cos(a)}
-                  {@const y1 = 100 - 90 * Math.sin(a)}
-                  {@const x2 = 100 - (isMajor ? 74 : 81) * Math.cos(a)}
-                  {@const y2 = 100 - (isMajor ? 74 : 81) * Math.sin(a)}
-                  <line {x1} {y1} {x2} {y2} stroke="black" stroke-width={isMajor ? 2 : 1}/>
-                {/each}
-                <g transform="rotate({rfdRotation}, 100, 100)">
-                  <polygon
-                    class="rdf-thumb"
-                    points="100,25 92,100 108,100"
-                    stroke-width="1.5"
-                    stroke-linejoin="round"
-                  />
-                </g>
-              </svg>
+        <div class="sezione">
+          <button class="sezione-header" onclick={() => accordionOpen = 'rdf'}>
+            <span>RDF — RATE OF FORCE DEVELOPMENT</span>
+            <span class="accordion-icon">{accordionOpen === 'rdf' ? '−' : '+'}</span>
+          </button>
+          
+          {#if accordionOpen === 'rdf'}
+            <div class="sezione-body rdf-layout" transition:slide>
+              <div class="rdf-gauge-box">
+                <p class="rdf-value">{config.rfd} <span class="rdf-unit">N/s</span></p>
+                <svg viewBox="0 0 200 110" class="rdf-svg"
+                  onpointerdown={onRdfPointerDown}
+                  onpointermove={onRdfPointerMove}
+                  onpointerup={onRdfPointerUp}
+                  onpointerleave={onRdfPointerUp}
+                >
+                  <path d="M 10 100 A 90 90 0 0 1 190 100" fill="none" stroke="black" stroke-width="2.5"/>
+                  {#each Array(10) as _, i}
+                    {@const a = (Math.PI * i) / 9}
+                    {@const isMajor = i % 3 === 0}
+                    {@const x1 = 100 - 90 * Math.cos(a)}
+                    {@const y1 = 100 - 90 * Math.sin(a)}
+                    {@const x2 = 100 - (isMajor ? 74 : 81) * Math.cos(a)}
+                    {@const y2 = 100 - (isMajor ? 74 : 81) * Math.sin(a)}
+                    <line {x1} {y1} {x2} {y2} stroke="black" stroke-width={isMajor ? 2 : 1}/>
+                  {/each}
+                  <g transform="rotate({rfdRotation}, 100, 100)">
+                    <polygon
+                      class="rdf-thumb"
+                      points="100,25 92,100 108,100"
+                      stroke-width="1.5"
+                      stroke-linejoin="round"
+                    />
+                  </g>
+                </svg>
+              </div>
+              <p class="pannello-desc">RDF — Rate of Force Development — measures how quickly the athlete can generate and apply muscular force, expressed in Newtons per second. It is not the same as maximum strength: two athletes can have identical peak force but entirely different RFD values, meaning one reaches that peak in 150 milliseconds and the other in 300. In alpine skiing, those 150 milliseconds are the difference between a clean edge engagement and a lost gate.</p>
             </div>
-            <p class="pannello-desc">RDF — Rate of Force Development — measures how quickly the athlete can generate and apply muscular force, expressed in Newtons per second. It is not the same as maximum strength: two athletes can have identical peak force but entirely different RFD values, meaning one reaches that peak in 150 milliseconds and the other in 300. In alpine skiing, those 150 milliseconds are the difference between a clean edge engagement and a lost gate.</p>
-          </div>
+          {/if}
         </div>
+
       </div>
+
     </div>
 
     <div class="right">
       <div class="dx-header">CONFIGURE YOUR ATHLETE</div>
-      
       <div class="viewer-container">
         <AtletaViewer {modello} rfd={config.rfd} deviazione={config.deviazione}/>
         {#if staEscendo && tutaPrecedente}
-          <img class="tuta {config.venue === 'bormio' ? 'tuta-uomo' : 'tuta-donna'} esce-{direzione}" src={tutaPrecedente} alt="tuta precedente" />
+          <img class="tuta {config.venue === 'bormio' ? 'tuta-uomo' : 'tuta-donna'} esce-{direzione}" src={tutaPrecedente} alt="" />
         {/if}
         {#key tutaIndex}
           {#if tute[tutaIndex]}
-            <img class="tuta {config.venue === 'bormio' ? 'tuta-uomo' : 'tuta-donna'} animazione-{direzione}" src={tute[tutaIndex]} alt="tuta" />
+            <img class="tuta {config.venue === 'bormio' ? 'tuta-uomo' : 'tuta-donna'} animazione-{direzione}" src={tute[tutaIndex]} alt="" />
           {/if}
         {/key}
       </div>
-
     </div>
 
   </main>
@@ -200,6 +225,7 @@
     inset: 0;
     display: flex;
     flex-direction: column;
+    background: var(--mc-bg);
   }
 
   .content {
@@ -213,22 +239,18 @@
     padding: 40px 40px 104px 40px; 
     display: flex;
     flex-direction: column;
-    gap: 24px; 
+    gap: 24px;
     overflow-y: auto;
-    min-height: 0;
-  }
-
-  .left-intro {
-    display: block; 
+    border-right: 1.5px solid black;
+    background: var(--mc-bg);
   }
 
   h1 {
     font-size: clamp(2.5rem, 5vw, 4.5rem);
     font-weight: 700;
-    letter-spacing: -0.03em;
     line-height: 1;
-    margin-top: 0;
-    margin-bottom: 24px;
+    margin: 0 0 24px 0;
+    letter-spacing: -0.03em;
   }
 
   .desc {
@@ -239,86 +261,99 @@
     margin: 0;
   }
 
-  .pannelli {
+  /* ACCORDION GROUP CONTENITORE */
+  .accordion-group {
     display: flex;
     flex-direction: column;
-    gap: 0;
-    border: 1.5px solid black;
-    margin-bottom: 0; 
+    gap: 12px;
   }
 
-  .pannelli-row {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    border-bottom: 1.5px solid black;
+  /* ACCORDION STYLES (Copiati fedelmente da Equipment) */
+  .sezione { 
+    border: 1.5px solid black; 
+    margin-bottom: 0;
+    background: var(--mc-bg);
   }
 
-  .pannello {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .pannello-small {
-    border-right: 1.5px solid black;
-  }
-
-  .pannello-header {
+  .sezione-header {
     background: black;
     color: white;
+    padding: 8px 24px; /* Esatto valore del modello */
     font-family: 'Geist Mono', monospace;
     font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.08em;
-    padding: 8px 24px; 
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
   }
 
-  .pannello-body {
+  .sezione-header:hover {
+    background: #1a1a1a; /* Esatto valore del modello */
+  }
+
+  .accordion-icon {
+    color: #BDF522; 
+    font-size: 1.2rem;
+    font-weight: 400; /* Esatto valore del modello */
+    line-height: 1;   /* Esatto valore del modello */
+  }
+
+  .sezione-body { 
     padding: 24px; 
     display: flex;
     flex-direction: column;
-    gap: 16px; 
+    gap: 20px;
   }
 
   .pannello-desc {
     font-family: 'Geist Mono', monospace;
     font-size: 12px;
     line-height: 1.7;
+    color: #444;
     margin: 0;
+  }
+
+  /* CONTROLLI SPECIFICI */
+  .mass-row {
+    display: flex;
+    align-items: center;
   }
 
   .mass-control {
     display: flex;
-    flex-direction: row;
     align-items: center;
-    gap: 12px; 
+    gap: 16px;
   }
 
   .mass-btn {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     border: 1.5px solid black;
     background: #BDF522;
-    color: black;
-    font-size: 16px;
-    line-height: 1;
     cursor: pointer;
+    font-size: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.2s;
     padding: 0;
-    transition: background 0.2s, color 0.2s, transform 0.2s;
   }
 
   .mass-btn:hover {
     background: black;
     color: #BDF522;
-    transform: scale(1.15);
+    transform: scale(1.1);
   }
 
   .mass-value {
     font-family: 'Geist Mono', monospace;
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 500;
   }
 
@@ -328,11 +363,23 @@
     color: #666;
   }
 
+  .val-live {
+    font-family: 'Geist Mono', monospace;
+    font-size: 18px;
+    color: var(--mc-copper, #cc5500);
+    font-weight: 600;
+  }
+
   .ruler-wrap {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 8px; 
-    width: 100%;
+    gap: 10px;
+  }
+
+  .ruler-header {
+    display: flex;
+    justify-content: flex-end;
   }
 
   .ruler-labels {
@@ -354,32 +401,28 @@
 
   .ruler-container {
     position: relative;
+    height: 24px;
     width: 100%;
-  }
-
-  .ruler-svg {
-    width: 100%;
-    height: 20px;
-    display: block;
-    overflow: visible;
   }
 
   .ruler-input {
     position: absolute;
-    inset: 0;
     width: 100%;
     height: 100%;
     opacity: 0;
-    cursor: grab;
-    margin: 0;
+    cursor: pointer;
     z-index: 2;
+    margin: 0;
+    inset: 0;
   }
 
-  .ruler-input:active {
-    cursor: grabbing;
+  .ruler-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    display: block;
   }
 
-  /* Effetti di Hover sul triangolino del righello */
   .ruler-thumb {
     fill: #BDF522;
     stroke: black;
@@ -394,45 +437,37 @@
     transform: scale(1.3);
   }
 
-  .rdf-body {
-    display: flex;
+  .rdf-layout {
     flex-direction: row;
-    align-items: center; 
-    gap: 40px; 
-    padding: 24px; 
+    align-items: center;
+    gap: 40px;
   }
 
-  .rdf-gauge {
+  .rdf-gauge-box {
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px; 
-    flex-shrink: 0;
+    gap: 10px;
   }
 
   .rdf-svg {
     width: 160px;
     height: 90px;
-    cursor: grab;
-    user-select: none;
+    cursor: pointer;
   }
 
-  .rdf-svg:active {
-    cursor: grabbing;
-  }
-
-  /* Effetti di hover sull'indicatore RDF */
   .rdf-thumb {
-    fill: var(--mc-copper);
+    fill: var(--mc-copper, #cc5500);
     stroke: black;
-    transition: fill 0.2s, stroke 0.2s, transform 0.2s;
     transform-origin: 100px 100px;
+    transition: fill 0.2s, stroke 0.2s, transform 0.2s;
   }
 
   .rdf-svg:hover .rdf-thumb,
   .rdf-svg:active .rdf-thumb {
     fill: black;
-    stroke: var(--mc-copper);
+    stroke: var(--mc-copper, #cc5500);
     transform: scale(1.15);
   }
 
@@ -450,10 +485,10 @@
     color: #666;
   }
 
+  /* COLONNA DESTRA */
   .right {
     display: flex;
     flex-direction: column;
-    border-left: 1.5px solid black;
   }
 
   .dx-header {
@@ -461,14 +496,17 @@
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.15em;
-    text-transform: uppercase;
     border-bottom: 1.5px solid black;
     margin: 0;
+    text-transform: uppercase;
   }
 
   .viewer-container {
     flex: 1;
-    position: relative; 
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .tuta {
@@ -490,6 +528,7 @@
     transform: translate(-50%, -49%);
   }
 
+  /* ANIMAZIONI TUTE */
   @keyframes da-destra {
     from { transform: translate(150%, -47.8%); opacity: 0; }
     to   { transform: translate(-50%, -47.8%); opacity: 1; }
@@ -514,6 +553,6 @@
 
   .animazione-destra   { animation: da-destra    0.8s ease-out forwards; }
   .animazione-sinistra { animation: da-sinistra  0.8s ease-out forwards; }
-  .esce-destra         { animation: vai-sinistra  0.8s ease-in  forwards; }
-  .esce-sinistra       { animation: vai-destra    0.8s ease-in  forwards; }
+  .esce-destra         { animation: vai-sinistra 0.8s ease-in  forwards; }
+  .esce-sinistra       { animation: vai-destra   0.8s ease-in  forwards; }
 </style>
