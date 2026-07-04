@@ -1,126 +1,53 @@
 <script>
   import { config } from '$lib/config.svelte.js'
-  import { goto } from '$app/navigation'
   import { onMount } from 'svelte'
+  import { calcola } from '$lib/algoritmo.js'
 
   config.fase = 4
 
-  // ─── FORMULA ──────────────────────────────────────────────────────────
-  function norm(x, xMin, xMax) {
-    return 2 * (x - xMin) / (xMax - xMin) - 1
-  }
-
-  const isMale   = config.venue === 'bormio'
-  const massaMin = isMale ? 85 : 65
-  const massaMax = isMale ? 100 : 75
-  const rfdMin   = isMale ? 3000 : 2800
-  const rfdMax   = isMale ? 6000 : 5000
-
-  const nMassa = norm(config.massa ?? 70, massaMin, massaMax)
-  const nRfd   = norm(config.rfd ?? 3500, rfdMin, rfdMax)
-  const nDev   = -norm(config.deviazione ?? 20, 5, 40)
-  const nGeo   = norm(config.lunghezza ?? 214, isMale ? 218 : 210, isMale ? 226 : 218)
-  const matMap  = { wood: -1, carbon: 0, titanal: 1 }
-  const nMat   = matMap[config.materiale] ?? -1
-
-  function ceraToNorm(c) {
-    if (c === 'fluoro' || c === 'fluoro formula') return 1
-    if (c === 'race' || c === 'graphite' || c === 'silicone') return 0.33
-    return -1
-  }
-  const nCera = ceraToNorm(config.cera)
-
-  const D = {
-    massa:      { neg: -0.3, pos: 0.2 },
-    rfd:        { neg: -0.4, pos: 0.3 },
-    consistenza:{ neg: -0.7, pos: 0.2 },
-    geometria:  { neg: -0.3, pos: 0.2 },
-    materiale:  { neg: 0.0,  pos: 0.3 },
-    cera:       { neg: -0.3, pos: 0.4 },
-  }
-
-  function contrib(n, d) {
-    return n >= 0 ? n * d.pos : n * Math.abs(d.neg)
-  }
-
-  const dtMassa   = contrib(nMassa, D.massa)
-  const dtRfd     = contrib(nRfd, D.rfd)
-  const dtConsist = contrib(nDev, D.consistenza)
-  const dtGeo     = contrib(nGeo, D.geometria)
-  const dtMat     = contrib(nMat, D.materiale)
-  const dtCera    = contrib(nCera, D.cera)
-  const dtAtleta  = dtMassa + dtRfd + dtConsist
-  const dtEquip   = dtGeo + dtMat + dtCera
-  const dtTotale  = dtAtleta + dtEquip
-
-  const nConsistNorm01 = (nDev + 1) / 2
-  const nRfdNorm01     = (nRfd + 1) / 2
-  const dnfRate = 0.25 * (1 - nConsistNorm01) + 0.10 * nRfdNorm01 * (1 - nConsistNorm01)
-
-  const isFluoro = config.cera === 'fluoro' || config.cera === 'fluoro formula'
-  const techFlags = (config.materiale === 'titanal' ? 1 : 0) +
-    (config.cera === 'race' || config.cera === 'graphite' || config.cera === 'silicone' ? 1 : 0)
-
-  // FIX 1: const invece di let scenario
-  const scenario = isFluoro ? 'DISQUALIFIED'
-    : dnfRate > 0.25 ? 'DNF'
-    : dtTotale > 0.5 && techFlags >= 2 ? 'UNFAIR'
-    : 'VALID'
+  const r = calcola(config)
+  const {
+    dtTotale, dtAtleta, dtEquip,
+    dnfRate, scenario, isFluoro, spider
+  } = r
 
   // ─── COLORI ───────────────────────────────────────────────────────────
   const colors = {
-    VALID:        '#BDF522',
+    CLEAN:        '#BDF522',
     DNF:          '#FA51A2',
-    DISQUALIFIED: '#A609F0',
-    UNFAIR:       '#7B46F8',
+    BANNED:       '#A609F0',
+    'RESOURCE GAP': '#7B46F8',
   }
-  const accent = colors[scenario]
+  const accent = colors[scenario] ?? '#BDF522'
 
   const verdicts = {
-    VALID:        'VALID RUN',
-    DNF:          'DNF',
-    DISQUALIFIED: 'DISQUALIFIED',
-    UNFAIR:       'NOT FAIR',
+    CLEAN:          'VALID RUN',
+    DNF:            'DNF',
+    BANNED:         'DISQUALIFIED',
+    'RESOURCE GAP': 'RESOURCE GAP',
   }
   const verdict = verdicts[scenario]
 
-  const sign = dtTotale >= 0 ? '+' : ''
-  const dtFormatted = `Δt= ${sign}${dtTotale.toFixed(2)}s`
-  const dtFormattedFull = `${sign}${dtTotale.toFixed(2)}s`
+  const sign = dtTotale <= 0 ? '' : '+'
+  const dtFormatted     = isFluoro ? 'Δt= —' : `Δt= ${sign}${dtTotale.toFixed(2)}s`
+  const dtFormattedFull = isFluoro ? 'INVALID' : `${sign}${dtTotale.toFixed(2)}s`
 
   // ─── TESTI SCENARIO ───────────────────────────────────────────────────
   const introText = {
-    VALID:        'Your configuration is within FIS compliance parameters across all three axes of the simulation.',
-    DNF:          'Your configuration is within FIS compliance parameters, but your physical profile generates a DNF risk above the threshold sustainable at elite level.',
-    DISQUALIFIED: 'Your configuration does not comply with FIS regulations. Fluorocarbon wax has been banned since 2022. This run is invalid.',
-    UNFAIR:       'Your configuration is within FIS compliance parameters, but the resource access required to assemble it places it outside what most national programs can replicate.',
+    CLEAN: 'Your configuration is within FIS compliance parameters across all three axes of the simulation — and within the portion of that legal space that does not require exceptional resources to reach.',
+    DNF: 'Your configuration is within FIS compliance parameters, but your physical profile generates a DNF risk above the threshold sustainable at elite level. The race does not finish.',
+    BANNED: 'Your configuration does not comply with FIS regulations. Fluorocarbon wax has been banned since the 2022/23 season. This run is invalid.',
+    'RESOURCE GAP': 'Your configuration is within FIS compliance parameters, but the combination of materials and wax protocol required to assemble it places it outside what most national programs can replicate without significant sponsorship infrastructure.',
   }
-
-  const paragraphs = [
-    `The number you are looking at is the time your configuration adds or removes from a reference descent. A negative value means you are faster. A positive value means you are slower. The reference is not a real athlete. It is a structural midpoint.`,
-    `The combination you have assembled produces a measurable time advantage over that midpoint within accessible resources.`,
-  ]
-
-  // ─── TESTI RIEPILOGO BOTTOM ───────────────────────────────────────────
-  const venueLabel = config.venue === 'bormio' ? 'STELVIO — BORMIO' : 'OLYMPIA DELLE TOFANE'
-  const genderLabel = config.venue === 'bormio' ? 'MALE' : 'FEMALE'
-  const trackLen    = config.venue === 'bormio' ? '2300m' : '2200m'
-  const speedPeak   = config.venue === 'bormio' ? '140 km/h' : '130 km/h'
-
-  const materiali = { wood: 'WOOD', carbon: 'CARBON FIBER', titanal: 'TITANAL' }
-  const cere      = { training: 'TRAINING', race: 'RACE FORMULA', fluoro: 'FLUORO', graphite: 'GRAPHITE', silicone: 'SILICONE' }
-  const tute      = { 0: 'STANDARD', 1: 'LEGAL', 2: 'BORDERLINE', 3: 'DOPING' }
-
-  const geoLabel = `L ${config.lunghezza ?? '—'}cm  R ${config.raggio ?? '—'}m  W ${config.larghezza ?? '—'}mm`
 
   // ─── SPIDER CHART ─────────────────────────────────────────────────────
   const spiderParams = [
-    { key: 'SPEED\nPOTENTIAL',     value: Math.max(0, Math.min(1, ((nMassa + nGeo) / 2 + 1) / 2)) },
-    { key: 'TECHNICAL\nCONTROL',   value: Math.max(0, Math.min(1, nConsistNorm01 * 0.6 + nRfdNorm01 * 0.4)) },
-    { key: 'EQUIPMENT\nCOMPLIANCE',value: Math.max(0, Math.min(1, isFluoro ? 0.05 : (1 - nCera * 0.4 - Math.max(0, nMat) * 0.2))) },
-    { key: 'DNF RISK',             value: Math.max(0, Math.min(1, 1 - dnfRate / 0.35)) },
-    { key: 'EDGE GRIP',            value: Math.max(0, Math.min(1, (nMat + 1) / 2 * 0.6 + (1 - Math.abs(nGeo)) * 0.4)) },
-    { key: 'RESOURCE\nACCESS',     value: Math.max(0, Math.min(1, ((nMat + 1) / 2 * 0.5 + (nCera + 1) / 2 * 0.5))) },
+    { key: 'SPEED\nPOTENTIAL',      value: spider.speedPotential },
+    { key: 'TECHNICAL\nCONTROL',    value: spider.technicalControl },
+    { key: 'EQUIPMENT\nCOMPLIANCE', value: spider.equipmentCompliance },
+    { key: 'DNF RISK',              value: spider.dnfRisk },
+    { key: 'EDGE GRIP',             value: spider.edgeGrip },
+    { key: 'RESOURCE\nACCESS',      value: spider.resourceAccess },
   ]
 
   const N  = spiderParams.length
@@ -133,16 +60,16 @@
     return { x: CX + r * Math.cos(a), y: CY + r * Math.sin(a) }
   }
 
-  function polyPoints(values, scale = R) {
+  function polyPoints(values) {
     return values.map((v, i) => {
-      const p = polarPt(i, v * scale)
+      const p = polarPt(i, v * R)
       return `${p.x},${p.y}`
     }).join(' ')
   }
 
-  const levels    = [0.25, 0.5, 0.75, 1]
-  const labelPts  = spiderParams.map((p, i) => ({ ...p, ...polarPt(i, R + 36) }))
-  const dataPoly  = polyPoints(spiderParams.map(p => p.value))
+  const levels   = [0.25, 0.5, 0.75, 1]
+  const labelPts = spiderParams.map((p, i) => ({ ...p, ...polarPt(i, R + 36) }))
+  const dataPoly = polyPoints(spiderParams.map(p => p.value))
 
   function anchor(x) {
     if (x < CX - 10) return 'end'
@@ -170,7 +97,7 @@
     <p class="intro-text">{introText[scenario]}</p>
   </div>
 
-  <!-- ③ MAIN AREA: spider + delta + testo -->
+  <!-- ③ MAIN AREA: spider + delta + breakdown -->
   <div class="main-area">
 
     <!-- Spider chart -->
@@ -199,7 +126,7 @@
           stroke-linejoin="round"
           style="transition: fill-opacity 0.8s ease;"
         />
-        <!-- FIX 2: role="img" su circle -->
+        <!-- Dots -->
         {#each spiderParams as p, i}
           {@const pt = polarPt(i, p.value * R)}
           <circle
@@ -233,7 +160,6 @@
         {/each}
       </svg>
 
-      <!-- Tooltip -->
       {#if hoveredParam !== null}
         <div class="tooltip">
           <span class="tt-key">{spiderParams[hoveredParam].key.replace('\n', ' ')}</span>
@@ -242,27 +168,25 @@
       {/if}
     </div>
 
-    <!-- Delta + testo -->
+    <!-- Right panel: delta + breakdown -->
     <div class="right-panel">
-      <div class="delta-num">{scenario === 'DISQUALIFIED' ? 'Δt= —' : dtFormatted}</div>
-      {#each paragraphs as para}
-        <p class="right-para" style="margin-top: 12px;">{para}</p>
-      {/each}
+      <div class="delta-num">{dtFormatted}</div>
+      <p class="right-para">The number you are looking at is the time your configuration adds or removes from a reference descent. A negative value means you are faster. A positive value means you are slower. The reference is not a real athlete — it is a structural midpoint.</p>
       <div class="breakdown-mini">
         <div class="bk-row">
           <span>Athlete</span>
-          <span class="mono">{(dtAtleta >= 0 ? '+' : '')}{dtAtleta.toFixed(2)}s</span>
+          <span class="mono">{dtAtleta <= 0 ? '' : '+'}{dtAtleta.toFixed(2)}s</span>
         </div>
         <div class="bk-row">
           <span>Equipment</span>
-          <span class="mono">{(dtEquip >= 0 ? '+' : '')}{dtEquip.toFixed(2)}s</span>
+          <span class="mono">{dtEquip <= 0 ? '' : '+'}{dtEquip.toFixed(2)}s</span>
         </div>
         <div class="bk-row total">
           <span>Total Δt</span>
-          <span class="mono">{scenario === 'DISQUALIFIED' ? 'INVALID' : dtFormattedFull}</span>
+          <span class="mono">{dtFormattedFull}</span>
         </div>
         <div class="bk-row">
-          <span>DNF</span>
+          <span>DNF risk</span>
           <span class="mono" class:danger={dnfRate > 0.25}>{(dnfRate * 100).toFixed(1)}%</span>
         </div>
       </div>
@@ -276,13 +200,12 @@
   .page {
     display: grid;
     grid-template-rows: auto auto 1fr;
-    height: calc(100vh - 76px);
+    height: calc(100vh - 64px);
     overflow: hidden;
     background: #fff;
     color: #000;
   }
 
-  /* ① BANNER */
   .banner {
     background: var(--accent);
     overflow: hidden;
@@ -307,29 +230,25 @@
     to   { transform: translateX(-25%); }
   }
 
-  /* ② INTRO ROW */
   .intro-row {
     border-bottom: 1.5px solid #000;
     padding: 12px 40px;
   }
   .intro-text {
+    font-family: 'Geist Mono', monospace;
     font-size: 0.72rem;
     line-height: 1.6;
     max-width: 900px;
     color: #444;
-    font-family: 'Geist Mono', monospace;
   }
 
-  /* ③ MAIN AREA */
   .main-area {
     display: grid;
     grid-template-columns: 1fr 260px;
-    border-bottom: 1.5px solid #000;
     overflow: hidden;
     min-height: 0;
   }
 
-  /* Spider */
   .spider-wrap {
     display: flex;
     align-items: center;
@@ -369,7 +288,6 @@
     font-family: 'Geist Mono', monospace;
   }
 
-  /* Right panel */
   .right-panel {
     width: 260px;
     display: flex;
@@ -379,6 +297,7 @@
     border-left: 1.5px solid #000;
   }
   .right-panel::-webkit-scrollbar { display: none; }
+
   .delta-num {
     font-size: clamp(22px, 2.5vw, 36px);
     font-weight: 700;
@@ -390,15 +309,15 @@
     flex-shrink: 0;
   }
   .right-para {
+    font-family: 'Geist Mono', monospace;
     font-size: 0.62rem;
     line-height: 1.6;
     color: #444;
-    padding: 0 16px;
+    padding: 12px 16px;
   }
 
-  /* Breakdown mini */
   .breakdown-mini {
-    margin: 12px 16px 16px;
+    margin: 0 16px 16px;
     border: 1.5px solid #000;
     display: flex;
     flex-direction: column;
@@ -414,7 +333,7 @@
   }
   .bk-row:last-child { border-bottom: none; }
   .bk-row.total { background: #000; color: #fff; font-weight: 700; }
-  .bk-row.total .mono { color: var(--accent); filter: brightness(1.2); }
+  .bk-row.total .mono { color: var(--accent); }
   .mono { font-family: 'Geist Mono', monospace; }
   .danger { color: #FF3B30; font-weight: 700; }
 </style>
