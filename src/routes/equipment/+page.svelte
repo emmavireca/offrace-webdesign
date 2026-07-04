@@ -351,21 +351,21 @@
   }
 
   .sezione-header {
-    background: black;
-    color: white;
-    padding: 12px 24px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: none;
-    cursor: pointer;
-    text-transform: uppercase;
-    font-family: inherit;
-  }
+  background: black;
+  color: white;
+  padding: 8px 24px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+}
 
   .sezione-header:hover {
     background: #1a1a1a;
@@ -404,33 +404,37 @@
     width: 100%;
   }
 
-  .col-title {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    margin: 0;
-  }
+.col-title {
+  font-family: 'Geist Mono', monospace;
+  font-weight: 500;
+  font-size: 16pt;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
 
-  .val-live {
-    color: var(--mc-copper);
-    font-size: 0.65rem;
-    font-weight: 600;
-    margin: 0;
-  }
+.val-live {
+  font-family: 'Geist Mono', monospace;
+  font-weight: 500;
+  font-size: 16pt;
+  color: var(--mc-copper);
+  margin: 0;
+}
 
-  .range-labels {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: 4px;
-  }
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: auto;
+}
 
-  .range-label {
-    font-size: 0.5rem;
-    color: #666;
-    letter-spacing: 0.05em;
-    margin: 0;
-  }
+.range-label {
+  font-family: 'Geist Mono', monospace;
+  font-weight: 400;
+  font-size: 8pt;
+  color: #666;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
 
   /* ── SLIDER LENGTH E WIDTH ── */
   .slider-h {
@@ -505,48 +509,68 @@
     margin-top: 0;
     margin-bottom: 16px;
   }
+  .mat-label {
+  font-family: 'Geist Mono', monospace;
+  font-weight: 500;
+  font-size: 16pt;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
 
   .mat-card {
-    border: 1.5px solid transparent; 
-    background: none;
-    cursor: pointer;
-    padding: 0;
-    width: 175px;
-    height: 64px;
-    overflow: hidden;
-    flex-shrink: 0;
-    margin: 0;
-    transition: transform 0.2s;
-  }
+  flex: 1;
+  position: relative;
+  border: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  height: 80px;
+  overflow: hidden;
+  transition: border 0.2s, box-shadow 0.2s;
+}
 
-  .mat-card:hover {
-    transform: scale(1.05);
-  }
+.mat-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(189, 245, 34, 0.5);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
 
-  .mat-card.selezionato { border-color: var(--mc-copper); }
+.mat-card:hover:not(.selezionato)::after {
+  opacity: 1;
+}
 
-  .mat-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+.mat-card.selezionato {
+  border: 2px solid black;
+  box-shadow: 0 0 0 2px var(--mc-copper);
+}
 
-  .mat-label {
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-top: 0;
-    margin-bottom: 8px;
-  }
+.mat-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(100%);
+  transition: filter 0.2s;
+}
+.mat-desc {
+  font-family: 'Geist Mono', monospace;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #444;
+  margin: 0;
+}
 
-  .mat-desc {
-    font-size: 0.75rem;
-    line-height: 1.5;
-    color: #444;
-    margin: 0;
-  }
 
+.mat-card.selezionato .mat-img {
+  filter: grayscale(0%);
+}
   .wax-row {
     display: flex;
     align-items: flex-end;
@@ -653,25 +677,25 @@
   }
 
   .wax-mu {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-    margin-left: 16px; 
-    padding-bottom: 4px;
-    margin-top: 0;
-    margin-bottom: 0;
-  }
+  font-family: 'Geist Mono', monospace;
+  font-size: 20pt;
+  font-weight: 500;
+  white-space: nowrap;
+  margin-left: 16px;
+  padding-bottom: 4px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
 
-  .wax-desc {
-    font-size: 0.75rem;
-    line-height: 1.5;
-    color: #444;
-    margin-top: 16px; 
-    border-left: 1.5px solid black; 
-    padding-left: 16px; 
-    margin-bottom: 0;
-  }
+ .wax-desc {
+  font-family: 'Geist Mono', monospace;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #444;
+  margin-top: 16px;
+  margin-bottom: 0;
+}
 
   .right-col {
     display: flex;
