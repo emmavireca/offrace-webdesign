@@ -84,7 +84,6 @@
 
 <div class="page" style="--accent: {accent};">
 
-  <!-- ① VERDICT BANNER -->
   <div class="banner" aria-label={verdict}>
     <div class="banner-track">
       <span>{verdict}&nbsp;&nbsp;{verdict}&nbsp;&nbsp;{verdict}&nbsp;&nbsp;{verdict}&nbsp;&nbsp;{verdict}&nbsp;&nbsp;{verdict}&nbsp;&nbsp;</span>
@@ -92,31 +91,25 @@
     </div>
   </div>
 
-  <!-- ② INTRO TEXT -->
   <div class="intro-row">
     <p class="intro-text">{introText[scenario]}</p>
   </div>
 
-  <!-- ③ MAIN AREA: spider + delta + breakdown -->
   <div class="main-area">
 
-    <!-- Spider chart -->
     <div class="spider-wrap">
       <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" class="spider-svg">
-        <!-- Grid -->
         {#each levels as lvl}
           <polygon
             points={polyPoints(Array(N).fill(lvl))}
             fill="none" stroke="#000" stroke-width="0.5" opacity="0.15"
           />
         {/each}
-        <!-- Axes -->
         {#each spiderParams as _, i}
           {@const a = polarPt(i, 0)}
           {@const b = polarPt(i, R)}
           <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="#000" stroke-width="0.5" opacity="0.2"/>
         {/each}
-        <!-- Data polygon -->
         <polygon
           points={dataPoly}
           fill={accent}
@@ -126,7 +119,6 @@
           stroke-linejoin="round"
           style="transition: fill-opacity 0.8s ease;"
         />
-        <!-- Dots -->
         {#each spiderParams as p, i}
           {@const pt = polarPt(i, p.value * R)}
           <circle
@@ -140,7 +132,6 @@
             onmouseleave={() => hoveredParam = null}
           />
         {/each}
-        <!-- Labels -->
         {#each labelPts as lp, i}
           {#each lp.key.split('\n') as line, li}
             <text
@@ -168,7 +159,6 @@
       {/if}
     </div>
 
-    <!-- Right panel: delta + breakdown -->
     <div class="right-panel">
       <div class="delta-num">{dtFormatted}</div>
       <p class="right-para">The number you are looking at is the time your configuration adds or removes from a reference descent. A negative value means you are faster. A positive value means you are slower. The reference is not a real athlete — it is a structural midpoint.</p>
@@ -214,7 +204,8 @@
   }
   .banner-track {
     display: inline-block;
-    animation: marquee 10s linear infinite;
+    /* Velocità rallentata a 30s per corrispondere alla home page */
+    animation: marquee 30s linear infinite;
   }
   .banner-track span {
     display: inline-block;
