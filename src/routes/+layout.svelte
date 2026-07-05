@@ -181,10 +181,10 @@
     grid-column: 3 / 4; 
     width: 100%;
     flex: none;
-    background: #BDF522; /* Diventa verde fluo */
-    color: black;        /* Testo nero per contrasto */
+    background: #BDF522; 
+    color: black;        
     font-weight: 800;
-    border-left: 1.5px solid black; /* Linea nera verticale a sinistra del tasto */
+    border-left: 1.5px solid black; 
     border-top: none;
     border-bottom: none;
     border-right: none;
@@ -196,7 +196,7 @@
 
   .brand:hover { background: rgba(0, 0, 0, 0.05); }
   .next:hover { background: #333; }
-  .next.is-home:hover { background: black; color: #BDF522; } /* Inverte i colori al passaggio del mouse */
+  .next.is-home:hover { background: black; color: #BDF522; } 
 
   @keyframes slideRightBrand {
     from { opacity: 0; transform: translateX(-20px); }
@@ -225,26 +225,33 @@
 
   .fase:last-child { border-right: none; }
   .fase:not(:disabled):not(.attiva):hover { background: #e8e8e8; }
+  .fase-info { border-left: 1.5px solid currentColor; }
   .fase:disabled { color: #777; cursor: default; pointer-events: none; }
   .fase.attiva { background: black; color: white; cursor: default;}
 
-  /* --- RETTANGOLI PARI E DISPARI --- */
-  .fase-label { 
-    display: flex; flex-direction: column; justify-content: space-between; 
-    padding: 12px 16px; 
-    min-width: 0; overflow: hidden;
+  /* --- ALLINEAMENTO SUPERIORE CORRETTO E PUSH IN BASSO --- */
+  .fase-label, .fase-info { 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: flex-start; 
+    gap: 6px;                    
+    padding: 12px 16px;          
+    min-width: 0; 
+    overflow: hidden;
   }
-  
-  .fase-num { font-size: 0.8rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1; opacity: 0.7; }
-  .fase-nome { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  .fase-info {
-    border-left: 1.5px solid currentColor; padding: 12px 16px; 
-    display: flex; flex-direction: column; justify-content: space-between; 
-    min-width: 0; overflow: hidden;
-  }
+  .fase-num { font-size: 0.8rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1; opacity: 0.7; }
   
-  .info-row-bottom { display: flex; gap: 12px; min-width: 0; }
+  .fase-nome { 
+    font-size: 1.05rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; line-height: 1; 
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+    
+    /* MODIFICA: spinge la scritta in basso allineando il lato superiore con le label di destra (TYPE, MASS) */
+    margin-top: auto; 
+    margin-bottom: 6px; 
+  }
+
+  .info-row-bottom { display: flex; gap: 12px; min-width: 0; margin-top: auto; } 
   .info-block { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; overflow: hidden; }
   
   .info-label { font-size: 0.55rem; font-weight: 400; letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.5; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
