@@ -5,6 +5,7 @@
   import { slide } from 'svelte/transition'
 
   config.fase = 2
+  config.deviazione = 0
   const massaMin = config.venue === 'bormio' ? 85 : 65
   const massaMax = config.venue === 'bormio' ? 100 : 75
   const rfdMin = config.venue === 'bormio' ? 3000 : 2800
