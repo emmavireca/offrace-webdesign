@@ -103,142 +103,139 @@
         <p class="desc">Every race is decided before the start. The equipment an athlete carries onto the slope is the result of years of research.</p>
       </div>
 
-      <!-- SEZIONE GEOMETRY -->
-      <div class="sezione">
-        <button class="sezione-header" onclick={() => accordionOpen = 'geometry'}>
-          <span>GEOMETRY</span>
-          <span class="accordion-icon">{accordionOpen === 'geometry' ? '−' : '+'}</span>
-        </button>
-        
-        {#if accordionOpen === 'geometry'}
-          <div class="sezione-body tre-col" transition:slide>
-            <div class="col">
-              <div class="col-header">
-                <span class="col-title">LENGTH:</span>
-                <span class="val-live">{config.lunghezza} CM</span>
-              </div>
-              <div class="range-labels">
-                <span class="range-label">MIN {config.venue === 'bormio' ? '218' : '210'}</span>
-                <span class="range-label">MAX {config.venue === 'bormio' ? '226' : '218'}</span>
-              </div>
-              <input type="range"
-                min={config.venue === 'bormio' ? 218 : 210}
-                max={config.venue === 'bormio' ? 226 : 218}
-                step={1}
-                bind:value={config.lunghezza}
-                onpointerdown={() => startZoom('length')}
-                class="slider-h"
-              />
-            </div>
-
-            <div class="col">
-              <div class="col-header">
-                <span class="col-title">WIDTH:</span>
-                <span class="val-live">{config.larghezza} MM</span>
-              </div>
-              <div class="range-labels">
-                <span class="range-label">MIN 63</span>
-                <span class="range-label">MAX 68</span>
-              </div>
-              <input type="range"
-                min={63} max={68} step={1}
-                bind:value={config.larghezza}
-                onpointerdown={() => startZoom('width')}
-                class="slider-h"
-              />
-            </div>
-
-            <div class="col">
-              <div class="col-header">
-                <span class="col-title">RADIUS:</span>
-                <span class="val-live">{config.raggio} M</span>
-              </div>
-              <div class="range-labels">
-                <span class="range-label">MIN {config.venue === 'bormio' ? '45' : '40'}</span>
-                <span class="range-label">MAX {config.venue === 'bormio' ? '55' : '50'}</span>
-              </div>
-              <svg viewBox="0 -5 200 100" class="radius-svg"
-                onmousedown={() => { dragging = true; startZoom('radius') }}
-                onmousemove={onDrag}
-                onmouseup={() => { dragging = false }}
-                onmouseleave={() => { dragging = false }}
-              >
-                <path d="M 10 100 A 90 90 0 0 1 190 100" fill="none" stroke="#000" stroke-width="3.5"/>
-                <g transform="translate({handleX}, {handleY})">
-                  <circle class="radius-thumb" cx="0" cy="0" r="12" stroke-width="3"/>
-                </g>
-              </svg>
-            </div>
-          </div>
-        {/if}
-      </div>
-
-      <!-- SEZIONE MATERIALS -->
-      <div class="sezione">
-        <button class="sezione-header" onclick={() => accordionOpen = 'materials'}>
-          <span>MATERIALS</span>
-          <span class="accordion-icon">{accordionOpen === 'materials' ? '−' : '+'}</span>
-        </button>
-        
-        {#if accordionOpen === 'materials'}
-          <div class="sezione-body" transition:slide>
-            <div class="materiali-grid">
-              {#each materiali as mat}
-                <button
-                  class="mat-card"
-                  class:selezionato={config.materiale === mat.id}
-                  onclick={() => config.materiale = mat.id}
-                >
-                  <img src={mat.img} alt={mat.label} class="mat-img" />
-                </button>
-              {/each}
-            </div>
-            <p class="mat-label">{materiali.find(m => m.id === config.materiale)?.label}</p>
-            <p class="mat-desc">
-              {#if config.materiale === 'wood'}Wood core is the structural foundation of almost every race ski. Lightweight and naturally dampening, it absorbs vibration along the full length of the ski and defines its base flex profile. Accessible across all budget levels.
-              {:else if config.materiale === 'carbon'}Carbon fiber is layered into specific zones of the ski to reduce mass and increase longitudinal stiffness. Lighter than titanal, with less dampening, optimised for power transfer rather than vibration absorption.
-              {:else}Titanal is an aluminium alloy laminated into the ski's core structure. It increases torisional stiffness and dampens high frequency vibrations at speed, reducing energy loss on hard, uneven snow.{/if}
-            </p>
-          </div>
-        {/if}
-      </div>
-
-      <!-- SEZIONE WAX PROTOCOL -->
-      <div class="sezione">
-        <button class="sezione-header" onclick={() => accordionOpen = 'wax'}>
-          <span>WAX PROTOCOL</span>
-          <span class="accordion-icon">{accordionOpen === 'wax' ? '−' : '+'}</span>
-        </button>
-        
-        {#if accordionOpen === 'wax'}
-          <div class="sezione-body" transition:slide>
-            <div class="wax-row">
-              <p class="wax-label">{waxLabel}</p>
-              <div class="wax-track-wrap">
-                <input type="range" min={0} max={2} step={0.01}
-                  bind:value={ceraIndex}
-                  class="wax-input"
-                />
-                <div class="wax-track">
-                  {#each Array(10) as _, i}
-                    {@const isPiena = i / 10 < (ceraIndex + 0.2) / 2}
-                    <div 
-                      class="wax-bacchetta" 
-                      class:piena={isPiena}
-                      style="--index: {i};"
-                    ></div>
-                  {/each}
+      <div class="accordion-group">
+        <div class="sezione">
+          <button class="sezione-header" onclick={() => accordionOpen = 'geometry'}>
+            <span>GEOMETRY</span>
+            <span class="accordion-icon">{accordionOpen === 'geometry' ? '−' : '+'}</span>
+          </button>
+          
+          {#if accordionOpen === 'geometry'}
+            <div class="sezione-body tre-col" transition:slide>
+              <div class="col">
+                <div class="col-header">
+                  <span class="col-title">LENGTH:</span>
+                  <span class="val-live">{config.lunghezza} CM</span>
                 </div>
+                <div class="range-labels">
+                  <span class="range-label">MIN {config.venue === 'bormio' ? '218' : '210'}</span>
+                  <span class="range-label">MAX {config.venue === 'bormio' ? '226' : '218'}</span>
+                </div>
+                <input type="range"
+                  min={config.venue === 'bormio' ? 218 : 210}
+                  max={config.venue === 'bormio' ? 226 : 218}
+                  step={1}
+                  bind:value={config.lunghezza}
+                  onpointerdown={() => startZoom('length')}
+                  class="slider-h"
+                />
               </div>
-              <p class="wax-mu">{waxMu}</p>
-            </div>
-            <p class="wax-desc">{waxDesc}</p>
-          </div>
-        {/if}
-      </div>
-    </div>
 
-    <!-- COLONNA DESTRA (3D OVERLAY) -->
+              <div class="col">
+                <div class="col-header">
+                  <span class="col-title">WIDTH:</span>
+                  <span class="val-live">{config.larghezza} MM</span>
+                </div>
+                <div class="range-labels">
+                  <span class="range-label">MIN 63</span>
+                  <span class="range-label">MAX 68</span>
+                </div>
+                <input type="range"
+                  min={63} max={68} step={1}
+                  bind:value={config.larghezza}
+                  onpointerdown={() => startZoom('width')}
+                  class="slider-h"
+                />
+              </div>
+
+              <div class="col">
+                <div class="col-header">
+                  <span class="col-title">RADIUS:</span>
+                  <span class="val-live">{config.raggio} M</span>
+                </div>
+                <div class="range-labels">
+                  <span class="range-label">MIN {config.venue === 'bormio' ? '45' : '40'}</span>
+                  <span class="range-label">MAX {config.venue === 'bormio' ? '55' : '50'}</span>
+                </div>
+                <svg viewBox="0 -5 200 100" class="radius-svg"
+                  onmousedown={() => { dragging = true; startZoom('radius') }}
+                  onmousemove={onDrag}
+                  onmouseup={() => { dragging = false }}
+                  onmouseleave={() => { dragging = false }}
+                >
+                  <path d="M 10 100 A 90 90 0 0 1 190 100" fill="none" stroke="#000" stroke-width="3.5"/>
+                  <g transform="translate({handleX}, {handleY})">
+                    <circle class="radius-thumb" cx="0" cy="0" r="12" stroke-width="3"/>
+                  </g>
+                </svg>
+              </div>
+            </div>
+          {/if}
+        </div>
+
+        <div class="sezione">
+          <button class="sezione-header" onclick={() => accordionOpen = 'materials'}>
+            <span>MATERIALS</span>
+            <span class="accordion-icon">{accordionOpen === 'materials' ? '−' : '+'}</span>
+          </button>
+          
+          {#if accordionOpen === 'materials'}
+            <div class="sezione-body" transition:slide>
+              <div class="materiali-grid">
+                {#each materiali as mat}
+                  <button
+                    class="mat-card"
+                    class:selezionato={config.materiale === mat.id}
+                    onclick={() => config.materiale = mat.id}
+                  >
+                    <img src={mat.img} alt={mat.label} class="mat-img" />
+                  </button>
+                {/each}
+              </div>
+              <p class="mat-label">{materiali.find(m => m.id === config.materiale)?.label}</p>
+              <p class="mat-desc">
+                {#if config.materiale === 'wood'}Wood core is the structural foundation of almost every race ski. Lightweight and naturally dampening, it absorbs vibration along the full length of the ski and defines its base flex profile. Accessible across all budget levels.
+                {:else if config.materiale === 'carbon'}Carbon fiber is layered into specific zones of the ski to reduce mass and increase longitudinal stiffness. Lighter than titanal, with less dampening, optimised for power transfer rather than vibration absorption.
+                {:else}Titanal is an aluminium alloy laminated into the ski's core structure. It increases torisional stiffness and dampens high frequency vibrations at speed, reducing energy loss on hard, uneven snow.{/if}
+              </p>
+            </div>
+          {/if}
+        </div>
+
+        <div class="sezione">
+          <button class="sezione-header" onclick={() => accordionOpen = 'wax'}>
+            <span>WAX PROTOCOL</span>
+            <span class="accordion-icon">{accordionOpen === 'wax' ? '−' : '+'}</span>
+          </button>
+          
+          {#if accordionOpen === 'wax'}
+            <div class="sezione-body" transition:slide>
+              <div class="wax-row">
+                <p class="wax-label">{waxLabel}</p>
+                <div class="wax-track-wrap">
+                  <input type="range" min={0} max={2} step={0.01}
+                    bind:value={ceraIndex}
+                    class="wax-input"
+                  />
+                  <div class="wax-track">
+                    {#each Array(10) as _, i}
+                      {@const isPiena = i / 10 < (ceraIndex + 0.2) / 2}
+                      <div 
+                        class="wax-bacchetta" 
+                        class:piena={isPiena}
+                        style="--index: {i};"
+                      ></div>
+                    {/each}
+                  </div>
+                </div>
+                <p class="wax-mu">{waxMu}</p>
+              </div>
+              <p class="wax-desc">{waxDesc}</p>
+            </div>
+          {/if}
+        </div>
+      </div> </div>
+
     <div class="right-col">
       <div class="dx-header">CONFIGURE YOUR SKI SYSTEM</div>
       
@@ -344,6 +341,13 @@
     margin: 0;
   }
 
+  /* ── NUOVO GRUPPO ACCORDION ── */
+  .accordion-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
   .sezione { 
     border: 1.5px solid black; 
     margin-bottom: 0;
@@ -351,21 +355,21 @@
   }
 
   .sezione-header {
-  background: black;
-  color: white;
-  padding: 8px 24px;
-  font-family: 'Geist Mono', monospace;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: none;
-  cursor: pointer;
-  text-transform: uppercase;
-}
+    background: black;
+    color: white;
+    padding: 8px 24px;
+    font-family: 'Geist Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
 
   .sezione-header:hover {
     background: #1a1a1a;

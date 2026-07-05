@@ -6,30 +6,20 @@
   config.fase = 4
 
   const r = calcola(config)
-  const {
-    dtTotale, dtAtleta, dtEquip,
-    dnfRate, scenario, isFluoro, spider
-  } = r
+  const { dtTotale, dtAtleta, dtEquip, dnfRate, scenario, isFluoro, spider } = r
 
   // ─── LOADING SCREEN ───────────────────────────────────────────────────
   let videoFinito = $state(false)
   let videoEl = $state(null)
 
- // Curva esponenziale — amplifica molto l'effetto
-const playbackRate = Math.max(0.25, Math.min(3.0, Math.pow(2, -dtTotale * 1.2)))
+  const playbackRate = Math.max(0.25, Math.min(3.0, Math.pow(2, -dtTotale * 1.2)))
+
   $effect(() => {
-  if (!videoEl) return
-  
-  const applyRate = () => {
-    videoEl.playbackRate = playbackRate
-  }
-  
-  if (videoEl.readyState >= 1) {
-    applyRate()
-  } else {
-    videoEl.addEventListener('loadedmetadata', applyRate, { once: true })
-  }
-})
+    if (!videoEl) return
+    const applyRate = () => { videoEl.playbackRate = playbackRate }
+    if (videoEl.readyState >= 1) applyRate()
+    else videoEl.addEventListener('loadedmetadata', applyRate, { once: true })
+  })
 
   // ─── COLORI ───────────────────────────────────────────────────────────
   const accent = scenario === 'DNF' ? '#000000' : '#BDF522'
@@ -43,8 +33,8 @@ const playbackRate = Math.max(0.25, Math.min(3.0, Math.pow(2, -dtTotale * 1.2)))
   const verdict = verdicts[scenario]
 
   const sign = dtTotale <= 0 ? '' : '+'
- const dtFormatted     = `Δt= ${sign}${dtTotale.toFixed(2)}s`
- const dtFormattedFull = `${sign}${dtTotale.toFixed(2)}s`
+  const dtFormatted     = `Δt= ${sign}${dtTotale.toFixed(2)}s`
+  const dtFormattedFull = `${sign}${dtTotale.toFixed(2)}s`
 
   const introText = {
     CLEAN: 'Your configuration is within FIS compliance parameters across all three axes of the simulation — and within the portion of that legal space that does not require exceptional resources to reach.',
@@ -54,44 +44,44 @@ const playbackRate = Math.max(0.25, Math.min(3.0, Math.pow(2, -dtTotale * 1.2)))
   }
 
   // ─── SPIDER CHART ─────────────────────────────────────────────────────
-    const spiderParams = [
-  { 
-    key: 'SPEED\nPOTENTIAL', 
-    value: spider.speedPotential,
-    desc: 'How much gravitational and mechanical force your configuration can convert into straight-line acceleration.',
-    from: 'Body mass + ski geometry'
-  },
-  { 
-    key: 'TECHNICAL\nCONTROL', 
-    value: spider.technicalControl,
-    desc: 'Your capacity to maintain the optimal racing line through technical sections without accumulating trajectory error.',
-    from: 'Trajectory deviation + RFD'
-  },
-  { 
-    key: 'EQUIPMENT\nCOMPLIANCE', 
-    value: spider.equipmentCompliance,
-    desc: 'How far your equipment sits from the regulatory boundary. Legal does not mean central.',
-    from: 'Wax protocol + ski geometry'
-  },
-  { 
-    key: 'DNF RISK', 
-    value: spider.dnfRisk,
-    desc: 'The probability that this configuration does not cross the finish line.',
-    from: 'Trajectory deviation + RFD (combined)'
-  },
-  { 
-    key: 'EDGE GRIP', 
-    value: spider.edgeGrip,
-    desc: 'The ski\'s ability to hold a clean edge on hard, icy snow under lateral load.',
-    from: 'Ski material + radius'
-  },
-  { 
-    key: 'RESOURCE\nACCESS', 
-    value: spider.resourceAccess,
-    desc: 'Where your configuration sits in the economic ecosystem of competitive skiing. Not a performance metric — a structural one.',
-    from: 'Ski material + wax protocol'
-  },
-]
+  const spiderParams = [
+    {
+      key: 'SPEED\nPOTENTIAL',
+      value: spider.speedPotential,
+      desc: 'How much gravitational and mechanical force your configuration can convert into straight-line acceleration.',
+      from: 'Body mass + ski geometry'
+    },
+    {
+      key: 'TECHNICAL\nCONTROL',
+      value: spider.technicalControl,
+      desc: 'Your capacity to maintain the optimal racing line through technical sections without accumulating trajectory error.',
+      from: 'Trajectory deviation + RFD'
+    },
+    {
+      key: 'EQUIPMENT\nCOMPLIANCE',
+      value: spider.equipmentCompliance,
+      desc: 'How far your equipment sits from the regulatory boundary. Legal does not mean central.',
+      from: 'Wax protocol + ski geometry'
+    },
+    {
+      key: 'DNF RISK',
+      value: spider.dnfRisk,
+      desc: 'The probability that this configuration does not cross the finish line.',
+      from: 'Trajectory deviation + RFD (combined)'
+    },
+    {
+      key: 'EDGE GRIP',
+      value: spider.edgeGrip,
+      desc: 'The ski\'s ability to hold a clean edge on hard, icy snow under lateral load.',
+      from: 'Ski material + radius'
+    },
+    {
+      key: 'RESOURCE\nACCESS',
+      value: spider.resourceAccess,
+      desc: 'Where your configuration sits in the economic ecosystem of competitive skiing. Not a performance metric — a structural one.',
+      from: 'Ski material + wax protocol'
+    },
+  ]
 
   const N  = spiderParams.length
   const CX = 250
@@ -128,18 +118,15 @@ const playbackRate = Math.max(0.25, Math.min(3.0, Math.pow(2, -dtTotale * 1.2)))
 {#if !videoFinito}
   <!-- ── LOADING SCREEN ── -->
   <div class="loading-screen" class:you-died={scenario === 'DNF'}>
-    <!-- video a tutto schermo dietro -->
     <video
-  bind:this={videoEl}
-  src="/videos/result_alpha.webm"
-  autoplay
-  muted
-  playsinline
-  onended={() => videoFinito = true}
-  class="loading-video"
-></video>
-
-    <!-- overlay centrato sopra -->
+      bind:this={videoEl}
+      src="/videos/result_alpha.webm"
+      autoplay
+      muted
+      playsinline
+      onended={() => videoFinito = true}
+      class="loading-video"
+    ></video>
     <div class="loading-overlay">
       <span class="loading-label">Loading...</span>
       <div class="loading-bar-outer">
@@ -221,15 +208,15 @@ const playbackRate = Math.max(0.25, Math.min(3.0, Math.pow(2, -dtTotale * 1.2)))
         </svg>
 
         {#if hoveredParam !== null}
-  <div class="tooltip">
-    <div class="tt-header">
-      <span class="tt-key">{spiderParams[hoveredParam].key.replace('\n', ' ')}</span>
-      <span class="tt-val">{(spiderParams[hoveredParam].value * 100).toFixed(0)}%</span>
-    </div>
-    <p class="tt-desc">{spiderParams[hoveredParam].desc}</p>
-    <p class="tt-from">Derived from: {spiderParams[hoveredParam].from}</p>
-  </div>
-{/if}
+          <div class="tooltip">
+            <div class="tt-header">
+              <span class="tt-key">{spiderParams[hoveredParam].key.replace('\n', ' ')}</span>
+              <span class="tt-val">{(spiderParams[hoveredParam].value * 100).toFixed(0)}%</span>
+            </div>
+            <p class="tt-desc">{spiderParams[hoveredParam].desc}</p>
+            <p class="tt-from">Derived from: {spiderParams[hoveredParam].from}</p>
+          </div>
+        {/if}
       </div>
 
       <div class="right-panel">
@@ -258,6 +245,7 @@ const playbackRate = Math.max(0.25, Math.min(3.0, Math.pow(2, -dtTotale * 1.2)))
     </div>
   </div>
 {/if}
+
 <style>
   /* ── LOADING SCREEN ── */
   .loading-screen {
@@ -267,13 +255,23 @@ const playbackRate = Math.max(0.25, Math.min(3.0, Math.pow(2, -dtTotale * 1.2)))
     z-index: 200;
   }
 
+  .loading-screen.you-died {
+    animation: flickerViolet 0.12s steps(2) infinite;
+  }
+
+  @keyframes flickerViolet {
+    0%   { background-color: white; }
+    49%  { background-color: white; }
+    50%  { background-color: rgba(166, 9, 240, 0.25); }
+    100% { background-color: rgba(166, 9, 240, 0.25); }
+  }
+
   .loading-video {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    
   }
 
   .loading-overlay {
@@ -317,18 +315,6 @@ const playbackRate = Math.max(0.25, Math.min(3.0, Math.pow(2, -dtTotale * 1.2)))
     90%  { width: 95%; }
     100% { width: 100%; }
   }
-  .loading-screen.you-died {
-  animation: flickerViolet 0.12s steps(2) infinite;
-}
-
-@keyframes flickerViolet {
-  0%   { background-color: white; }
-  49%  { background-color: white; }
-  50%  { background-color: rgba(166, 9, 240, 0.25); }
-  100% { background-color: rgba(166, 9, 240, 0.25); }
-}
-
-  
 
   /* ── RESULT PAGE ── */
   .page {
@@ -395,60 +381,28 @@ const playbackRate = Math.max(0.25, Math.min(3.0, Math.pow(2, -dtTotale * 1.2)))
   .spider-svg { width: 100%; height: 100%; max-height: 100%; }
 
   .tooltip {
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #000;
-  color: #fff;
-  padding: 12px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  pointer-events: none;
-  max-width: 320px;
-  width: max-content;
-}
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: #fff;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    pointer-events: none;
+    max-width: 320px;
+    width: max-content;
+  }
 
-.tt-header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-}
+  .tt-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+  }
 
-.tt-key {
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent-text);
-}
-
-.tt-val {
-  font-size: 1.1rem;
-  font-weight: 700;
-  font-family: 'Geist Mono', monospace;
-  flex-shrink: 0;
-}
-
-.tt-desc {
-  font-family: 'Geist Mono', monospace;
-  font-size: 0.6rem;
-  line-height: 1.5;
-  color: #aaa;
-  margin: 0;
-}
-
-.tt-from {
-  font-family: 'Geist Mono', monospace;
-  font-size: 0.55rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--accent-text);
-  opacity: 0.7;
-  margin: 0;
-}
   .tt-key {
     font-size: 0.6rem;
     font-weight: 700;
@@ -456,10 +410,30 @@ const playbackRate = Math.max(0.25, Math.min(3.0, Math.pow(2, -dtTotale * 1.2)))
     text-transform: uppercase;
     color: var(--accent-text);
   }
+
   .tt-val {
     font-size: 1.1rem;
     font-weight: 700;
     font-family: 'Geist Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  .tt-desc {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.6rem;
+    line-height: 1.5;
+    color: #aaa;
+    margin: 0;
+  }
+
+  .tt-from {
+    font-family: 'Geist Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+    opacity: 0.7;
+    margin: 0;
   }
 
   .right-panel {

@@ -82,6 +82,13 @@
     </div>
 
   </div>
+
+  <div class="bottom-bar">
+    <div class="bb-spacer"></div>
+    <button class="start-btn" onclick={() => goto('/athlete')}>
+      START SIMULATION
+    </button>
+  </div>
 {/if}
 
 <style>
@@ -120,7 +127,7 @@
     top: 0;
     left: 0;
     right: 0;
-    bottom: 76px; 
+    bottom: 76px; /* Lascia lo spazio esatto per la bottom bar */
     display: grid;
     grid-template-rows: auto auto 1fr;
     overflow: hidden;
@@ -183,7 +190,7 @@
   .marquee-track {
     display: flex;
     width: max-content;
-    animation: marquee 15s linear infinite; 
+    animation: marquee 30s linear infinite; /* <-- DIMEZZATA LA VELOCITÀ (da 15s a 30s) */
   }
 
   .marquee-item {
@@ -223,7 +230,7 @@
   .riga-bottom .cella {
     padding: 40px;
     height: 100%;
-    overflow: hidden; /* Fissato: rimosso auto */
+    overflow: hidden; 
   }
 
   .cella-occhiali {
@@ -252,7 +259,6 @@
     border-bottom: 1.5px solid black;
   }
 
-  /* Rimuove il bordo dall'ultima riga */
   .reg-row:last-child {
     border-bottom: none;
   }
@@ -271,5 +277,61 @@
     color: #444;
     margin: 0;
     padding: 0;
+  }
+
+  /* ── BOTTOM BAR STYLES ── */
+  .bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 76px;
+    background: var(--mc-bg, #a02424);
+    
+    /* Linea nera sopra la bottom bar */
+    border-top: 1.5px solid black; 
+    
+    display: grid;
+    /* Stessa identica griglia della riga-bottom per allineare il pulsante */
+    grid-template-columns: 0.8fr 2fr 0.8fr; 
+    z-index: 50;
+    opacity: 0;
+    animation: fadeIn 0.8s ease 0.8s forwards;
+    box-sizing: border-box;
+  }
+
+  .bb-spacer {
+    /* Occupa le prime due colonne lasciandole vuote */
+    grid-column: 1 / 3;
+  }
+
+  .start-btn {
+    grid-column: 3 / 4;
+    
+    /* Resetta i bordi nativi del bottone e imposta solo quello sinistro */
+    border: none;
+    border-left: 1.5px solid black;
+    border-radius: 0;
+    outline: none;
+    
+    background: #BDF522;
+    color: black;
+    font-family: 'Geist Mono', monospace;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+    text-transform: uppercase;
+    padding: 0;
+    margin: 0;
+  }
+
+  .start-btn:hover {
+    background: black;
+    color: #BDF522;
   }
 </style>

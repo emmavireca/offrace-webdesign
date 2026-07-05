@@ -13,6 +13,7 @@
 
   let cameraObj = $state(null)
   let controls = $state(null)
+  let durata = 260
 
   // ── PRESET DI FUOCO ──────────────────────────────────────────
   // zoom <1 = avvicina, >1 = allontana ; off = sposta il punto guardato
@@ -22,7 +23,7 @@
     radius: { zoom: 0.55, off: new THREE.Vector3( 0.20, 0.0, 0.0) },
   }
 
-  const DURATA = 260   // durata zoom in/out (ms) — più basso = più sprint
+  const DURATA = { length: 260, width: 260, radius: 400 }   // durata zoom in/out (ms) — più basso = più sprint
 
   function easeInOut(t) {
     return t >= 0.5 ? 1 - Math.pow(-2 * t + 2, 2) / 2 : 2 * t * t
@@ -52,10 +53,16 @@
   }
 
   function calcolaFuoco(key) {
-    const f = fuochi[key]
-    focusTarget.copy(returnTarget).add(f.off)
-    focusPos.copy(returnPos).sub(returnTarget).multiplyScalar(f.zoom).add(returnTarget).add(f.off)
+  if (key === 'radius') {
+  focusTarget.set(1.5, 0.2, -0.3)   // sposta il punto guardato più a destra
+  focusPos.set(1.0, 1.6, -0.8)      // abbassa la camera per ingrandire
+  return
   }
+  // length e width restano col sistema relativo di prima
+  const f = fuochi[key]
+  focusTarget.copy(returnTarget).add(f.off)
+  focusPos.copy(returnPos).sub(returnTarget).multiplyScalar(f.zoom).add(returnTarget).add(f.off)
+}
 
   // reagisce a PREMI / RILASCIA (config.zoomTarget)
   $effect(() => {
@@ -71,6 +78,7 @@
         curTarget.copy(controls.target)
       }
       calcolaFuoco(key)
+      durata = DURATA[key] ?? 260
       startTransizione(focusPos, focusTarget)
       fase = 'andata'
       controls.enabled = false
@@ -89,7 +97,7 @@
     if (fase !== 'andata' && fase !== 'ritorno') return
     if (!cameraObj || !controls) return
 
-    const t = Math.min((performance.now() - tStart) / DURATA, 1)
+    const t = Math.min((performance.now() - tStart) / durata, 1)
     const e = easeInOut(t)
 
     curPos.copy(fromPos).lerp(toPos, e)
