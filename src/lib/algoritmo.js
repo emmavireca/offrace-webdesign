@@ -103,8 +103,8 @@ export function calcola(config) {
 
   // Scenario
   let scenario
-  if (isFluoro)              scenario = 'BANNED'
-  else if (dnfRate > 0.25)   scenario = 'DNF'
+ if (dnfRate > 0.25)        scenario = 'DNF'
+  else if (isFluoro)         scenario = 'BANNED'
   else if (dtTotale < -0.8 && techFlags >= 2) scenario = 'RESOURCE GAP'
   else                       scenario = 'CLEAN'
 

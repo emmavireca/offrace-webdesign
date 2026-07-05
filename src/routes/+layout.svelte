@@ -111,11 +111,14 @@
   <button type="button" class="next" class:is-home={isHome} onclick={() => {
       if (isHome) goto('/environment')
       else {
-        const rotte = ['/environment', '/athlete', '/equipment', '/result'];
-        goto(rotte[config.fase] || '/result');
+        if (config.fase === 4) goto('/')
+else {
+  const rotte = ['/environment', '/athlete', '/equipment', '/result'];
+  goto(rotte[config.fase] || '/result');
+}
       }
     }}>
-    {isHome ? 'START SIMULATION' : 'NEXT PHASE →'}
+   {isHome ? 'START SIMULATION' : config.fase === 4 ? 'TRY AGAIN →' : 'NEXT PHASE →'}
   </button>
 </footer>
 
@@ -261,4 +264,7 @@
     text-transform: uppercase; line-height: 1; 
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; 
   }
+  .barra.nascosta {
+  display: none !important;
+}
 </style>

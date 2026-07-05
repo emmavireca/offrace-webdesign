@@ -9,6 +9,7 @@
   const { dtTotale, dtAtleta, dtEquip, dnfRate, scenario, isFluoro, spider } = r
 
   // ─── LOADING SCREEN ───────────────────────────────────────────────────
+  const videoSrc = scenario === 'DNF' ? '/videos/result_died.webm' : '/videos/result_alpha.webm'
   let videoFinito = $state(false)
   let videoEl = $state(null)
 
@@ -20,6 +21,11 @@
     if (videoEl.readyState >= 1) applyRate()
     else videoEl.addEventListener('loadedmetadata', applyRate, { once: true })
   })
+
+  $effect(() => {
+  const barra = document.querySelector('.barra')
+  if (barra) barra.classList.toggle('nascosta', !videoFinito)
+})
 
   // ─── COLORI ───────────────────────────────────────────────────────────
   const accent = scenario === 'DNF' ? '#000000' : '#BDF522'
@@ -120,7 +126,7 @@
   <div class="loading-screen" class:you-died={scenario === 'DNF'}>
     <video
       bind:this={videoEl}
-      src="/videos/result_alpha.webm"
+      src={videoSrc}
       autoplay
       muted
       playsinline
@@ -276,9 +282,9 @@
 
   .loading-overlay {
     position: absolute;
-    bottom: 80px;
+    bottom: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
     align-items: center;
