@@ -12,13 +12,8 @@
   } = r
 
   // ─── COLORI ───────────────────────────────────────────────────────────
-  const colors = {
-    CLEAN:        '#BDF522',
-    DNF:          '#FA51A2',
-    BANNED:       '#A609F0',
-    'RESOURCE GAP': '#7B46F8',
-  }
-  const accent = colors[scenario] ?? '#BDF522'
+  // Ora usiamo il verde "Valid Run" per tutti i casi
+  const accent = '#BDF522'
 
   const verdicts = {
     CLEAN:          'VALID RUN',
