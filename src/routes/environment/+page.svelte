@@ -305,4 +305,72 @@
     margin-left: 8px; 
     opacity: 0.8;
   }
+
+/* ── RESPONSIVE PER MOBILE ── */
+@media (max-width: 768px) {
+  
+  :global(html), :global(body) {
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+
+  .page {
+    position: relative;
+    inset: auto;
+    display: flex;
+    flex-direction: column;
+    
+    overflow-y: auto !important; 
+    overflow-x: hidden;
+    height: auto !important;
+    min-height: 100vh;
+  }
+
+  .col-sx {
+    border-right: none;
+    border-bottom: 1.5px solid black;
+    height: auto !important;
+    overflow: visible !important;
+    order: 1;
+  }
+
+  .sx-top {
+    padding: 24px;
+  }
+
+  .sx-img {
+    padding: 16px;
+    height: 300px; 
+    background: #fcfcfc;
+  }
+
+  .sx-img img {
+    max-height: 100%;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .col-dx {
+    height: auto !important;
+    overflow-y: visible !important;
+    padding-bottom: 120px;
+    order: 2;
+  }
+
+  .dx-header {
+    padding: 16px 24px;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .pista {
+    padding: 24px;
+  }
+
+  .desc, .track-desc {
+    max-width: 100%;
+  }
+}
 </style>
