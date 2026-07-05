@@ -17,7 +17,7 @@
 
   const verdicts = {
     CLEAN:          'VALID RUN',
-    DNF:            'DNF',
+    DNF:            'YOU DIED',
     BANNED:         'DISQUALIFIED',
     'RESOURCE GAP': 'RESOURCE GAP',
   }
