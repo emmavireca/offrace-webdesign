@@ -12,8 +12,8 @@
   } = r
 
   // ─── COLORI ───────────────────────────────────────────────────────────
-  // Ora usiamo il verde "Valid Run" per tutti i casi
-  const accent = '#BDF522'
+  // Nero se il caso è DNF ("You Died"), altrimenti il verde per tutti gli altri
+  const accent = scenario === 'DNF' ? '#000000' : '#BDF522'
 
   const verdicts = {
     CLEAN:          'VALID RUN',
@@ -77,7 +77,11 @@
   onMount(() => { setTimeout(() => { mounted = true }, 100) })
 </script>
 
-<div class="page" style="--accent: {accent};">
+<div class="page" style="
+  --accent: {accent}; 
+  --accent-text: {scenario === 'DNF' ? '#ffffff' : '#BDF522'}; 
+  --banner-text: {scenario === 'DNF' ? '#ffffff' : '#000000'};
+">
 
   <div class="banner" aria-label={verdict}>
     <div class="banner-track">
@@ -193,13 +197,13 @@
 
   .banner {
     background: var(--accent);
+    color: var(--banner-text); 
     overflow: hidden;
     white-space: nowrap;
     border-bottom: 1.5px solid #000;
   }
   .banner-track {
     display: inline-block;
-    /* Velocità rallentata a 30s per corrispondere alla home page */
     animation: marquee 30s linear infinite;
   }
   .banner-track span {
@@ -266,7 +270,7 @@
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--accent-text); 
   }
   .tt-val {
     font-size: 1.1rem;
@@ -319,7 +323,7 @@
   }
   .bk-row:last-child { border-bottom: none; }
   .bk-row.total { background: #000; color: #fff; font-weight: 700; }
-  .bk-row.total .mono { color: var(--accent); }
+  .bk-row.total .mono { color: var(--accent-text); }
   .mono { font-family: 'Geist Mono', monospace; }
   .danger { color: #FF3B30; font-weight: 700; }
 </style>
