@@ -515,4 +515,86 @@
   .animazione-sinistra { animation: da-sinistra  0.8s ease-out forwards; }
   .esce-destra         { animation: vai-sinistra  0.8s ease-in  forwards; }
   .esce-sinistra       { animation: vai-destra    0.8s ease-in  forwards; }
+
+/* ── RESPONSIVE PER MOBILE ── */
+@media (max-width: 768px) {
+  
+  /* Sblocchiamo la pagina fissa del desktop */
+  .page {
+    position: relative;
+    inset: auto;
+    height: auto !important;
+    overflow-y: auto !important;
+  }
+
+  /* Trasformiamo la griglia a due colonne in un flusso verticale */
+  .content {
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    height: auto;
+  }
+
+  /* ── MODELLO 3D (ORA VA IN ALTO) ── */
+  .right {
+    border-left: none;
+    border-bottom: 1.5px solid black;
+    order: 1; /* Forza il blocco 3D a stare per primo */
+  }
+
+  .dx-header {
+    padding: 16px 24px;
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  /* Definiamo un'altezza fissa adeguata per lo schermo del telefono */
+  .viewer-container {
+    height: 350px; 
+    width: 100%;
+    position: relative;
+  }
+
+  /* Risistemiamo le tute in sovrapposizione sul mobile */
+  .tuta-donna {
+    width: 60%;
+    transform: translate(-50%, -50%);
+  }
+
+  .tuta-uomo {
+    width: 55%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* ── CONTROLLI E SLIDER (ORA VANNO IN BASSO) ── */
+  .left {
+    padding: 24px 24px 80px 24px; /* Riduciamo i padding mastodontici */
+    overflow-y: visible;
+    height: auto !important;
+    order: 2; /* Si posiziona sotto il modello 3D */
+  }
+
+  /* Riposizioniamo la griglia dei pannelli interni */
+  .pannelli-row {
+    grid-template-columns: 1fr; /* Anche i sotto-pannelli vanno uno sotto l'altro */
+  }
+
+  .pannello-small {
+    border-right: none;
+    border-bottom: 1.5px solid black;
+  }
+
+  /* Ottimizziamo il widget RDF (il misuratore circolare) per il touch */
+  .rdf-body {
+    flex-direction: column; /* Il misuratore va sopra il suo testo descrittivo */
+    gap: 20px;
+    padding: 16px;
+  }
+
+  .desc, .pannello-desc {
+    max-width: 100%;
+  }
+}
 </style>
