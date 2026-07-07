@@ -85,7 +85,7 @@
     <div class="left">
       <div class="left-intro">
         <h1>Athlete</h1>
-        <p class="desc">The athlete is not a fixed variable. Body composition, neuromuscular capacity, and technical precision are not equal across competitors — and none of them are regulated. While equipment is subject to FIS specifications and wax protocols are enforced at the gate, the physical profile of the athlete remains entirely outside the compliance system.</p>
+        <p class="desc">The athlete enters the race as a trained body, but also as a set of accumulated adaptations. Weight, force, reaction time and trajectory control are the result of years spent building a specific relationship with speed. In alpine skiing, this relationship is compressed into a descent that leaves almost no room for correction. Every movement has a consequence: a delayed edge change, a wider line, a slightly unstable landing can alter the rhythm of the whole run. The body becomes one part of a larger system, working with the slope, the equipment and the conditions of the track. This section isolates the physical variables that shape that system, showing how human performance is constructed before it is expressed on the course.</p>
       </div>
 
       <div class="accordion-group">
@@ -258,7 +258,7 @@
     font-size: 0.78rem;
     line-height: 1.6;
     color: #444;
-    max-width: 54ch;
+    max-width: 74ch;
     margin: 0;
   }
 
@@ -321,9 +321,11 @@
 
   /* CONTROLLI SPECIFICI */
   .mass-row {
-    display: flex;
-    align-items: center;
-  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
 
   .mass-control {
     display: flex;

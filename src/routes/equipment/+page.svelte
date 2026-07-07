@@ -31,7 +31,7 @@
         ? config.venue === 'bormio'
           ? 'High-purity paraffin with additives graphite. Graphite is a form of carbon with a layered molecular structure : the layers slide over each other with almost no resistance, which is why graphite is used as a dry lubricant in industrial applications. When incorporated into race wax, graphite particles embed in the base surface and reduce static friction at the ski-snow contact point. It is most effective on cold, dry snow where the water film is minimal and mechanical friction dominates. At temperatures close to 0°C, where the water film becomes abundant, graphite loses its advantage and silicone-based additives perform better.'
           : 'Silicone is a synthetic polymer built on a silicon-oxygen backbone rather than carbon, which gives it an unusually low surface energy, meaning liquids, including water, struggle to adhere to it. When incorporated into race wax as an additive, silicone molecules migrate to the outermost layer of the base surface and create a hydrophobic barrier that repels the water film forming at the ski-snow interface. It is most effective on wet, warm snow near 0°C, where the water film is thick and viscous drag dominates friction. On cold, dry snow, where the water film is minimal, silicone provides little advantage over standard paraffin.'
-        : 'Paraffin is a saturated hydrocarbon derived from petroleum refining, the same base compound used in candles and industrial lubricants. In its wax form, it is applied to the ski base to create a thin protective layer between the polyethylene sole and the snow surface. Training-grade paraffin is unrefined and broadly formulated, designed for repeated application and removal during practice sessions rather than performance optimisation. It provides basic protection against base oxidation and drying, but offers no condition-specific advantage. Friction remains high compared to race-grade alternatives.'
+        : 'Paraffin is a saturated hydrocarbon derived from petroleum refining, the same base compound used in candles and industrial lubricants. In its wax form, it is applied to the ski base to create a thin protective layer between the polyethylene sole and the snow surface. Training-grade paraffin is unrefined and broadly formatted, designed for repeated application and removal during practice sessions rather than performance optimisation. It provides basic protection against base oxidation and drying, but offers no condition-specific advantage. Friction remains high compared to race-grade alternatives.'
   )
 
   let waxMu = $derived(
@@ -100,7 +100,7 @@
     <div class="left">
       <div class="left-intro">
         <h1>Equipment</h1>
-        <p class="desc">Every race is decided before the start. The equipment an athlete carries onto the slope is the result of years of research.</p>
+        <p class="desc">Equipment is the part of the race where performance becomes material. Ski length, radius, construction, edge grip and wax protocol shape how the athlete meets the snow, translating force into speed, stability and control. Every choice carries a different weight depending on the selected track: a setup that holds cleanly on Bormio’s steep, icy sections may become less agile on Olympia’s technical rhythm. This is also the area most directly exposed to regulation. The rulebook defines what can enter the gate, what must stay outside, and where innovation begins to resemble an unfair advantage. In this space, equipment is never neutral. It is a technical decision, a regulatory boundary, and a resource question at the same time.</p>
       </div>
 
       <div class="accordion-group">
@@ -114,7 +114,7 @@
             <div class="sezione-body tre-col" transition:slide>
               <div class="col">
                 <div class="col-header">
-                  <span class="col-title">LENGTH:</span>
+                  <span class="col-title">LENGTH</span>
                   <span class="val-live">{config.lunghezza} CM</span>
                 </div>
                 <div class="range-labels">
@@ -133,7 +133,7 @@
 
               <div class="col">
                 <div class="col-header">
-                  <span class="col-title">WIDTH:</span>
+                  <span class="col-title">WIDTH</span>
                   <span class="val-live">{config.larghezza} MM</span>
                 </div>
                 <div class="range-labels">
@@ -150,7 +150,7 @@
 
               <div class="col">
                 <div class="col-header">
-                  <span class="col-title">RADIUS:</span>
+                  <span class="col-title">RADIUS</span>
                   <span class="val-live">{config.raggio} M</span>
                 </div>
                 <div class="range-labels">
@@ -255,7 +255,9 @@
             <div class="tooltip-box" class:visibile={attivo('length')} style="left: 58%; top: -15%; cursor: pointer;" onclick={() => goto('/athlete')}>
               <p class="tooltip-title">LENGTH</p>
               <p class="tooltip-desc">{descrizioni.length}</p>
-              <p class="tooltip-valore">{config.lunghezza} CM</p>
+              <div class="tooltip-valore-wrap">
+                <span class="tooltip-valore">{config.lunghezza} CM</span>
+              </div>
             </div>
 
             {#if attivo('width')}
@@ -270,7 +272,9 @@
             <div class="tooltip-box width-box" class:visibile={attivo('width')} style="left: 3.5%; top: 8%; cursor: pointer;" onclick={() => goto('/environment')}>
               <p class="tooltip-title">WIDTH</p>
               <p class="tooltip-desc">{descrizioni.width}</p>
-              <p class="tooltip-valore">{config.larghezza} MM</p>
+              <div class="tooltip-valore-wrap">
+                <span class="tooltip-valore">{config.larghezza} MM</span>
+              </div>
             </div>
 
             {#if attivo('radius')}
@@ -286,7 +290,9 @@
             <div class="tooltip-box" class:visibile={attivo('radius')} style="left: 50%; top: 210%; cursor: pointer;" onclick={() => goto('/athlete')}>
               <p class="tooltip-title">RADIUS</p>
               <p class="tooltip-desc">{descrizioni.radius}</p>
-              <p class="tooltip-valore">{config.raggio} M</p>
+              <div class="tooltip-valore-wrap">
+                <span class="tooltip-valore">{config.raggio} M</span>
+              </div>
             </div>
           {/if}
         </div>
@@ -337,11 +343,10 @@
     font-size: 0.78rem;
     line-height: 1.6;
     color: #444;
-    max-width: 54ch;
+    max-width: 74ch;
     margin: 0;
   }
 
-  /* ── NUOVO GRUPPO ACCORDION ── */
   .accordion-group {
     display: flex;
     flex-direction: column;
@@ -388,57 +393,69 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 0;
-    padding: 0;
+    padding: 0; 
   }
 
   .col {
     display: flex;
     flex-direction: column;
     gap: 8px; 
-    padding: 16px 12px;
+    padding: 24px 24px; 
     border-right: 1.5px solid black; 
+    min-width: 0;
   }
 
-  .col:last-child { border-right: none; }
+  .col:first-child {
+    padding-left: 24px;
+  }
+
+  .col:last-child { 
+    border-right: none; 
+    padding-right: 24px;
+  }
 
   .col-header {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: center;
     width: 100%;
   }
 
-.col-title {
-  font-family: 'Geist Mono', monospace;
-  font-weight: 500;
-  font-size: 16pt;
-  letter-spacing: 0.02em;
-  margin: 0;
-}
+  .col-title {
+    font-family: 'Geist Mono', monospace;
+    font-weight: 600;
+    font-size: 11pt;
+    letter-spacing: 0.02em;
+    margin: 0;
+    text-transform: uppercase;
+  }
 
-.val-live {
-  font-family: 'Geist Mono', monospace;
-  font-weight: 500;
-  font-size: 16pt;
-  color: var(--mc-copper);
-  margin: 0;
-}
+  .val-live {
+    font-family: 'Geist Mono', monospace;
+    font-weight: 600;
+    font-size: 11pt;
+    background: black;
+    color: #BDF522;
+    padding: 4px 8px;
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
 
-.range-labels {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-top: auto;
-}
+  .range-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: auto;
+  }
 
-.range-label {
-  font-family: 'Geist Mono', monospace;
-  font-weight: 400;
-  font-size: 8pt;
-  color: #666;
-  letter-spacing: 0.05em;
-  margin: 0;
-}
+  .range-label {
+    font-family: 'Geist Mono', monospace;
+    font-weight: 400;
+    font-size: 8pt;
+    color: #666;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
 
   /* ── SLIDER LENGTH E WIDTH ── */
   .slider-h {
@@ -463,22 +480,22 @@
   }
 
   .slider-h::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: var(--mc-copper);
-    outline: 1.5px solid black; 
-    margin-top: -6px;
-    transition: transform 0.2s, background 0.2s, outline-color 0.2s;
-  }
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #BDF522;
+  outline: 1.5px solid black;
+  margin-top: -6px;
+  transition: transform 0.2s, background 0.2s, outline-color 0.2s;
+}
 
-  .slider-h:hover::-webkit-slider-thumb,
-  .slider-h:active::-webkit-slider-thumb {
-    transform: scale(1.3);
-    background: black;
-    outline-color: var(--mc-copper);
-  }
+.slider-h:hover::-webkit-slider-thumb,
+.slider-h:active::-webkit-slider-thumb {
+  transform: scale(1.3);
+  background: black;
+  outline-color: #BDF522;
+}
 
   /* ── SLIDER RADIUS ── */
   .radius-svg {
@@ -493,17 +510,17 @@
   }
 
   .radius-thumb {
-    fill: var(--mc-copper);
-    stroke: black;
-    transition: fill 0.2s, stroke 0.2s, transform 0.2s;
-  }
+  fill: #BDF522;
+  stroke: black;
+  transition: fill 0.2s, stroke 0.2s, transform 0.2s;
+}
 
-  .radius-svg:hover .radius-thumb,
-  .radius-svg:active .radius-thumb {
-    fill: black;
-    stroke: var(--mc-copper);
-    transform: scale(1.3);
-  }
+.radius-svg:hover .radius-thumb,
+.radius-svg:active .radius-thumb {
+  fill: black;
+  stroke: #BDF522;
+  transform: scale(1.3);
+}
 
   /* ── CARDS MATERIALI ── */
   .materiali-grid {
@@ -513,68 +530,72 @@
     margin-top: 0;
     margin-bottom: 16px;
   }
+
   .mat-label {
-  font-family: 'Geist Mono', monospace;
-  font-weight: 500;
-  font-size: 16pt;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  margin-top: 0;
-  margin-bottom: 8px;
-}
+    font-family: 'Geist Mono', monospace;
+    font-weight: 600;
+    font-size: 11pt;
+    color: black;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin-top: 0;
+    margin-bottom: 8px;
+    display: block;
+  }
 
   .mat-card {
-  flex: 1;
-  position: relative;
-  border: 2px solid transparent;
-  background: none;
-  cursor: pointer;
-  padding: 0;
-  height: 80px;
-  overflow: hidden;
-  transition: border 0.2s, box-shadow 0.2s;
-}
+    flex: 1;
+    position: relative;
+    border: 2px solid transparent;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    height: 80px;
+    overflow: hidden;
+    transition: border 0.2s, box-shadow 0.2s;
+  }
 
-.mat-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(189, 245, 34, 0.5);
-  opacity: 0;
-  transition: opacity 0.2s;
-  pointer-events: none;
-}
+  .mat-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(189, 245, 34, 0.5);
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
 
-.mat-card:hover:not(.selezionato)::after {
-  opacity: 1;
-}
+  .mat-card:hover:not(.selezionato)::after {
+    opacity: 1;
+  }
 
-.mat-card.selezionato {
-  border: 2px solid black;
-  box-shadow: 0 0 0 2px var(--mc-copper);
-}
+  /* MODIFICATO: Contorno verde acido netto quando selezionato, rimosso box-shadow nero */
+  .mat-card.selezionato {
+    border: 2px solid #BDF522; 
+  }
 
-.mat-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  filter: grayscale(100%);
-  transition: filter 0.2s;
-}
-.mat-desc {
-  font-family: 'Geist Mono', monospace;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 1.7;
-  color: #444;
-  margin: 0;
-}
+  .mat-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(100%);
+    transition: filter 0.2s;
+  }
+  
+  .mat-desc {
+    font-family: 'Geist Mono', monospace;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #444;
+    margin: 0;
+  }
 
-
-.mat-card.selezionato .mat-img {
-  filter: grayscale(0%);
-}
+  .mat-card.selezionato .mat-img {
+    filter: grayscale(0%);
+  }
+  
   .wax-row {
     display: flex;
     align-items: flex-end;
@@ -583,9 +604,10 @@
   }
 
   .wax-label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    font-size: 11pt;
+    font-weight: 600;
+    font-family: 'Geist Mono', monospace;
+    letter-spacing: 0.02em;
     white-space: nowrap;
     width: 140px;
     flex-shrink: 0;
@@ -634,7 +656,7 @@
     border: none !important;
     height: 0px !important;
   }
-  .wax-input::-moz-range-track {
+  .wax-input::-moz-track-wrap {
     background: transparent !important;
     border: none !important;
     height: 0px !important;
@@ -645,7 +667,7 @@
     appearance: none;
     width: 14px;
     height: 12px;
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12'><polygon points='7,11 1,1 13,1' fill='%23BDF522' stroke='black' stroke-width='1.5' stroke-linejoin='round'/></svg>") no-repeat center;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12'><polygon points='7,11 1,1 13,1' fill='black' stroke='black' stroke-width='1.5' stroke-linejoin='round'/></svg>"); 
     border: none;
     transition: transform 0.2s;
   }
@@ -653,7 +675,7 @@
   .wax-input:hover::-webkit-slider-thumb,
   .wax-input:active::-webkit-slider-thumb {
     transform: scale(1.3);
-    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12'><polygon points='7,11 1,1 13,1' fill='black' stroke='%23BDF522' stroke-width='1.5' stroke-linejoin='round'/></svg>") no-repeat center;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12'><polygon points='7,11 1,1 13,1' fill='black' stroke='black' stroke-width='1.5' stroke-linejoin='round'/></svg>") no-repeat center;
   }
 
   .wax-track {
@@ -681,25 +703,29 @@
   }
 
   .wax-mu {
-  font-family: 'Geist Mono', monospace;
-  font-size: 20pt;
-  font-weight: 500;
-  white-space: nowrap;
-  margin-left: 16px;
-  padding-bottom: 4px;
-  margin-top: 0;
-  margin-bottom: 0;
-}
+    font-family: 'Geist Mono', monospace;
+    font-size: 11pt; 
+    font-weight: 600;
+    background: black;
+    color: #BDF522;
+    padding: 4px 8px;
+    white-space: nowrap;
+    margin-left: 20px;
+    align-self: flex-end;
+    margin-top: 0;
+    margin-bottom: 0; 
+    letter-spacing: 0.02em;
+  }
 
- .wax-desc {
-  font-family: 'Geist Mono', monospace;
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 1.7;
-  color: #444;
-  margin-top: 16px;
-  margin-bottom: 0;
-}
+  .wax-desc {
+    font-family: 'Geist Mono', monospace;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #444;
+    margin-top: 16px;
+    margin-bottom: 0;
+  }
 
   .right-col {
     display: flex;
@@ -841,14 +867,23 @@
   .tooltip-desc {
     font-size: 0.75rem;
     line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .tooltip-valore-wrap {
+    display: inline-block;
+    background: black;
+    padding: 4px 8px;
     margin: 0;
   }
 
   .tooltip-valore {
+    font-family: 'Geist Mono', monospace;
     font-size: 0.8rem;
     font-weight: 700;
-    color: var(--mc-copper);
-    margin-top: 8px; 
-    margin-bottom: 0;
+    color: #BDF522;
+    margin: 0;
+    display: block;
+    letter-spacing: 0.02em;
   }
 </style>
