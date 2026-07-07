@@ -171,3 +171,4 @@ npm run dev -- --open  # apre anche il browser
 npm run build    # build di produzione (Studio escluso)
 npm run preview  # anteprima del build
 ```
+
