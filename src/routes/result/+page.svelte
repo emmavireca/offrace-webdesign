@@ -195,7 +195,7 @@
         <div class="left-title">About</div>
 
         <p class="left-para">
-          This project was created by Emma Sodini, Rebecca di Taranto, Arianna Martorelli, Emma Vireca, Alessandro Polistena and Greta Francesca Pelusi as part of the Web and Digital Design course at Politecnico di Milano, academic year 2025/2026.
+          This project was created by Emma Sodini, Rebecca Ditaranto, Arianna Martorelli, Emma Vireca, Alessandro Polistena and Greta Francesca Pelusi as part of the Web and Digital Design course at Politecnico di Milano, academic year 2025/2026.
         </p>
 
         <p class="left-para">
