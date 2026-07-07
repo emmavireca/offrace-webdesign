@@ -56,7 +56,7 @@
       'The simulation translates your choices into a measurable race profile. In this configuration, the data shows a physical setup pushed beyond a sustainable threshold: force output, trajectory control and accumulated risk combine into a descent that cannot be completed at elite level. The race ends before the finish line.',
 
     BANNED:
-      'The simulation translates your choices into a measurable race profile. In this configuration, the data exposes a breach in the equipment system: the selected wax protocol falls outside current FIS regulations. Fluorocarbon wax has been banned since the 2022/23 season, making this run invalid at the gate.',
+      'The simulation translates your choices into a measurable race profile. In this configuration, the data exposes a breach in the equipment system: the selected wax protocol falls outside current FIS regulations. Fluorocarbon wax has been banned since the 2022/3 season, making this run invalid at the gate.',
 
     'RESOURCE GAP':
       'The simulation translates your choices into a measurable race profile. The data shows a legal configuration built around materials, tuning and wax protocols that require exceptional technical infrastructure. The run remains within FIS compliance parameters, while revealing a level of resource access that most national programs cannot reproduce.',
@@ -146,7 +146,6 @@
 </script>
 
 {#if !videoFinito}
-  <!-- ── LOADING SCREEN ── -->
   <div class="loading-screen" class:you-died={scenario === 'DNF'}>
     <video
       bind:this={videoEl}
@@ -170,7 +169,6 @@
     </div>
   </div>
 {:else}
-  <!-- ── RESULT PAGE ── -->
   <div
     class="page"
     style="
@@ -346,7 +344,6 @@
     z-index: 200;
   }
 
-
   .loading-video {
     position: absolute;
     inset: 0;
@@ -394,15 +391,12 @@
     0% {
       width: 0%;
     }
-
     70% {
       width: 80%;
     }
-
     90% {
       width: 95%;
     }
-
     100% {
       width: 100%;
     }
@@ -445,7 +439,6 @@
     from {
       transform: translateX(0);
     }
-
     to {
       transform: translateX(-25%);
     }
@@ -455,6 +448,7 @@
     border-bottom: 1.5px solid #000;
     padding: 12px 40px;
   }
+  
   .intro-text {
     font-family: 'Geist Mono', monospace;
     font-size: 0.72rem;
@@ -491,7 +485,7 @@
     font-family: 'Geist Mono', monospace;
     letter-spacing: -0.02em;
     line-height: 1.1;
-    padding: 16px 16px 12px;
+    padding: 16px 40px 12px; /* AGGIORNATO: 40px di padding laterale per allineamento desktop */
     border-bottom: 1.5px solid #000;
     flex-shrink: 0;
     text-transform: uppercase;
@@ -502,7 +496,7 @@
     font-size: 0.62rem;
     line-height: 1.6;
     color: #444;
-    padding: 12px 16px;
+    padding: 12px 40px; /* AGGIORNATO: 40px di padding laterale per allineamento desktop */
     margin: 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
@@ -694,119 +688,113 @@
     color: #444;
     margin: 0;
   }
+
   /* ── RESPONSIVE PER MOBILE (SPIDERCHART PRIMA DEL TESTO) ── */
-@media (max-width: 768px) {
-  
-  /* Sblocchiamo l'altezza fissa della pagina desktop */
-  .page {
-    position: relative !important;
-    height: auto !important;
-    min-height: 100vh;
-    display: flex !important;
-    flex-direction: column !important;
-    overflow-y: visible !important;
-  }
+  @media (max-width: 768px) {
+    .page {
+      position: relative !important;
+      height: auto !important;
+      min-height: 100vh;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow-y: visible !important;
+    }
 
-  /* Il banner scorrevole rimane in cima (nativamente primo nel DOM) */
-  .banner-track span {
-    font-size: clamp(38px, 10vw, 56px) !important; /* Ridimensioniamo il testo del marquee */
-    padding: 4px 0 !important;
-  }
+    .banner-track span {
+      font-size: clamp(38px, 10vw, 56px) !important;
+      padding: 4px 0 !important;
+    }
 
-  /* Testo introduttivo subito sotto il marquee */
-  .intro-row {
-    padding: 16px !important;
-  }
-  .intro-text {
-    font-size: 0.75rem !important;
-  }
+    .intro-row {
+      padding: 16px !important;
+    }
+    
+    .intro-text {
+      font-size: 0.75rem !important;
+    }
 
-  /* Sganciamo la griglia desktop e usiamo un flusso Flex verticale */
-  .main-area {
-    display: flex !important;
-    flex-direction: column !important;
-    height: auto !important;
-    overflow: visible !important;
-  }
+    .main-area {
+      display: flex !important;
+      flex-direction: column !important;
+      height: auto !important;
+      overflow: visible !important;
+    }
 
-  /* ① LA SPIDERCHART DIVENTA LA PROTAGONISTA (Subito sotto l'intro) */
-  .spider-wrap {
-    order: 1 !important; /* La forziamo in cima al flusso della main-area */
-    width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 1 / 1; /* Mantiene il grafico perfettamente quadrato */
-    padding: 16px !important;
-    box-sizing: border-box !important;
-  }
+    /* ① LA SPIDERCHART DIVENTA LA PROTAGONISTA */
+    .spider-wrap {
+      order: 1 !important;
+      width: 100% !important;
+      height: auto !important;
+      aspect-ratio: 1 / 1;
+      padding: 16px !important;
+      box-sizing: border-box !important;
+    }
 
-  .spider-svg {
-    max-height: 380px !important; /* Gli impediamo di allargarsi troppo sui tablet */
-    margin: 0 auto;
-  }
+    .spider-svg {
+      max-height: 380px !important;
+      margin: 0 auto;
+    }
 
-  /* Spostiamo il tooltip nero in modo che non si sovrapponga */
-  .tooltip {
-    bottom: 0px !important;
-  }
+    .tooltip {
+      bottom: 0px !important;
+    }
 
-  /* ② IL PANNELLO DESTRO CON IL PARAGRAFO E IL COSTRUTTO DEI DELTA */
-  .right-panel {
-    order: 2 !important; /* Scende sotto la spiderchart */
-    width: 100% !important;
-    border-left: none !important; /* Rimuove il bordo verticale del desktop */
-    border-top: 1.5px solid #000; /* Aggiunge una divisione orizzontale pulita */
-    overflow-y: visible !important;
-    height: auto !important;
-    padding-bottom: 40px; /* Spazio di respiro finale per lo scroll */
-  }
+    /* ② IL PANNELLO DESTRO CON IL PARAGRAFO E IL COSTRUTTO DEI DELTA */
+    .right-panel {
+      order: 2 !important;
+      width: 100% !important;
+      border-left: none !important;
+      border-top: 1.5px solid #000;
+      overflow-y: visible !important;
+      height: auto !important;
+      padding-bottom: 40px;
+    }
 
-  /* Il blocco col grande Delta numerico live (es: Δt= +0.45s) */
-  .delta-num {
-    padding: 20px 16px 12px !important;
-    font-size: 28px !important;
-  }
+    .delta-num {
+      padding: 20px 16px 12px !important;
+      font-size: 28px !important;
+    }
 
-  /* Il paragrafo descrittivo che volevi subito sotto il grafico */
-  .right-para {
-    font-size: 0.72rem !important;
-    padding: 16px !important;
-  }
+    .right-para {
+      font-size: 0.72rem !important;
+      padding: 16px !important;
+    }
 
-  /* La tabellina dei breakdown finali (Athlete, Equipment, ecc.) */
-  .breakdown-mini {
-    margin: 0 16px !important;
-  }
-  
-  .bk-row {
-    padding: 8px 12px !important; /* Leggermente più alti per l'interazione touch su mobile */
-    font-size: 0.7rem !important;
-  }
-    /* ③ ABOUT — in fondo, responsive */
-  .left-panel {
-    order: 3 !important;
-    width: 100% !important;
-    border-right: none !important;
-    border-top: 1.5px solid #000 !important;
-    overflow-y: visible !important;
-    height: auto !important;
-    scrollbar-width: none;
-  }
+    .breakdown-mini {
+      margin: 0 16px !important;
+    }
+    
+    .bk-row {
+      padding: 8px 12px !important;
+      font-size: 0.7rem !important;
+    }
 
-  .left-title {
-    font-size: 28px !important;
-    padding: 20px 16px 12px !important;
-    border-bottom: 1.5px solid #000 !important;
-  }
+    /* ③ ABOUT — in fondo, responsive con padding allineato a intro-row mobile */
+    .left-panel {
+      order: 3 !important;
+      width: 100% !important;
+      border-right: none !important;
+      border-top: 1.5px solid #000 !important;
+      overflow-y: visible !important;
+      height: auto !important;
+      scrollbar-width: none;
+    }
 
-  .left-para {
-    font-size: 0.72rem !important;
-    line-height: 1.6 !important;
-    padding: 16px !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
-  }
+    .left-title {
+      font-size: 28px !important;
+      padding: 20px 16px 12px !important; /* AGGIORNATO: 16px per allinearsi a intro-row su mobile */
+      border-bottom: 1.5px solid #000 !important;
+    }
 
-  .left-para:last-child {
-    border-bottom: none !important;
+    .left-para {
+      font-size: 0.72rem !important;
+      line-height: 1.6 !important;
+      padding: 16px !important; /* AGGIORNATO: 16px per allinearsi a intro-row su mobile */
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .left-para:last-child {
+      border-bottom: none !important;
+    }
   }
-}
 </style>
