@@ -215,6 +215,7 @@
           {/if}
         {/key}
       </div>
+
     </div>
 
   </main>
@@ -556,6 +557,96 @@
 
   .animazione-destra   { animation: da-destra    0.8s ease-out forwards; }
   .animazione-sinistra { animation: da-sinistra  0.8s ease-out forwards; }
-  .esce-destra         { animation: vai-sinistra 0.8s ease-in  forwards; }
-  .esce-sinistra       { animation: vai-destra   0.8s ease-in  forwards; }
+  .esce-destra         { animation: vai-sinistra  0.8s ease-in  forwards; }
+  .esce-sinistra       { animation: vai-destra    0.8s ease-in  forwards; }
+
+/* ── RESPONSIVE PER MOBILE ── */
+@media (max-width: 768px) {
+  
+  /* Sblocchiamo la pagina fissa */
+  .page {
+    position: relative;
+    inset: auto;
+    height: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+  }
+
+  /* 1. Trasformiamo il content in una Grid unica per riordinare TUTTO */
+  .content {
+    display: grid;
+    grid-template-columns: 1fr; /* Una sola colonna verticale */
+    grid-template-rows: auto auto auto; /* Tre righe distinte */
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* 2. FORZIAMO I CONTENITORI A COLLABORARE */
+  .left, .right {
+    display: contents; /* Questo trucco "annulla" i contenitori rigidi e libera i figli diretti per la Grid! */
+  }
+
+  /* Posizione 1: Il Titolo con il paragrafo */
+  .left-intro {
+    grid-row: 1;
+    padding: 24px 24px 0 24px;
+  }
+
+  .left-intro h1 {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+  }
+
+  /* Posizione 2: Il Modello 3D (che prima era in .right) */
+  .viewer-container {
+    grid-row: 2;
+    height: 380px !important;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1.5px solid black;
+    margin-top: 16px;
+  }
+
+  /* Nascondiamo la scritta "CONFIGURE YOUR ATHLETE" o "CHOOSE YOUR TRACK" solo su mobile se si sovrappone male */
+  .dx-header {
+    display: none !important;
+  }
+
+  :global(.viewer-container canvas) {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Posizione 3: I tre pannelli con gli sliders */
+  .pannelli {
+    grid-row: 3;
+    padding: 24px;
+    margin-bottom: 40px; /* Spazio per non farli finire sotto al bottone footer */
+    border: 1.5px solid black;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* Sistemazione interna dei pannelli per il mobile */
+  .pannelli-row {
+    grid-template-columns: 1fr;
+    border-bottom: none;
+  }
+
+  .pannello-small {
+    border-right: none;
+    border-bottom: 1.5px solid black;
+  }
+
+  .pannello-body {
+    padding: 16px;
+  }
+
+  .rdf-body {
+    flex-direction: column;
+    gap: 24px;
+    padding: 16px;
+  }
+}
 </style>

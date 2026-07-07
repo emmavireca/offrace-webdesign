@@ -54,7 +54,10 @@
     return hover === nome || fissi[nome]
   }
 
-  function startZoom(key) { config.zoomTarget = key }
+  function startZoom(key) { 
+  if (window.innerWidth > 768) config.zoomTarget = key 
+}
+  
 
   onMount(() => {
     const rilascia = () => { config.zoomTarget = null }
@@ -236,6 +239,7 @@
         </div>
       </div> </div>
 
+    <!-- COLONNA DESTRA (3D OVERLAY) -->
     <div class="right-col">
       <div class="dx-header">CONFIGURE YOUR SKI SYSTEM</div>
       
@@ -530,6 +534,15 @@
     margin-top: 0;
     margin-bottom: 16px;
   }
+  .mat-label {
+  font-family: 'Geist Mono', monospace;
+  font-weight: 500;
+  font-size: 16pt;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
 
   .mat-label {
     font-family: 'Geist Mono', monospace;
@@ -886,4 +899,124 @@
     display: block;
     letter-spacing: 0.02em;
   }
+
+/* ── RESPONSIVE PER MOBILE DEFINITIVO (3D VISIBILE E SLIDER WAX CORRETTO) ── */
+@media (max-width: 768px) {
+
+  .viewport {
+    position: relative !important;
+    inset: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding-bottom: 80px;
+    background: var(--mc-bg, #fff);
+  }
+
+  /* Canvas = order 2, tra intro e accordions */
+  :global(.viewport > div:not(.overlay)) {
+    order: 2 !important;
+    width: 100% !important;
+    height: 300px !important;
+    position: relative !important;
+    flex-shrink: 0 !important;
+    transform: scale(1.3) translateX(-50%) !important;
+    overflow: visible !important;
+  }
+
+  /* Rendiamo trasparenti i contenitori così i figli partecipano al flex del viewport */
+  .overlay {
+    display: contents !important;
+  }
+
+  .left {
+    display: contents !important;
+  }
+
+  .left-intro {
+    order: 1;
+    padding: 24px 24px 16px 24px;
+    background: var(--mc-bg, #fff);
+    border-bottom: 1.5px solid black;
+    flex-shrink: 0;
+  }
+
+  h1 { font-size: 2.5rem; margin-bottom: 12px; }
+
+  /* right-col trasparente così dx-header può essere ordinato */
+  .right-col {
+    display: contents !important;
+  }
+
+  .dx-header {
+    order: 3;
+    padding: 16px 24px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-bottom: 1.5px solid black;
+    border-top: 1.5px solid black;
+    margin-top: 16px;
+    flex-shrink: 0;
+  }
+
+  .sezione {
+    order: 4;
+    margin: 0;
+    border-left: none;
+    border-right: none;
+    background: var(--mc-bg, #fff);
+    flex-shrink: 0;
+  }
+
+  .right-info {
+    display: none !important;
+  }
+
+  .sezione-body {
+    padding: 16px;
+    overflow-y: visible;
+    border-top: 1px solid #eee;
+  }
+
+  .tre-col {
+    grid-template-columns: 1fr;
+  }
+
+  .col {
+    border-right: none;
+    border-bottom: 1.5px solid black;
+    padding: 12px 16px;
+  }
+
+  .col:last-child { border-bottom: none; }
+
+  .materiali-grid { gap: 8px; }
+
+  .mat-card { height: 64px; }
+
+  .wax-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .wax-track-wrap {
+    margin-left: 0;
+    width: 100% !important;
+  }
+
+  .wax-input { width: 100% !important; margin: 0; }
+
+  .wax-track {
+    width: 100% !important;
+    display: flex;
+    justify-content: space-between;
+    gap: 2px;
+  }
+
+  .wax-bacchetta { flex: 1; max-width: 12px; }
+}
 </style>

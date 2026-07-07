@@ -455,7 +455,6 @@
     border-bottom: 1.5px solid #000;
     padding: 12px 40px;
   }
-
   .intro-text {
     font-family: 'Geist Mono', monospace;
     font-size: 0.72rem;
@@ -517,13 +516,11 @@
     position: relative;
     min-height: 0;
   }
-
   .spider-svg {
     width: 100%;
     height: 100%;
     max-height: 100%;
   }
-
   .tooltip {
     position: absolute;
     bottom: 16px;
@@ -604,7 +601,6 @@
     border-bottom: 1.5px solid #000;
     flex-shrink: 0;
   }
-
   .right-para {
     font-family: 'Geist Mono', monospace;
     font-size: 0.62rem;

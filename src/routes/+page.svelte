@@ -279,59 +279,103 @@
     padding: 0;
   }
 
-  /* ── BOTTOM BAR STYLES ── */
-  .bottom-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 76px;
-    background: var(--mc-bg, #a02424);
-    
-    /* Linea nera sopra la bottom bar */
-    border-top: 1.5px solid black; 
-    
-    display: grid;
-    /* Stessa identica griglia della riga-bottom per allineare il pulsante */
-    grid-template-columns: 0.8fr 2fr 0.8fr; 
-    z-index: 50;
-    opacity: 0;
-    animation: fadeIn 0.8s ease 0.8s forwards;
-    box-sizing: border-box;
+/* ── RESPONSIVE PER MOBILE ── */
+@media (max-width: 768px) {
+  
+  /* Sblocchiamo i tag globali del telefono per permettere lo scroll */
+  :global(html), :global(body) {
+    overflow-y: auto !important;
+    height: auto !important;
   }
 
-  .bb-spacer {
-    /* Occupa le prime due colonne lasciandole vuote */
-    grid-column: 1 / 3;
+  /* ── INTRO MOBILE ── */
+  .intro-title {
+    font-size: 70vh;
+    line-height: 0.8;
   }
 
-  .start-btn {
-    grid-column: 3 / 4;
-    
-    /* Resetta i bordi nativi del bottone e imposta solo quello sinistro */
-    border: none;
-    border-left: 1.5px solid black;
-    border-radius: 0;
-    outline: none;
-    
-    background: #BDF522;
-    color: black;
-    font-family: 'Geist Mono', monospace;
-    font-size: 1rem;
-    font-weight: 800;
-    letter-spacing: 0.05em;
-    cursor: pointer;
+  /* ── STRUTTURA HOME MOBILE ── */
+  .home {
+    position: relative;
+    inset: auto;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s, color 0.2s;
-    text-transform: uppercase;
-    padding: 0;
-    margin: 0;
+    flex-direction: column;
+    padding-bottom: 100px; /* Spazio di sicurezza per il footer del layout */
+    
+    /* Forziamo l'altezza dinamica e abilitiamo lo scroll */
+    height: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden;
   }
 
-  .start-btn:hover {
-    background: black;
-    color: #BDF522;
+  .bordo-r {
+    border-right: none;
+    border-bottom: 1.5px solid black; /* Il bordo destro diventa inferiore */
   }
+
+  /* Ottimizziamo i padding delle celle per i display più piccoli */
+  .riga-top .cella, 
+  .riga-bottom .cella,
+  .cella-occhiali {
+    padding: 24px !important;
+    height: auto !important; /* Rimuove i blocchi rigidi di altezza */
+    overflow-y: visible !important; /* Rimuove mini-scroll interni fastidiosi */
+  }
+
+  /* ── FASCIA ALTA (01 e 02 si incolonnano) ── */
+  .riga-top {
+    grid-template-columns: 1fr;
+    height: auto !important;
+  }
+
+  /* ── BANDA MARQUEE RESPONSIVE ── */
+  .banda {
+    padding: 16px 0;
+  }
+
+  .marquee-item {
+    font-size: 5vw; /* Scala in base alla larghezza dello schermo */
+    gap: 16px;
+    padding-right: 32px;
+  }
+
+  /* ── FASCIA BASSA (Ordine personalizzato tramite Flexbox) ── */
+  .riga-bottom {
+    display: flex;
+    flex-direction: column;
+    min-height: auto !important; 
+    height: auto !important;
+    overflow: visible !important; 
+  }
+
+  /* Posizione 1: Gli occhiali subito sotto il marquee */
+  .cella-occhiali {
+    height: 250px !important; 
+    border-bottom: 1.5px solid black;
+    order: 1; 
+    padding-top: 40px !important; 
+  }
+
+  /* Posizione 2: Segue Technodoping (03) */
+  .riga-bottom .cella:nth-child(1) {
+    order: 2;
+  }
+
+  /* Posizione 3: Segue Regulations (04) */
+  .riga-bottom .cella:nth-child(3) {
+    order: 3;
+    border-bottom: none; /* L'ultimo blocco chiude la lista senza bordi extra */
+  }
+
+  /* ── TABELLA REGULATIONS PER MOBILE ── */
+  .reg-list {
+    margin-left: -24px;
+    margin-right: -24px;
+  }
+
+  .reg-row {
+    padding: 16px 24px;
+    gap: 16px;
+  }
+}
 </style>

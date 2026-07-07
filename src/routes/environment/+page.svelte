@@ -307,4 +307,77 @@
     margin-left: 8px;
     opacity: 0.8;
   }
+
+/* ── RESPONSIVE PER MOBILE ── */
+@media (max-width: 768px) {
+  
+  /* Sblocchiamo la griglia fissa dello schermo */
+  .page {
+    position: relative;
+    inset: auto;
+    height: auto !important;
+    overflow-y: auto !important;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 80px; /* Sicurezza per il footer */
+  }
+
+  /* ── COLONNA SINISTRA (IN ALTO) ── */
+  .col-sx {
+    border-right: none;
+    border-bottom: 1.5px solid black;
+    height: auto !important;
+    overflow: visible;
+  }
+
+  .sx-top {
+    padding: 24px;
+  }
+
+  /* Diamo uno spazio stabile e ottimizzato al Canvas 3D sul telefono */
+  .sx-img {
+    height: 320px !important; 
+    padding: 16px;
+    position: relative;
+  }
+
+  :global(.sx-img canvas) {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* ── COLONNA DESTRA (IN BASSO) ── */
+  .col-dx {
+    padding-bottom: 0;
+    overflow-y: visible;
+    height: auto !important;
+  }
+
+  .dx-header {
+    padding: 16px 24px;
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  /* Adattiamo i pulsantoni delle piste per il touch */
+  .pista {
+    padding: 24px;
+  }
+
+  .pista h2 {
+    font-size: 1.8rem; /* Evita che titoli lunghi vadano a capo male */
+  }
+
+  .track-desc {
+    max-width: 100%;
+  }
+
+  /* Ottimizziamo le barre nere delle statistiche per schermi stretti */
+  .stat {
+    padding: 10px 16px;
+    font-size: 0.65rem;
+  }
+}
 </style>
