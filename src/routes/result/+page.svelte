@@ -346,27 +346,6 @@
     z-index: 200;
   }
 
-  .loading-screen.you-died {
-    animation: flickerViolet 0.12s steps(2) infinite;
-  }
-
-  @keyframes flickerViolet {
-    0% {
-      background-color: white;
-    }
-
-    49% {
-      background-color: white;
-    }
-
-    50% {
-      background-color: rgba(166, 9, 240, 0.25);
-    }
-
-    100% {
-      background-color: rgba(166, 9, 240, 0.25);
-    }
-  }
 
   .loading-video {
     position: absolute;
