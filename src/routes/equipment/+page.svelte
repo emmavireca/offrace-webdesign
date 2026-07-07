@@ -791,4 +791,142 @@
     margin-top: 8px; 
     margin-bottom: 0;
   }
+
+/* ── RESPONSIVE PER MOBILE ── */
+@media (max-width: 768px) {
+  
+  /* Sblocchiamo la pagina fissa */
+  .viewport {
+    position: relative;
+    inset: auto;
+    height: auto !important;
+    min-height: 100vh;
+    overflow-y: auto !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Il Canvas 3D ora occupa una porzione fissa in alto */
+  :global(canvas) {
+    position: relative !important;
+    height: 300px !important;
+    width: 100% !important;
+    order: 1; /* Primo elemento in alto */
+  }
+
+  /* L'overlay contenitore si trasforma in un flusso verticale sotto il 3D */
+  .overlay {
+    position: relative;
+    inset: auto;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    padding-bottom: 80px;
+    order: 2; /* Sotto il canvas */
+  }
+
+  /* ── SEZIONE SLIDER E ACCORDION (SOTTO IL 3D) ── */
+  .left {
+    padding: 24px 24px 0 24px;
+    border-right: none;
+    overflow-y: visible;
+    height: auto !important;
+    order: 2; /* I controlli vanno sotto */
+  }
+
+  .left-intro {
+    margin-bottom: 16px;
+  }
+
+  /* Trasformiamo la griglia a tre colonne della Geometria in 1 colonna */
+  .tre-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .col {
+    border-right: none;
+    border-bottom: 1.5px solid black;
+    padding: 20px 0;
+  }
+
+  .col:last-child {
+    border-bottom: none;
+  }
+
+  /* Risistemiamo la griglia dei materiali (flex-wrap per non farli uscire dallo schermo) */
+  .materiali-grid {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .mat-card {
+    width: calc(50% - 4px); /* Due card per riga su mobile */
+    height: 54px;
+  }
+
+  /* Ottimizziamo il protocollo sciolne per il touch */
+  .wax-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .wax-label {
+    width: 100%;
+  }
+
+  .wax-label::after {
+    width: 100%;
+  }
+
+  .wax-track-wrap {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .wax-input, .wax-track {
+    width: 100%; /* Lo slider della cera ora occupa tutta la larghezza */
+  }
+
+  .wax-mu {
+    margin-left: 0;
+    padding-bottom: 0;
+  }
+
+  .wax-desc {
+    margin-top: 20px;
+    padding-left: 12px;
+  }
+
+  /* ── SEZIONE OVERLAY INFORMATIVO (INFO SKI SYSTEM) ── */
+  .right-col {
+    order: 3; /* Va in fondo a tutto come approfondimento o interazione secondaria */
+    border-top: 1.5px solid black;
+    margin-top: 24px;
+  }
+
+  .dx-header {
+    padding: 16px 24px;
+    background: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .right-info {
+    padding: 24px;
+  }
+
+  .sci-overlay {
+    height: 250px; /* Diamo un'altezza stabile all'area dei pallini interattivi */
+  }
+
+  /* Riposizioniamo i box informativi (tooltip) in modo che non escano dallo schermo */
+  .tooltip-box {
+    width: 90%;
+    left: 5% !important;
+    top: 10% !important;
+  }
+}
 </style>
