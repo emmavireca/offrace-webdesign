@@ -17,18 +17,20 @@
       nome: 'Olympia',
       luogo: "Cortina d'Ampezzo",
       track: "Women's Track",
-      lunghezza: '2,8 km',
-      angolo: '31%',
-      terrain: 'very bumpy',
+      lunghezza: '2,26 km',
+      angolo: 'AVERAGE 30% PEAK 65%',
+      terrain: 'technical difficulty',
+      descrizione: "A highly technical course demanding extreme precision, alternating high-speed gliding with steep, selective sections that test athlete endurance.",
       glb: '/models/olympia.glb',
     },
     bormio: {
       nome: 'Bormio',
       luogo: 'Stelvio — Bormio',
       track: "Men's Track",
-      lunghezza: '3,2 km',
-      angolo: '31%',
-      terrain: 'very bumpy',
+      lunghezza: '3,27 km',
+      angolo: 'AVERAGE 30% PEAK 73%',
+      terrain: 'high intensity',
+      descrizione: "An elite, high-intensity course defined by unrelenting steepness and icy terrain, requiring exceptional strength and tactical control.",
       glb: '/models/bormio.glb',
     },
   }
@@ -39,8 +41,7 @@
   <div class="col-sx">
     <div class="sx-top">
       <h1>Environment</h1>
-      <p class="desc">The environment where the race takes place dictates its physical characteristics and unique challenges. To face them, the athlete must be fully prepared, combining physical endurance with a strategic study of the most advantageous trajectories.
-</p>
+      <p class="desc">The environment where the race takes place dictates its physical characteristics and unique challenges. To face them, the athlete must be fully prepared, combining physical endurance with a strategic study of the most advantageous trajectories.</p>
     </div>
     <div class="sx-img">
       {#if pistaMostrata}
@@ -65,7 +66,7 @@
           <div class="radio-circle"></div>
         </div>
         <p class="track-label">{p.track}</p>
-        <p class="track-desc">As a men's course, it requires elite physical conditioning because the high speed severely tests joint endurance.</p>
+        <p class="track-desc">{p.descrizione}</p>
 
         <div class="stats">
           <div class="stat">

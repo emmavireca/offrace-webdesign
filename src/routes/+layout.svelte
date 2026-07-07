@@ -71,11 +71,7 @@
                 <span class="info-label">MASS</span>
                 <span class="info-valore">{config.massa || '—'} KG</span>
               </div>
-              <div class="info-block">
-                <span class="info-label">SUIT</span>
-                <span class="info-valore">{config.tutaIndex ? (config.tutaIndex === 1 ? 'LEGAL' : config.tutaIndex === 2 ? 'BORDERLINE' : 'DOPING') : 'STANDARD'}</span>
               </div>
-            </div>
           </div>
         {/if}
       </button>
@@ -112,10 +108,10 @@
       if (isHome) goto('/environment')
       else {
         if (config.fase === 4) goto('/')
-else {
-  const rotte = ['/environment', '/athlete', '/equipment', '/result'];
-  goto(rotte[config.fase] || '/result');
-}
+        else {
+          const rotte = ['/environment', '/athlete', '/equipment', '/result'];
+          goto(rotte[config.fase] || '/result');
+        }
       }
     }}>
    {isHome ? 'START SIMULATION' : config.fase === 4 ? 'TRY AGAIN →' : 'NEXT PHASE →'}
@@ -265,6 +261,6 @@ else {
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; 
   }
   .barra.nascosta {
-  display: none !important;
-}
+    display: none !important;
+  }
 </style>
