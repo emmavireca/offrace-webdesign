@@ -4,6 +4,7 @@
   import AtletaViewer from '$lib/components/AtletaViewer.svelte'
 
   config.fase = 2
+  config.deviazione = 0
   const massaMin = config.venue === 'bormio' ? 85 : 65
   const massaMax = config.venue === 'bormio' ? 100 : 75
   const rfdMin = config.venue === 'bormio' ? 3000 : 2800
@@ -178,7 +179,7 @@
       <div class="dx-header">CONFIGURE YOUR ATHLETE</div>
       
       <div class="viewer-container">
-        <AtletaViewer {modello} />
+        <AtletaViewer {modello} rfd={config.rfd} deviazione={config.deviazione}/>
         {#if staEscendo && tutaPrecedente}
           <img class="tuta {config.venue === 'bormio' ? 'tuta-uomo' : 'tuta-donna'} esce-{direzione}" src={tutaPrecedente} alt="tuta precedente" />
         {/if}
@@ -188,6 +189,7 @@
           {/if}
         {/key}
       </div>
+
     </div>
 
   </main>
@@ -519,66 +521,75 @@
 /* ── RESPONSIVE PER MOBILE ── */
 @media (max-width: 768px) {
   
-  /* Sblocchiamo la pagina fissa del desktop */
+  /* Sblocchiamo la pagina fissa */
   .page {
     position: relative;
     inset: auto;
     height: auto !important;
     overflow-y: auto !important;
+    overflow-x: hidden;
   }
 
-  /* Trasformiamo la griglia a due colonne in un flusso verticale */
+  /* 1. Trasformiamo il content in una Grid unica per riordinare TUTTO */
   .content {
+    display: grid;
+    grid-template-columns: 1fr; /* Una sola colonna verticale */
+    grid-template-rows: auto auto auto; /* Tre righe distinte */
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* 2. FORZIAMO I CONTENITORI A COLLABORARE */
+  .left, .right {
+    display: contents; /* Questo trucco "annulla" i contenitori rigidi e libera i figli diretti per la Grid! */
+  }
+
+  /* Posizione 1: Il Titolo con il paragrafo */
+  .left-intro {
+    grid-row: 1;
+    padding: 24px 24px 0 24px;
+  }
+
+  .left-intro h1 {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+  }
+
+  /* Posizione 2: Il Modello 3D (che prima era in .right) */
+  .viewer-container {
+    grid-row: 2;
+    height: 380px !important;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1.5px solid black;
+    margin-top: 16px;
+  }
+
+  /* Nascondiamo la scritta "CONFIGURE YOUR ATHLETE" o "CHOOSE YOUR TRACK" solo su mobile se si sovrappone male */
+  .dx-header {
+    display: none !important;
+  }
+
+  :global(.viewer-container canvas) {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Posizione 3: I tre pannelli con gli sliders */
+  .pannelli {
+    grid-row: 3;
+    padding: 24px;
+    margin-bottom: 40px; /* Spazio per non farli finire sotto al bottone footer */
+    border: 1.5px solid black;
     display: flex;
     flex-direction: column;
-    overflow: visible;
-    height: auto;
+    gap: 0;
   }
 
-  /* ── MODELLO 3D (ORA VA IN ALTO) ── */
-  .right {
-    border-left: none;
-    border-bottom: 1.5px solid black;
-    order: 1; /* Forza il blocco 3D a stare per primo */
-  }
-
-  .dx-header {
-    padding: 16px 24px;
-    background: white;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-
-  /* Definiamo un'altezza fissa adeguata per lo schermo del telefono */
-  .viewer-container {
-    height: 350px; 
-    width: 100%;
-    position: relative;
-  }
-
-  /* Risistemiamo le tute in sovrapposizione sul mobile */
-  .tuta-donna {
-    width: 60%;
-    transform: translate(-50%, -50%);
-  }
-
-  .tuta-uomo {
-    width: 55%;
-    transform: translate(-50%, -50%);
-  }
-
-  /* ── CONTROLLI E SLIDER (ORA VANNO IN BASSO) ── */
-  .left {
-    padding: 24px 24px 80px 24px; /* Riduciamo i padding mastodontici */
-    overflow-y: visible;
-    height: auto !important;
-    order: 2; /* Si posiziona sotto il modello 3D */
-  }
-
-  /* Riposizioniamo la griglia dei pannelli interni */
+  /* Sistemazione interna dei pannelli per il mobile */
   .pannelli-row {
-    grid-template-columns: 1fr; /* Anche i sotto-pannelli vanno uno sotto l'altro */
+    grid-template-columns: 1fr;
+    border-bottom: none;
   }
 
   .pannello-small {
@@ -586,15 +597,14 @@
     border-bottom: 1.5px solid black;
   }
 
-  /* Ottimizziamo il widget RDF (il misuratore circolare) per il touch */
-  .rdf-body {
-    flex-direction: column; /* Il misuratore va sopra il suo testo descrittivo */
-    gap: 20px;
+  .pannello-body {
     padding: 16px;
   }
 
-  .desc, .pannello-desc {
-    max-width: 100%;
+  .rdf-body {
+    flex-direction: column;
+    gap: 24px;
+    padding: 16px;
   }
 }
 </style>

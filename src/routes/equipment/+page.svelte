@@ -4,6 +4,7 @@
   import { config } from '$lib/config.svelte.js'
   import { goto } from '$app/navigation' 
   import { slide } from 'svelte/transition'
+  import { onMount } from 'svelte'
 
   config.fase = 3
 
@@ -53,6 +54,14 @@
     return hover === nome || fissi[nome]
   }
 
+  function startZoom(key) { config.zoomTarget = key }
+
+  onMount(() => {
+    const rilascia = () => { config.zoomTarget = null }
+    window.addEventListener('pointerup', rilascia)
+    return () => window.removeEventListener('pointerup', rilascia)
+  })
+
   const descrizioni = {
     length: 'Affects load distribution along the edge contact area. A longer ski increases stability at high speed and improves edge hold on hardpack, but reduces responsiveness.',
     width: 'Determines the contact area between base and snow. A narrower waist reduces lateral friction on icy snow. A wider waist increases the gliding surface.',
@@ -79,9 +88,7 @@
     config.raggio = Math.round(radMin + (1 - ang / Math.PI) * (radMax - radMin))
   }
 
-  // Inizializza su 'geometry' affinché sia l'unico aperto al caricamento
   let accordionOpen = $state('geometry')
-
 </script>
 
 <div class="viewport">
@@ -90,13 +97,13 @@
   </Canvas>
 
   <div class="overlay">
-
     <div class="left">
       <div class="left-intro">
         <h1>Equipment</h1>
         <p class="desc">Every race is decided before the start. The equipment an athlete carries onto the slope is the result of years of research.</p>
       </div>
 
+      <!-- SEZIONE GEOMETRY -->
       <div class="sezione">
         <button class="sezione-header" onclick={() => accordionOpen = 'geometry'}>
           <span>GEOMETRY</span>
@@ -119,6 +126,7 @@
                 max={config.venue === 'bormio' ? 226 : 218}
                 step={1}
                 bind:value={config.lunghezza}
+                onpointerdown={() => startZoom('length')}
                 class="slider-h"
               />
             </div>
@@ -135,6 +143,7 @@
               <input type="range"
                 min={63} max={68} step={1}
                 bind:value={config.larghezza}
+                onpointerdown={() => startZoom('width')}
                 class="slider-h"
               />
             </div>
@@ -149,7 +158,7 @@
                 <span class="range-label">MAX {config.venue === 'bormio' ? '55' : '50'}</span>
               </div>
               <svg viewBox="0 -5 200 100" class="radius-svg"
-                onmousedown={() => { dragging = true }}
+                onmousedown={() => { dragging = true; startZoom('radius') }}
                 onmousemove={onDrag}
                 onmouseup={() => { dragging = false }}
                 onmouseleave={() => { dragging = false }}
@@ -164,6 +173,7 @@
         {/if}
       </div>
 
+      <!-- SEZIONE MATERIALS -->
       <div class="sezione">
         <button class="sezione-header" onclick={() => accordionOpen = 'materials'}>
           <span>MATERIALS</span>
@@ -193,6 +203,7 @@
         {/if}
       </div>
 
+      <!-- SEZIONE WAX PROTOCOL -->
       <div class="sezione">
         <button class="sezione-header" onclick={() => accordionOpen = 'wax'}>
           <span>WAX PROTOCOL</span>
@@ -210,7 +221,12 @@
                 />
                 <div class="wax-track">
                   {#each Array(10) as _, i}
-                    <div class="wax-bacchetta" class:piena={i / 10 < (ceraIndex + 0.2) / 2}></div>
+                    {@const isPiena = i / 10 < (ceraIndex + 0.2) / 2}
+                    <div 
+                      class="wax-bacchetta" 
+                      class:piena={isPiena}
+                      style="--index: {i};"
+                    ></div>
                   {/each}
                 </div>
               </div>
@@ -220,66 +236,65 @@
           </div>
         {/if}
       </div>
-
     </div>
 
+    <!-- COLONNA DESTRA (3D OVERLAY) -->
     <div class="right-col">
       <div class="dx-header">CONFIGURE YOUR SKI SYSTEM</div>
       
       <div class="right-info">
         <div class="sci-overlay">
+          {#if !config.zoomAttivo}
+            {#if attivo('length')}
+              <div class="linea v-up" style="left: 52%; top: 0%; height: 90%;"></div>
+              <div class="linea h-right" style="left: 52%; top: 0%; width: 10%;"></div>
+            {/if}
+            <button class="pallino" style="left: 52%; top: 90%"
+              onmouseenter={() => hover = 'length'}
+              onmouseleave={() => hover = null}
+              onclick={() => toggleFisso('length')}
+              class:attivo={attivo('length')}>
+            </button>
+            <div class="tooltip-box" class:visibile={attivo('length')} style="left: 58%; top: -15%; cursor: pointer;" onclick={() => goto('/athlete')}>
+              <p class="tooltip-title">LENGTH</p>
+              <p class="tooltip-desc">{descrizioni.length}</p>
+              <p class="tooltip-valore">{config.lunghezza} CM</p>
+            </div>
 
-          {#if attivo('length')}
-            <div class="linea v-up" style="left: 52%; top: -15%; height: 105%;"></div>
-            <div class="linea h-right" style="left: 52%; top: -15%; width: 18%;"></div>
+            {#if attivo('width')}
+              <div class="linea v-up" style="left: 20%; top: 88%; height: 62%;"></div>
+            {/if}
+            <button class="pallino" style="left: 20%; top: 150%"
+              onmouseenter={() => hover = 'width'}
+              onmouseleave={() => hover = null}
+              onclick={() => toggleFisso('width')}
+              class:attivo={attivo('width')}>
+            </button>
+            <div class="tooltip-box width-box" class:visibile={attivo('width')} style="left: 3.5%; top: 8%; cursor: pointer;" onclick={() => goto('/environment')}>
+              <p class="tooltip-title">WIDTH</p>
+              <p class="tooltip-desc">{descrizioni.width}</p>
+              <p class="tooltip-valore">{config.larghezza} MM</p>
+            </div>
+
+            {#if attivo('radius')}
+              <div class="linea v-down" style="left: 28%; top: 200%; height: 33%;"></div>
+              <div class="linea h-right" style="left: 28%; top: 232%; width: 22%;"></div>
+            {/if}
+            <button class="pallino" style="left: 28%; top: 200%"
+              onmouseenter={() => hover = 'radius'}
+              onmouseleave={() => hover = null}
+              onclick={() => toggleFisso('radius')}
+              class:attivo={attivo('radius')}>
+            </button>
+            <div class="tooltip-box" class:visibile={attivo('radius')} style="left: 50%; top: 210%; cursor: pointer;" onclick={() => goto('/athlete')}>
+              <p class="tooltip-title">RADIUS</p>
+              <p class="tooltip-desc">{descrizioni.radius}</p>
+              <p class="tooltip-valore">{config.raggio} M</p>
+            </div>
           {/if}
-          <button class="pallino" style="left: 52%; top: 90%"
-            onmouseenter={() => hover = 'length'}
-            onmouseleave={() => hover = null}
-            onclick={() => toggleFisso('length')}
-            class:attivo={attivo('length')}>
-          </button>
-          <div class="tooltip-box" class:visibile={attivo('length')} style="left: 66%; top: -25%; cursor: pointer;" onclick={() => goto('/athlete')}>
-            <p class="tooltip-title">LENGTH</p>
-            <p class="tooltip-desc">{descrizioni.length}</p>
-            <p class="tooltip-valore">{config.lunghezza} CM</p>
-          </div>
-
-          {#if attivo('width')}
-            <div class="linea v-up" style="left: 20%; top: 88%; height: 62%;"></div>
-          {/if}
-          <button class="pallino" style="left: 20%; top: 150%"
-            onmouseenter={() => hover = 'width'}
-            onmouseleave={() => hover = null}
-            onclick={() => toggleFisso('width')}
-            class:attivo={attivo('width')}>
-          </button>
-         <div class="tooltip-box width-box" class:visibile={attivo('width')} style="left: 3.5%; top: 0%; cursor: pointer;" onclick={() => goto('/environment')}>
-            <p class="tooltip-title">WIDTH</p>
-            <p class="tooltip-desc">{descrizioni.width}</p>
-            <p class="tooltip-valore">{config.larghezza} MM</p>
-          </div>
-
-          {#if attivo('radius')}
-            <div class="linea v-down" style="left: 28%; top: 200%; height: 33%;"></div>
-            <div class="linea h-right" style="left: 28%; top: 232%; width: 22%;"></div>
-          {/if}
-          <button class="pallino" style="left: 28%; top: 200%"
-            onmouseenter={() => hover = 'radius'}
-            onmouseleave={() => hover = null}
-            onclick={() => toggleFisso('radius')}
-            class:attivo={attivo('radius')}>
-          </button>
-          <div class="tooltip-box" class:visibile={attivo('radius')} style="left: 50%; top: 222%; cursor: pointer;" onclick={() => goto('/athlete')}>
-            <p class="tooltip-title">RADIUS</p>
-            <p class="tooltip-desc">{descrizioni.radius}</p>
-            <p class="tooltip-valore">{config.raggio} M</p>
-          </div>
-
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -305,6 +320,7 @@
     gap: 24px; 
     overflow-y: auto;
     border-right: 1.5px solid black; 
+    background: var(--mc-bg);
   }
 
   .left-intro {
@@ -335,21 +351,21 @@
   }
 
   .sezione-header {
-    background: black;
-    color: white;
-    padding: 12px 24px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: none;
-    cursor: pointer;
-    text-transform: uppercase;
-    font-family: inherit;
-  }
+  background: black;
+  color: white;
+  padding: 8px 24px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+}
 
   .sezione-header:hover {
     background: #1a1a1a;
@@ -388,33 +404,37 @@
     width: 100%;
   }
 
-  .col-title {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    margin: 0;
-  }
+.col-title {
+  font-family: 'Geist Mono', monospace;
+  font-weight: 500;
+  font-size: 16pt;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
 
-  .val-live {
-    color: var(--mc-copper);
-    font-size: 0.65rem;
-    font-weight: 600;
-    margin: 0;
-  }
+.val-live {
+  font-family: 'Geist Mono', monospace;
+  font-weight: 500;
+  font-size: 16pt;
+  color: var(--mc-copper);
+  margin: 0;
+}
 
-  .range-labels {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: 4px;
-  }
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: auto;
+}
 
-  .range-label {
-    font-size: 0.5rem;
-    color: #666;
-    letter-spacing: 0.05em;
-    margin: 0;
-  }
+.range-label {
+  font-family: 'Geist Mono', monospace;
+  font-weight: 400;
+  font-size: 8pt;
+  color: #666;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
 
   /* ── SLIDER LENGTH E WIDTH ── */
   .slider-h {
@@ -449,7 +469,6 @@
     transition: transform 0.2s, background 0.2s, outline-color 0.2s;
   }
 
-  /* Inversione e ingrandimento su hover/active */
   .slider-h:hover::-webkit-slider-thumb,
   .slider-h:active::-webkit-slider-thumb {
     transform: scale(1.3);
@@ -490,48 +509,68 @@
     margin-top: 0;
     margin-bottom: 16px;
   }
+  .mat-label {
+  font-family: 'Geist Mono', monospace;
+  font-weight: 500;
+  font-size: 16pt;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
 
   .mat-card {
-    border: 1.5px solid transparent; 
-    background: none;
-    cursor: pointer;
-    padding: 0;
-    width: 175px;
-    height: 64px;
-    overflow: hidden;
-    flex-shrink: 0;
-    margin: 0;
-    transition: transform 0.2s;
-  }
+  flex: 1;
+  position: relative;
+  border: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  height: 80px;
+  overflow: hidden;
+  transition: border 0.2s, box-shadow 0.2s;
+}
 
-  .mat-card:hover {
-    transform: scale(1.05);
-  }
+.mat-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(189, 245, 34, 0.5);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
 
-  .mat-card.selezionato { border-color: var(--mc-copper); }
+.mat-card:hover:not(.selezionato)::after {
+  opacity: 1;
+}
 
-  .mat-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+.mat-card.selezionato {
+  border: 2px solid black;
+  box-shadow: 0 0 0 2px var(--mc-copper);
+}
 
-  .mat-label {
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-top: 0;
-    margin-bottom: 8px;
-  }
+.mat-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(100%);
+  transition: filter 0.2s;
+}
+.mat-desc {
+  font-family: 'Geist Mono', monospace;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #444;
+  margin: 0;
+}
 
-  .mat-desc {
-    font-size: 0.75rem;
-    line-height: 1.5;
-    color: #444;
-    margin: 0;
-  }
 
+.mat-card.selezionato .mat-img {
+  filter: grayscale(0%);
+}
   .wax-row {
     display: flex;
     align-items: flex-end;
@@ -566,6 +605,7 @@
     gap: 4px;
     width: fit-content;
     margin-left: 16px; 
+    position: relative;
   }
 
   /* ── SLIDER WAX ── */
@@ -573,9 +613,11 @@
     width: 120px;
     -webkit-appearance: none;
     appearance: none;
-    height: 2px;
+    height: 12px;
     background: transparent;
     cursor: grab;
+    position: relative;
+    z-index: 5;
     margin: 0;
   }
 
@@ -583,18 +625,27 @@
     cursor: grabbing;
   }
 
+  .wax-input::-webkit-slider-runnable-track {
+    background: transparent !important;
+    border: none !important;
+    height: 0px !important;
+  }
+  .wax-input::-moz-range-track {
+    background: transparent !important;
+    border: none !important;
+    height: 0px !important;
+  }
+
   .wax-input::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 14px;
     height: 12px;
-    /* Immagine default: sfondo fluo, bordo nero */
     background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 12'><polygon points='7,11 1,1 13,1' fill='%23BDF522' stroke='black' stroke-width='1.5' stroke-linejoin='round'/></svg>") no-repeat center;
     border: none;
     transition: transform 0.2s;
   }
 
-  /* Inversione: sfondo nero, bordo fluo */
   .wax-input:hover::-webkit-slider-thumb,
   .wax-input:active::-webkit-slider-thumb {
     transform: scale(1.3);
@@ -613,34 +664,38 @@
 
   .wax-bacchetta {
     width: 5px;
-    height: 16px;
+    height: 12px;
     background: #ccc;
     transform: skewX(-12deg);
     flex: none;
+    transition: height 0.2s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.2s ease;
   }
 
-  .wax-bacchetta.piena { background: black; }
+  .wax-bacchetta.piena { 
+    background: black; 
+    height: calc(14px + var(--index) * 1.4px);
+  }
 
   .wax-mu {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    white-space: nowrap;
-    margin-left: 16px; 
-    padding-bottom: 4px;
-    margin-top: 0;
-    margin-bottom: 0;
-  }
+  font-family: 'Geist Mono', monospace;
+  font-size: 20pt;
+  font-weight: 500;
+  white-space: nowrap;
+  margin-left: 16px;
+  padding-bottom: 4px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
 
-  .wax-desc {
-    font-size: 0.75rem;
-    line-height: 1.5;
-    color: #444;
-    margin-top: 16px; 
-    border-left: 1.5px solid black; 
-    padding-left: 16px; 
-    margin-bottom: 0;
-  }
+ .wax-desc {
+  font-family: 'Geist Mono', monospace;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #444;
+  margin-top: 16px;
+  margin-bottom: 0;
+}
 
   .right-col {
     display: flex;
@@ -664,6 +719,7 @@
     padding: 40px; 
     gap: 24px; 
     flex: 1; 
+    overflow: hidden;
   }
 
   .sci-overlay {
@@ -743,7 +799,7 @@
     background: white;
     border: 1.5px solid black; 
     padding: 16px; 
-    width: 220px;
+    width: 280px;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s, transform 0.2s; 
@@ -792,141 +848,202 @@
     margin-bottom: 0;
   }
 
-/* ── RESPONSIVE PER MOBILE ── */
+/* ── RESPONSIVE PER MOBILE DEFINITIVO (3D VISIBILE E SLIDER WAX CORRETTO) ── */
 @media (max-width: 768px) {
   
-  /* Sblocchiamo la pagina fissa */
+  /* Sblocchiamo la pagina */
   .viewport {
     position: relative;
     inset: auto;
     height: auto !important;
-    min-height: 100vh;
     overflow-y: auto !important;
     display: flex;
     flex-direction: column;
+    background: var(--mc-bg, #fff);
   }
 
-  /* Il Canvas 3D ora occupa una porzione fissa in alto */
-  :global(canvas) {
-    position: relative !important;
-    height: 300px !important;
+  /* 1. IL CANVAS 3D RITORNA SULLO SFONDO MA AGGANCIATO IN ALTO */
+  :global(.viewport > canvas), 
+  :global(.viewport > div:not(.overlay)) {
+    position: fixed !important;
+    top: 140px !important; /* Si posiziona perfettamente sotto il titolo */
+    left: 0 !important;
     width: 100% !important;
-    order: 1; /* Primo elemento in alto */
+    height: 240px !important; /* Spazio fisso dedicato al modello 3D */
+    z-index: 1 !important;
+    pointer-events: auto !important;
   }
 
-  /* L'overlay contenitore si trasforma in un flusso verticale sotto il 3D */
+  /* 2. L'OVERLAY DIVENTA TRASPARENTE PER FAR VEDERE IL 3D SOTTO */
   .overlay {
     position: relative;
     inset: auto;
     display: flex;
     flex-direction: column;
-    height: auto;
-    padding-bottom: 80px;
-    order: 2; /* Sotto il canvas */
-  }
-
-  /* ── SEZIONE SLIDER E ACCORDION (SOTTO IL 3D) ── */
-  .left {
-    padding: 24px 24px 0 24px;
-    border-right: none;
-    overflow-y: visible;
+    grid-template-columns: none;
+    padding-bottom: 90px;
     height: auto !important;
-    order: 2; /* I controlli vanno sotto */
+    z-index: 2;
+    background: transparent !important;
   }
 
-  .left-intro {
-    margin-bottom: 16px;
-  }
-
-  /* Trasformiamo la griglia a tre colonne della Geometria in 1 colonna */
-  .tre-col {
+  .left, .right-col {
     display: flex;
     flex-direction: column;
+    background: transparent !important;
+    border: none;
+    padding: 0;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* TITOLO E PARAGRAFO (COPRENTE IN ALTO) */
+  .left-intro {
+    order: 1;
+    padding: 24px 24px 12px 24px;
+    background: var(--mc-bg, #fff); /* Sfondo pieno per coprire il 3D quando si scrolla */
+    position: relative;
+    z-index: 100;
+    border-bottom: 1.5px solid black;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+  }
+
+  /* LA COLONNA DESTRA DIVENTA LA CORNICE DEI PALLINI */
+  .right-col {
+    order: 2;
+    height: 240px !important; /* Stessa identica altezza del Canvas 3D */
+    position: relative;
+    z-index: 90;
+    pointer-events: none;
+    background: transparent !important; /* Trasparente così si vede lo sci sotto! */
+  }
+
+  .dx-header {
+    display: none !important;
+  }
+
+  .right-info {
+    padding: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .sci-overlay {
+    height: 100%;
+    width: 100%;
+  }
+
+  .pallino {
+    pointer-events: auto;
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Disattiviamo i box desktop per liberare i click */
+  .tooltip-box {
+    display: none !important;
+  }
+
+  /* Tooltip popup mobile coordinato */
+  .tooltip-box.visibile {
+    display: block !important;
+    position: fixed !important;
+    inset: auto 24px 90px 24px !important;
+    width: auto !important;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 200;
+    pointer-events: auto;
+  }
+
+  .linea {
+    display: none !important;
+  }
+
+  /* ── 3. GLI ACCORDION (CORREZIONE PARTE INFERIORE) ── */
+  .sezione {
+    order: 3;
+    margin: 0 24px;
+    border-top: none;
+    background: var(--mc-bg, #fff);
+    position: relative;
+    z-index: 100; /* Coprente, passa SOPRA al modello 3D quando si scrolla verso l'alto */
+  }
+  
+  /* Crea il bordo superiore sul primo accordion e stacca visivamente lo spazio del 3D */
+  .sezione:first-of-type {
+    border-top: 1.5px solid black;
+    margin-top: 16px;
+  }
+
+  .sezione-header {
+    position: relative;
+    z-index: 110;
+  }
+
+  .sezione-body {
+    padding: 16px;
+    max-height: 260px; 
+    overflow-y: auto;  
+    -webkit-overflow-scrolling: touch; 
+    border-top: 1px solid #eee;
+  }
+
+  .tre-col {
+    grid-template-columns: 1fr;
   }
 
   .col {
     border-right: none;
     border-bottom: 1.5px solid black;
-    padding: 20px 0;
+    padding: 12px 0;
   }
 
   .col:last-child {
     border-bottom: none;
   }
 
-  /* Risistemiamo la griglia dei materiali (flex-wrap per non farli uscire dallo schermo) */
   .materiali-grid {
-    flex-wrap: wrap;
     gap: 8px;
   }
-
+  
   .mat-card {
-    width: calc(50% - 4px); /* Due card per riga su mobile */
-    height: 54px;
+    height: 64px;
   }
 
-  /* Ottimizziamo il protocollo sciolne per il touch */
+  /* ── INTERFACCIA WAX PROTOCOL (RISOLUZIONE BUG) ── */
   .wax-row {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
   }
 
-  .wax-label {
-    width: 100%;
-  }
-
-  .wax-label::after {
-    width: 100%;
-  }
-
   .wax-track-wrap {
     margin-left: 0;
-    width: 100%;
+    width: 100% !important; /* Occupa tutta la larghezza dell'accordion */
+    position: relative;
+  }
+  
+  /* Forza l'input e la traccia delle bacchette ad essere lunghe uguali */
+  .wax-input {
+    width: 100% !important;
+    margin: 0;
   }
 
-  .wax-input, .wax-track {
-    width: 100%; /* Lo slider della cera ora occupa tutta la larghezza */
+  .wax-track {
+    width: 100% !important;
+    display: flex;
+    justify-content: space-between; /* Distribuisce le bacchette in modo omogeneo su tutta la larghezza */
+    gap: 2px;
   }
 
-  .wax-mu {
-    margin-left: 0;
-    padding-bottom: 0;
-  }
-
-  .wax-desc {
-    margin-top: 20px;
-    padding-left: 12px;
-  }
-
-  /* ── SEZIONE OVERLAY INFORMATIVO (INFO SKI SYSTEM) ── */
-  .right-col {
-    order: 3; /* Va in fondo a tutto come approfondimento o interazione secondaria */
-    border-top: 1.5px solid black;
-    margin-top: 24px;
-  }
-
-  .dx-header {
-    padding: 16px 24px;
-    background: white;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-
-  .right-info {
-    padding: 24px;
-  }
-
-  .sci-overlay {
-    height: 250px; /* Diamo un'altezza stabile all'area dei pallini interattivi */
-  }
-
-  /* Riposizioniamo i box informativi (tooltip) in modo che non escano dallo schermo */
-  .tooltip-box {
-    width: 90%;
-    left: 5% !important;
-    top: 10% !important;
+  .wax-bacchetta {
+    flex: 1; /* Le bacchette si allargano proporzionalmente riempiendo lo schermo mobile */
+    max-width: 12px;
   }
 }
 </style>

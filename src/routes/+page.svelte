@@ -24,11 +24,11 @@
     <div class="riga-top">
       <div class="cella bordo-r">
         <h3 class="num-title">01_Performance</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+        <p>Alpine skiing performance is the outcome of a complex, interconnected system. It is driven by the athlete, the equipment, the environment, the regulations, and the timing and precision measurement systems.</p>
       </div>
       <div class="cella">
         <h3 class="num-title">02_More than an athlete</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <p>An athlete's success is about more than just talent and physical or mental preparation. While these are obviously essential, they are often not enough to reach the top. The equipment they use also plays a crucial role.</p>
       </div>
     </div>
 
@@ -52,30 +52,29 @@
 
       <div class="cella bordo-r">
         <h3 class="num-title">03_Technodoping</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        <p>Dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
+        <p>Technodoping is an interconnected system. It involves technologies that enhance performance to the point of challenging the very concept of sport as something comparable, merit-based, and governable. The core issue is determining whether performance can still be fundamentally credited to the athlete, or if it has simply become the product of a technical advantage gained through superior resources.</p>
       </div>
 
       <div class="cella-occhiali bordo-r">
         <OcchialiDither />
       </div>
 
-      <div class="cella">
+      <div class="cella no-scroll">
         <h3 class="num-title">04_Regulations</h3>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
+        <p>The International Ski Federation's rules define the framework for what is possible in terms of performance.</p>
 
         <div class="reg-list">
           <div class="reg-row">
             <span class="reg-num">1</span>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>Gender-specific ski geometry (male or female): length and turning radius.</p>
           </div>
           <div class="reg-row">
             <span class="reg-num">2</span>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+            <p>The core and composite materials of the ski layers.</p>
           </div>
           <div class="reg-row">
             <span class="reg-num">3</span>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+            <p>The type of ski wax applied to the base for snow contact.</p>
           </div>
         </div>
       </div>
@@ -137,7 +136,7 @@
 
   .bordo-r { border-right: 1.5px solid black; }
 
-  /* ── TIPOGRAFIA & DISTANZE (Standardizzate a 40px/24px) ── */
+  /* ── TIPOGRAFIA & DISTANZE ── */
   .num-title {
     font-size: clamp(1rem, 1.4vw, 1.25rem);
     font-weight: 800;
@@ -224,7 +223,7 @@
   .riga-bottom .cella {
     padding: 40px;
     height: 100%;
-    overflow-y: auto; 
+    overflow: hidden; /* Fissato: rimosso auto */
   }
 
   .cella-occhiali {
@@ -238,10 +237,9 @@
     overflow: hidden;
   }
 
-  /* ── TABELLA REGULATIONS (Estesa) ── */
+  /* ── TABELLA REGULATIONS ── */
   .reg-list {
     margin-top: 24px;
-    /* I margini negativi estendono la riga coprendo esattamente il padding di 40px della cella */
     margin-left: -40px;
     margin-right: -40px;
     border-top: 1.5px solid black;
@@ -249,10 +247,14 @@
 
   .reg-row {
     display: flex;
-    gap: 24px; /* Stessa distanza logica del resto del sito */
-    /* Rimettiamo i 40px orizzontali per riallineare il contenuto col resto della cella */
+    gap: 24px;
     padding: 16px 40px; 
     border-bottom: 1.5px solid black;
+  }
+
+  /* Rimuove il bordo dall'ultima riga */
+  .reg-row:last-child {
+    border-bottom: none;
   }
 
   .reg-num {
@@ -260,7 +262,7 @@
     font-family: 'Geist Mono', monospace;
     font-weight: 700;
     font-size: 0.85rem;
-    padding-top: 1px; /* Riallineamento ottico col testo */
+    padding-top: 1px;
   }
 
   .reg-row p {
@@ -268,13 +270,13 @@
     line-height: 1.6;
     color: #444;
     margin: 0;
-    padding: 0; /* Il padding ora è gestito direttamente dalla riga */
+    padding: 0;
   }
 
 /* ── RESPONSIVE PER MOBILE ── */
 @media (max-width: 768px) {
   
-  /* Sblocchiamo i tag globali del telefono */
+  /* Sblocchiamo i tag globali del telefono per permettere lo scroll */
   :global(html), :global(body) {
     overflow-y: auto !important;
     height: auto !important;
@@ -292,9 +294,9 @@
     inset: auto;
     display: flex;
     flex-direction: column;
-    padding-bottom: 100px; /* Spazio di sicurezza per il footer */
+    padding-bottom: 100px; /* Spazio di sicurezza per il footer del layout */
     
-    /* Forziamo l'altezza libera e abilitiamo lo scroll generale */
+    /* Forziamo l'altezza dinamica e abilitiamo lo scroll */
     height: auto !important;
     overflow-y: auto !important;
     overflow-x: hidden;
@@ -302,64 +304,64 @@
 
   .bordo-r {
     border-right: none;
-    border-bottom: 1.5px solid black;
+    border-bottom: 1.5px solid black; /* Il bordo destro diventa inferiore */
   }
 
+  /* Ottimizziamo i padding delle celle per i display più piccoli */
   .riga-top .cella, 
   .riga-bottom .cella,
   .cella-occhiali {
     padding: 24px !important;
-    height: auto !important; /* Rimuove altezze fisse */
-    overflow-y: visible !important; /* Disattiva gli scroll interni alle singole celle */
+    height: auto !important; /* Rimuove i blocchi rigidi di altezza */
+    overflow-y: visible !important; /* Rimuove mini-scroll interni fastidiosi */
   }
 
-  /* ── FASCIA ALTA ── */
+  /* ── FASCIA ALTA (01 e 02 si incolonnano) ── */
   .riga-top {
     grid-template-columns: 1fr;
     height: auto !important;
   }
 
-  /* ── BANDA MARQUEE ── */
+  /* ── BANDA MARQUEE RESPONSIVE ── */
   .banda {
     padding: 16px 0;
   }
 
   .marquee-item {
-    font-size: 5vw;
+    font-size: 5vw; /* Scala in base alla larghezza dello schermo */
     gap: 16px;
     padding-right: 32px;
   }
 
-  /* ── FASCIA BASSA (Sbloccata totalmente) ── */
+  /* ── FASCIA BASSA (Ordine personalizzato tramite Flexbox) ── */
   .riga-bottom {
     display: flex;
     flex-direction: column;
-    
-    /* CANCELLIAMO i vincoli del desktop che bloccavano lo scroll */
     min-height: auto !important; 
     height: auto !important;
     overflow: visible !important; 
   }
 
-  /* 1. Gli occhiali subito sotto il marquee */
+  /* Posizione 1: Gli occhiali subito sotto il marquee */
   .cella-occhiali {
     height: 250px !important; 
     border-bottom: 1.5px solid black;
     order: 1; 
+    padding-top: 40px !important; 
   }
 
-  /* 2. Segue Technodoping (03) */
+  /* Posizione 2: Segue Technodoping (03) */
   .riga-bottom .cella:nth-child(1) {
     order: 2;
   }
 
-  /* 3. Infine Regulations (04) */
+  /* Posizione 3: Segue Regulations (04) */
   .riga-bottom .cella:nth-child(3) {
     order: 3;
-    border-bottom: none; /* L'ultimo blocco non ha bisogno del bordo sotto */
+    border-bottom: none; /* L'ultimo blocco chiude la lista senza bordi extra */
   }
 
-  /* ── TABELLA REGULATIONS ── */
+  /* ── TABELLA REGULATIONS PER MOBILE ── */
   .reg-list {
     margin-left: -24px;
     margin-right: -24px;
