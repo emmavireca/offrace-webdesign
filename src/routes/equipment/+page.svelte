@@ -54,7 +54,10 @@
     return hover === nome || fissi[nome]
   }
 
-  function startZoom(key) { config.zoomTarget = key }
+  function startZoom(key) { 
+  if (window.innerWidth > 768) config.zoomTarget = key 
+}
+  
 
   onMount(() => {
     const rilascia = () => { config.zoomTarget = null }
@@ -850,146 +853,82 @@
 
 /* ── RESPONSIVE PER MOBILE DEFINITIVO (3D VISIBILE E SLIDER WAX CORRETTO) ── */
 @media (max-width: 768px) {
-  
-  /* Sblocchiamo la pagina */
+
   .viewport {
-    position: relative;
-    inset: auto;
+    position: relative !important;
+    inset: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
     height: auto !important;
-    overflow-y: auto !important;
-    display: flex;
-    flex-direction: column;
+    overflow: visible !important;
+    padding-bottom: 80px;
     background: var(--mc-bg, #fff);
   }
 
-  /* 1. IL CANVAS 3D RITORNA SULLO SFONDO MA AGGANCIATO IN ALTO */
-  :global(.viewport > canvas), 
+  /* Canvas = order 2, tra intro e accordions */
   :global(.viewport > div:not(.overlay)) {
-    position: fixed !important;
-    top: 140px !important; /* Si posiziona perfettamente sotto il titolo */
-    left: 0 !important;
+    order: 2 !important;
     width: 100% !important;
-    height: 240px !important; /* Spazio fisso dedicato al modello 3D */
-    z-index: 1 !important;
-    pointer-events: auto !important;
-  }
-
-  /* 2. L'OVERLAY DIVENTA TRASPARENTE PER FAR VEDERE IL 3D SOTTO */
-  .overlay {
-    position: relative;
-    inset: auto;
-    display: flex;
-    flex-direction: column;
-    grid-template-columns: none;
-    padding-bottom: 90px;
-    height: auto !important;
-    z-index: 2;
-    background: transparent !important;
-  }
-
-  .left, .right-col {
-    display: flex;
-    flex-direction: column;
-    background: transparent !important;
-    border: none;
-    padding: 0;
-    height: auto !important;
+    height: 300px !important;
+    position: relative !important;
+    flex-shrink: 0 !important;
+    transform: scale(1.3) translateX(-50%) !important;
     overflow: visible !important;
   }
 
-  /* TITOLO E PARAGRAFO (COPRENTE IN ALTO) */
+  /* Rendiamo trasparenti i contenitori così i figli partecipano al flex del viewport */
+  .overlay {
+    display: contents !important;
+  }
+
+  .left {
+    display: contents !important;
+  }
+
   .left-intro {
     order: 1;
-    padding: 24px 24px 12px 24px;
-    background: var(--mc-bg, #fff); /* Sfondo pieno per coprire il 3D quando si scrolla */
-    position: relative;
-    z-index: 100;
+    padding: 24px 24px 16px 24px;
+    background: var(--mc-bg, #fff);
     border-bottom: 1.5px solid black;
+    flex-shrink: 0;
   }
 
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: 12px;
-  }
+  h1 { font-size: 2.5rem; margin-bottom: 12px; }
 
-  /* LA COLONNA DESTRA DIVENTA LA CORNICE DEI PALLINI */
+  /* right-col trasparente così dx-header può essere ordinato */
   .right-col {
-    order: 2;
-    height: 240px !important; /* Stessa identica altezza del Canvas 3D */
-    position: relative;
-    z-index: 90;
-    pointer-events: none;
-    background: transparent !important; /* Trasparente così si vede lo sci sotto! */
+    display: contents !important;
   }
 
   .dx-header {
-    display: none !important;
+    order: 3;
+    padding: 16px 24px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-bottom: 1.5px solid black;
+    border-top: 1.5px solid black;
+    margin-top: 16px;
+    flex-shrink: 0;
+  }
+
+  .sezione {
+    order: 4;
+    margin: 0;
+    border-left: none;
+    border-right: none;
+    background: var(--mc-bg, #fff);
+    flex-shrink: 0;
   }
 
   .right-info {
-    padding: 0;
-    height: 100%;
-    width: 100%;
-  }
-
-  .sci-overlay {
-    height: 100%;
-    width: 100%;
-  }
-
-  .pallino {
-    pointer-events: auto;
-    width: 14px;
-    height: 14px;
-  }
-
-  /* Disattiviamo i box desktop per liberare i click */
-  .tooltip-box {
     display: none !important;
-  }
-
-  /* Tooltip popup mobile coordinato */
-  .tooltip-box.visibile {
-    display: block !important;
-    position: fixed !important;
-    inset: auto 24px 90px 24px !important;
-    width: auto !important;
-    background: white;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    z-index: 200;
-    pointer-events: auto;
-  }
-
-  .linea {
-    display: none !important;
-  }
-
-  /* ── 3. GLI ACCORDION (CORREZIONE PARTE INFERIORE) ── */
-  .sezione {
-    order: 3;
-    margin: 0 24px;
-    border-top: none;
-    background: var(--mc-bg, #fff);
-    position: relative;
-    z-index: 100; /* Coprente, passa SOPRA al modello 3D quando si scrolla verso l'alto */
-  }
-  
-  /* Crea il bordo superiore sul primo accordion e stacca visivamente lo spazio del 3D */
-  .sezione:first-of-type {
-    border-top: 1.5px solid black;
-    margin-top: 16px;
-  }
-
-  .sezione-header {
-    position: relative;
-    z-index: 110;
   }
 
   .sezione-body {
     padding: 16px;
-    max-height: 260px; 
-    overflow-y: auto;  
-    -webkit-overflow-scrolling: touch; 
+    overflow-y: visible;
     border-top: 1px solid #eee;
   }
 
@@ -1000,22 +939,15 @@
   .col {
     border-right: none;
     border-bottom: 1.5px solid black;
-    padding: 12px 0;
+    padding: 12px 16px;
   }
 
-  .col:last-child {
-    border-bottom: none;
-  }
+  .col:last-child { border-bottom: none; }
 
-  .materiali-grid {
-    gap: 8px;
-  }
-  
-  .mat-card {
-    height: 64px;
-  }
+  .materiali-grid { gap: 8px; }
 
-  /* ── INTERFACCIA WAX PROTOCOL (RISOLUZIONE BUG) ── */
+  .mat-card { height: 64px; }
+
   .wax-row {
     flex-direction: column;
     align-items: flex-start;
@@ -1024,26 +956,18 @@
 
   .wax-track-wrap {
     margin-left: 0;
-    width: 100% !important; /* Occupa tutta la larghezza dell'accordion */
-    position: relative;
-  }
-  
-  /* Forza l'input e la traccia delle bacchette ad essere lunghe uguali */
-  .wax-input {
     width: 100% !important;
-    margin: 0;
   }
+
+  .wax-input { width: 100% !important; margin: 0; }
 
   .wax-track {
     width: 100% !important;
     display: flex;
-    justify-content: space-between; /* Distribuisce le bacchette in modo omogeneo su tutta la larghezza */
+    justify-content: space-between;
     gap: 2px;
   }
 
-  .wax-bacchetta {
-    flex: 1; /* Le bacchette si allargano proporzionalmente riempiendo lo schermo mobile */
-    max-width: 12px;
-  }
+  .wax-bacchetta { flex: 1; max-width: 12px; }
 }
 </style>
