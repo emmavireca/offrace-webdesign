@@ -100,7 +100,7 @@
     <div class="left">
       <div class="left-intro">
         <h1>Equipment</h1>
-        <p class="desc">Every race is decided before the start. The equipment an athlete carries onto the slope is the result of years of research.</p>
+        <p class="desc">Equipment is the part of the race where performance becomes material. Ski length, radius, construction, edge grip and wax protocol shape how the athlete meets the snow, translating force into speed, stability and control. Every choice carries a different weight depending on the selected track: a setup that holds cleanly on Bormio’s steep, icy sections may become less agile on Olympia’s technical rhythm. This is also the area most directly exposed to regulation. The rulebook defines what can enter the gate, what must stay outside, and where innovation begins to resemble an unfair advantage. In this space, equipment is never neutral. It is a technical decision, a regulatory boundary, and a resource question at the same time.</p>
       </div>
 
       <div class="accordion-group">
@@ -343,7 +343,7 @@
     font-size: 0.78rem;
     line-height: 1.6;
     color: #444;
-    max-width: 54ch;
+    max-width: 74ch;
     margin: 0;
   }
 
@@ -480,22 +480,22 @@
   }
 
   .slider-h::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: white; 
-    outline: 1.5px solid black; 
-    margin-top: -6px;
-    transition: transform 0.2s, background 0.2s, outline-color 0.2s;
-  }
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #BDF522;
+  outline: 1.5px solid black;
+  margin-top: -6px;
+  transition: transform 0.2s, background 0.2s, outline-color 0.2s;
+}
 
-  .slider-h:hover::-webkit-slider-thumb,
-  .slider-h:active::-webkit-slider-thumb {
-    transform: scale(1.3);
-    background: black;
-    outline-color: white;
-  }
+.slider-h:hover::-webkit-slider-thumb,
+.slider-h:active::-webkit-slider-thumb {
+  transform: scale(1.3);
+  background: black;
+  outline-color: #BDF522;
+}
 
   /* ── SLIDER RADIUS ── */
   .radius-svg {
@@ -510,17 +510,17 @@
   }
 
   .radius-thumb {
-    fill: white; 
-    stroke: black;
-    transition: fill 0.2s, stroke 0.2s, transform 0.2s;
-  }
+  fill: #BDF522;
+  stroke: black;
+  transition: fill 0.2s, stroke 0.2s, transform 0.2s;
+}
 
-  .radius-svg:hover .radius-thumb,
-  .radius-svg:active .radius-thumb {
-    fill: black;
-    stroke: white;
-    transform: scale(1.3);
-  }
+.radius-svg:hover .radius-thumb,
+.radius-svg:active .radius-thumb {
+  fill: black;
+  stroke: #BDF522;
+  transform: scale(1.3);
+}
 
   /* ── CARDS MATERIALI ── */
   .materiali-grid {
