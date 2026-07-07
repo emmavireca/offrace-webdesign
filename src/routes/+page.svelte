@@ -270,4 +270,104 @@
     margin: 0;
     padding: 0; /* Il padding ora è gestito direttamente dalla riga */
   }
+
+/* ── RESPONSIVE PER MOBILE ── */
+@media (max-width: 768px) {
+  
+  /* Sblocchiamo i tag globali del telefono */
+  :global(html), :global(body) {
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+
+  /* ── INTRO MOBILE ── */
+  .intro-title {
+    font-size: 70vh;
+    line-height: 0.8;
+  }
+
+  /* ── STRUTTURA HOME MOBILE ── */
+  .home {
+    position: relative;
+    inset: auto;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 100px; /* Spazio di sicurezza per il footer */
+    
+    /* Forziamo l'altezza libera e abilitiamo lo scroll generale */
+    height: auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+  }
+
+  .bordo-r {
+    border-right: none;
+    border-bottom: 1.5px solid black;
+  }
+
+  .riga-top .cella, 
+  .riga-bottom .cella,
+  .cella-occhiali {
+    padding: 24px !important;
+    height: auto !important; /* Rimuove altezze fisse */
+    overflow-y: visible !important; /* Disattiva gli scroll interni alle singole celle */
+  }
+
+  /* ── FASCIA ALTA ── */
+  .riga-top {
+    grid-template-columns: 1fr;
+    height: auto !important;
+  }
+
+  /* ── BANDA MARQUEE ── */
+  .banda {
+    padding: 16px 0;
+  }
+
+  .marquee-item {
+    font-size: 5vw;
+    gap: 16px;
+    padding-right: 32px;
+  }
+
+  /* ── FASCIA BASSA (Sbloccata totalmente) ── */
+  .riga-bottom {
+    display: flex;
+    flex-direction: column;
+    
+    /* CANCELLIAMO i vincoli del desktop che bloccavano lo scroll */
+    min-height: auto !important; 
+    height: auto !important;
+    overflow: visible !important; 
+  }
+
+  /* 1. Gli occhiali subito sotto il marquee */
+  .cella-occhiali {
+    height: 250px !important; 
+    border-bottom: 1.5px solid black;
+    order: 1; 
+  }
+
+  /* 2. Segue Technodoping (03) */
+  .riga-bottom .cella:nth-child(1) {
+    order: 2;
+  }
+
+  /* 3. Infine Regulations (04) */
+  .riga-bottom .cella:nth-child(3) {
+    order: 3;
+    border-bottom: none; /* L'ultimo blocco non ha bisogno del bordo sotto */
+  }
+
+  /* ── TABELLA REGULATIONS ── */
+  .reg-list {
+    margin-left: -24px;
+    margin-right: -24px;
+  }
+
+  .reg-row {
+    padding: 16px 24px;
+    gap: 16px;
+  }
+}
 </style>
