@@ -1,5 +1,6 @@
 <script>
   import { Canvas } from '@threlte/core'
+  import { OrbitControls } from '@threlte/extras'     // ← controlli 3D
   import Scene from '$lib/components/Scene.svelte'
   import { config } from '$lib/config.svelte.js'
   import { goto } from '$app/navigation' 
@@ -9,7 +10,7 @@
   config.fase = 3
 
   const materiali = [
-    { id: 'wood',    label: 'Wood Core',    img: '/textures/WOOD.png' },
+    { id: 'wood',    label: 'Wood Core',    img: '/textures/wood.png' },
     { id: 'carbon',  label: 'Carbon Fiber', img: '/textures/CARBON F.png' },
     { id: 'titanal', label: 'Titanal',      img: '/textures/TITANAL.png' },
   ]
@@ -55,14 +56,27 @@
   }
 
   function startZoom(key) { 
-  if (window.innerWidth > 768) config.zoomTarget = key 
-}
-  
+    if (window.innerWidth > 768) config.zoomTarget = key 
+  }
+
+  // ─── STATO PER IL CONTROLLO ORBIT ───
+  let isDesktop = $state(true)
 
   onMount(() => {
+    const check = () => {
+      isDesktop = window.innerWidth > 768
+    }
+    check()
+    window.addEventListener('resize', check)
+
+    // Rilascia lo zoom al pointerup (già presente)
     const rilascia = () => { config.zoomTarget = null }
     window.addEventListener('pointerup', rilascia)
-    return () => window.removeEventListener('pointerup', rilascia)
+    
+    return () => {
+      window.removeEventListener('resize', check)
+      window.removeEventListener('pointerup', rilascia)
+    }
   })
 
   const descrizioni = {
@@ -97,6 +111,7 @@
 <div class="viewport">
   <Canvas renderMode="always">
     <Scene />
+    <OrbitControls enabled={isDesktop} />
   </Canvas>
 
   <div class="overlay">
@@ -239,7 +254,6 @@
         </div>
       </div> </div>
 
-    <!-- COLONNA DESTRA (3D OVERLAY) -->
     <div class="right-col">
       <div class="dx-header">CONFIGURE YOUR SKI SYSTEM</div>
       
@@ -318,6 +332,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     padding-bottom: 64px;
+    pointer-events: none;
   }
 
   .left {
@@ -328,6 +343,7 @@
     overflow-y: auto;
     border-right: 1.5px solid black; 
     background: var(--mc-bg);
+    pointer-events: auto;
   }
 
   .left-intro {
@@ -534,15 +550,6 @@
     margin-top: 0;
     margin-bottom: 16px;
   }
-  .mat-label {
-  font-family: 'Geist Mono', monospace;
-  font-weight: 500;
-  font-size: 16pt;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  margin-top: 0;
-  margin-bottom: 8px;
-}
 
   .mat-label {
     font-family: 'Geist Mono', monospace;
@@ -582,7 +589,6 @@
     opacity: 1;
   }
 
-  /* MODIFICATO: Contorno verde acido netto quando selezionato, rimosso box-shadow nero */
   .mat-card.selezionato {
     border: 2px solid #BDF522; 
   }
@@ -753,6 +759,7 @@
     text-transform: uppercase;
     border-bottom: 1.5px solid black;
     margin: 0;
+    pointer-events: auto;
   }
 
   .right-info {
@@ -789,6 +796,7 @@
     z-index: 10;
     margin: 0;
     padding: 0;
+    pointer-events: auto;
   }
 
   .pallino:hover, .pallino.attivo {
@@ -921,8 +929,9 @@
     height: 300px !important;
     position: relative !important;
     flex-shrink: 0 !important;
-    transform: scale(1.3) translateX(-50%) !important;
+    transform: scale(1.3) translate(-50%, -15%) !important; 
     overflow: visible !important;
+    pointer-events: none !important;
   }
 
   /* Rendiamo trasparenti i contenitori così i figli partecipano al flex del viewport */
@@ -962,8 +971,12 @@
     flex-shrink: 0;
   }
 
-  .sezione {
+  .accordion-group {
     order: 4;
+    margin: 0;
+  }
+
+  .sezione {
     margin: 0;
     border-left: none;
     border-right: none;
@@ -976,7 +989,7 @@
   }
 
   .sezione-body {
-    padding: 16px;
+    padding: 16px 24px; /* ← MODIFICATO: ora il padding orizzontale è di 24px, allineato col titolo */
     overflow-y: visible;
     border-top: 1px solid #eee;
   }
@@ -988,7 +1001,7 @@
   .col {
     border-right: none;
     border-bottom: 1.5px solid black;
-    padding: 12px 16px;
+    padding: 12px 24px; /* ← MODIFICATO: padding orizzontale a 24px */
   }
 
   .col:last-child { border-bottom: none; }
