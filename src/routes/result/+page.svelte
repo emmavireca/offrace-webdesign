@@ -485,7 +485,7 @@
     font-family: 'Geist Mono', monospace;
     letter-spacing: -0.02em;
     line-height: 1.1;
-    padding: 16px 40px 12px; /* AGGIORNATO: 40px di padding laterale per allineamento desktop */
+    padding: 16px 40px 12px; /* AGGIORNATO: 40px laterale per allineamento desktop */
     border-bottom: 1.5px solid #000;
     flex-shrink: 0;
     text-transform: uppercase;
@@ -496,7 +496,7 @@
     font-size: 0.62rem;
     line-height: 1.6;
     color: #444;
-    padding: 12px 40px; /* AGGIORNATO: 40px di padding laterale per allineamento desktop */
+    padding: 12px 40px; /* AGGIORNATO: 40px laterale per allineamento desktop */
     margin: 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
@@ -591,21 +591,22 @@
     font-family: 'Geist Mono', monospace;
     letter-spacing: -0.02em;
     line-height: 1.1;
-    padding: 16px 16px 12px;
+    padding: 16px 40px 12px; /* AGGIORNATO: 40px laterale per allineamento desktop */
     border-bottom: 1.5px solid #000;
     flex-shrink: 0;
   }
+  
   .right-para {
     font-family: 'Geist Mono', monospace;
     font-size: 0.62rem;
     line-height: 1.6;
     color: #444;
-    padding: 12px 16px;
+    padding: 12px 40px; /* AGGIORNATO: 40px laterale per allineamento desktop */
     margin: 0;
   }
 
   .breakdown-mini {
-    margin: 0 16px 16px;
+    margin: 0 40px 16px; /* AGGIORNATO: Margine orizzontale a 40px per seguire la linea del testo superiore */
     border: 1.5px solid #000;
     display: flex;
     flex-direction: column;
@@ -751,17 +752,17 @@
     }
 
     .delta-num {
-      padding: 20px 16px 12px !important;
+      padding: 20px 16px 12px !important; /* AGGIORNATO: Reset orizzontale a 16px per mobile */
       font-size: 28px !important;
     }
 
     .right-para {
       font-size: 0.72rem !important;
-      padding: 16px !important;
+      padding: 16px !important; /* AGGIORNATO: Reset orizzontale a 16px per mobile */
     }
 
     .breakdown-mini {
-      margin: 0 16px !important;
+      margin: 0 16px !important; /* AGGIORNATO: Reset orizzontale a 16px per mobile */
     }
     
     .bk-row {
@@ -769,7 +770,7 @@
       font-size: 0.7rem !important;
     }
 
-    /* ③ ABOUT — in fondo, responsive con padding allineato a intro-row mobile */
+    /* ③ ABOUT — in fondo, responsive */
     .left-panel {
       order: 3 !important;
       width: 100% !important;
@@ -782,14 +783,14 @@
 
     .left-title {
       font-size: 28px !important;
-      padding: 20px 16px 12px !important; /* AGGIORNATO: 16px per allinearsi a intro-row su mobile */
+      padding: 20px 16px 12px !important; /* Reset orizzontale a 16px per mobile */
       border-bottom: 1.5px solid #000 !important;
     }
 
     .left-para {
       font-size: 0.72rem !important;
       line-height: 1.6 !important;
-      padding: 16px !important; /* AGGIORNATO: 16px per allinearsi a intro-row su mobile */
+      padding: 16px !important; /* Reset orizzontale a 16px per mobile */
       border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
     }
 
